@@ -1,0 +1,69 @@
+import pygame
+
+from core.pieces.Pieces import Pieces
+
+
+class Board:
+    def __init__(self, game, pos, size, color_w, color_b):
+        self.game = game
+        self.position = pos
+        self.size = size
+        self.color_w = color_w
+        self.color_b = color_b
+        self.surface = pygame.Surface((8 * size[0], 8 * size[1]))
+        self.generate_surface()
+        self.focused = None
+        self.pieces_texture = pygame.image.load('Source/Image/pieces.png')
+        # Pieces(self.game, (0, 0), self.pieces_texture.subsurface((0, 0, 50, 150)))
+        self.board = []
+        self.generate_board()
+
+    def draw(self):
+        self.game.screen.blit(self.surface, self.position)
+        for piece in self.board:
+                piece.draw()
+
+    def update(self, event):
+        pos = ((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1])
+        print(event.button, event.pos, pos)
+        if not self.focused:
+            self.focused = self.get_pos(pos)
+        if self.focused:
+            self.focused.update(pos)
+
+    def get_pos(self, pos):
+        for i in range(len(self.board) - 1, -1, -1):
+            if self.board[i].pos == pos:
+                return self.board[i]
+
+    def generate_surface(self):
+        for i in range(8):
+            for j in range(8):
+                if i % 2 != j % 2:
+                    pygame.draw.rect(self.surface, self.color_b,
+                                     [self.size[0] * i, self.size[1] * j, *self.size])
+                else:
+                    pygame.draw.rect(self.surface, self.color_w,
+                                     [self.size[0] * i, self.size[1] * j, *self.size])
+        pygame.image.save(self.surface, "tmp.png")
+
+    def generate_board(self):
+        self.board = []
+        for i in range(8):
+            self.board.append(Pieces(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 'b'))
+            self.board.append(Pieces(self.game, (i, 6), self.pieces_texture.subsurface((0, 150, 50, 150)), 'w'))
+            if i % 7 == 0:
+                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((50, 0, 50, 150)), 'b'))
+                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((50, 150, 50, 150)), 'w'))
+            if i % 5 == 1:
+                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((250, 0, 50, 150)), 'b'))
+                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((250, 150, 50, 150)), 'w'))
+            if i % 3 == 2:
+                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((200, 0, 50, 150)), 'b'))
+                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((200, 150, 50, 150)), 'w'))
+            if i == 3:
+                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((100, 0, 50, 150)), 'b'))
+                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((100, 150, 50, 150)), 'w'))
+            if i == 4:
+                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((150, 0, 50, 150)), 'b'))
+                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((150, 150, 50, 150)), 'w'))
