@@ -3,7 +3,7 @@ import pygame
 
 
 class Game:
-    def __init__(self, size, title, fps=15, icon=None, flags={}):
+    def __init__(self, size, title, fps=30, icon=None, flags={}):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
@@ -13,13 +13,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.max_fps = fps
         self.board = Board(self, (0, 0), (50, 50), (220, 220, 220), (50, 50, 50))
+        self.board.generate_board()
 
     def update(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print("GAY")
                 self.running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP]:
                 self.board.update(event)
 
     def draw(self):
