@@ -1,6 +1,7 @@
 import pygame
 
 from core.pieces.Pieces import Pieces
+from core.pieces.Pawn import Pawn
 
 
 class Board:
@@ -40,11 +41,9 @@ class Board:
                 self.focused.move((self.last_mouse_pos[0] - event.pos[0], self.last_mouse_pos[1] - event.pos[1]))
                 self.last_mouse_pos = event.pos
         elif event.type == pygame.MOUSEBUTTONUP:
-            print(self.focused, self.set_on_next)
             if self.focused and not self.set_on_next:
                 self.dragging = False
                 pos = ((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1])
-                print(self.focused.cell, pos)
                 if self.focused.cell != pos:
                     self.focused.update(pos)
                 else:
@@ -61,6 +60,10 @@ class Board:
             if self.board[i].cell == pos:
                 return self.board[i]
 
+    def remove_from_board(self, piece):
+        if piece:
+            self.board.remove(piece)
+
     def generate_surface(self):
         for i in range(8):
             for j in range(8):
@@ -75,8 +78,8 @@ class Board:
     def generate_board(self):
         self.board = []
         for i in range(8):
-            self.board.append(Pieces(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 'b'))
-            self.board.append(Pieces(self.game, (i, 6), self.pieces_texture.subsurface((0, 150, 50, 150)), 'w'))
+            self.board.append(Pawn(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 'b'))
+            self.board.append(Pawn(self.game, (i, 6), self.pieces_texture.subsurface((0, 150, 50, 150)), 'w'))
             if i % 7 == 0:
                 self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((50, 0, 50, 150)), 'b'))
                 self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((50, 150, 50, 150)), 'w'))
