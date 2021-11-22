@@ -39,11 +39,13 @@ class Pieces:
         return False
 
     def update(self, cell):
+        print(cell)
         if self.check_move(cell):
             self.set_cell(cell)
+            self.game.board.go_to_next_step()
+            self.game.board.focused = None
         else:
             self.set_cell(self.cell)
-        self.game.board.focused = None
 
     def set_cell(self, cell):
         self.cell = cell
