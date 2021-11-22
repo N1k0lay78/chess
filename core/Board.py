@@ -3,6 +3,7 @@ import pygame
 from core.pieces.Pieces import Pieces
 from core.pieces.Pawn import Pawn
 from core.pieces.Horse import Horse
+from core.pieces.Elephant import Elephant
 
 
 class Board:
@@ -88,8 +89,8 @@ class Board:
                 self.board.append(Horse(self.game, (i, 0), self.pieces_texture.subsurface((250, 0, 50, 150)), 'b'))
                 self.board.append(Horse(self.game, (i, 7), self.pieces_texture.subsurface((250, 150, 50, 150)), 'w'))
             if i % 3 == 2:
-                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((200, 0, 50, 150)), 'b'))
-                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((200, 150, 50, 150)), 'w'))
+                self.board.append(Elephant(self.game, (i, 0), self.pieces_texture.subsurface((200, 0, 50, 150)), 'b'))
+                self.board.append(Elephant(self.game, (i, 7), self.pieces_texture.subsurface((200, 150, 50, 150)), 'w'))
             if i == 3:
                 self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((100, 0, 50, 150)), 'b'))
                 self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((100, 150, 50, 150)), 'w'))
