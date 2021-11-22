@@ -1,5 +1,6 @@
 import pygame
 
+from core.pieces.King import King
 from core.pieces.Pieces import Pieces
 from core.pieces.Pawn import Pawn
 from core.pieces.Horse import Horse
@@ -66,7 +67,11 @@ class Board:
 
     def remove_from_board(self, piece):
         if piece:
-            self.board.remove(piece)
+            if type(piece) == King:
+                print(f"win is {'white' if piece.color == 'b' else 'black'}")
+                self.generate_board()
+            else:
+                self.board.remove(piece)
 
     def generate_surface(self):
         for i in range(8):
@@ -97,5 +102,5 @@ class Board:
                 self.board.append(Queen(self.game, (i, 0), self.pieces_texture.subsurface((100, 0, 50, 150)), 'b'))
                 self.board.append(Queen(self.game, (i, 7), self.pieces_texture.subsurface((100, 150, 50, 150)), 'w'))
             if i == 4:
-                self.board.append(Pieces(self.game, (i, 0), self.pieces_texture.subsurface((150, 0, 50, 150)), 'b'))
-                self.board.append(Pieces(self.game, (i, 7), self.pieces_texture.subsurface((150, 150, 50, 150)), 'w'))
+                self.board.append(King(self.game, (i, 0), self.pieces_texture.subsurface((150, 0, 50, 150)), 'b'))
+                self.board.append(King(self.game, (i, 7), self.pieces_texture.subsurface((150, 150, 50, 150)), 'w'))

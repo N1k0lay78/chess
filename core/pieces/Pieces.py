@@ -25,7 +25,6 @@ class Pieces:
         if piece:
             if piece.color != self.color:
                 self.game.board.remove_from_board(piece)
-                self.on_eat()
                 return True
             elif piece.color == self.color:
                 return False
@@ -36,14 +35,11 @@ class Pieces:
         if piece:
             if piece.color != self.color:
                 self.game.board.remove_from_board(piece)
-                self.on_eat()
                 return True
         return False
 
     def update(self, cell):
         if self.check_move(cell):
-            if self.game.board.get_pos(cell):
-                self.game.board.remove_from_board(self.game.board.get_pos(cell))
             self.set_cell(cell)
         else:
             self.set_cell(self.cell)
@@ -60,9 +56,6 @@ class Pieces:
     def move(self, move):
         self.pos[0] -= move[0]
         self.pos[1] -= move[1]
-
-    def on_eat(self):
-        pass
 
     def __repr__(self):
         return f"{self.color}"
