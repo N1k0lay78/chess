@@ -12,7 +12,7 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
         self.max_fps = fps
-        self.board = Board(self, (0, 0), (50, 50), (220, 220, 220), (50, 50, 50))
+        self.board = Board(self, (0, 100), (50, 50), (220, 220, 220), (50, 50, 50))
         self.board.generate_board()
 
     def update(self):

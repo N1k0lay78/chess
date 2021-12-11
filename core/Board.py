@@ -78,20 +78,11 @@ class Board:
         self.step += 1
 
     def generate_surface(self):
-        for i in range(8):
-            for j in range(8):
-                if i % 2 != j % 2:
-                    pygame.draw.rect(self.surface, self.color_b,
-                                     [self.size[0] * i, self.size[1] * j, *self.size])
-                else:
-                    pygame.draw.rect(self.surface, self.color_w,
-                                     [self.size[0] * i, self.size[1] * j, *self.size])
-        pygame.image.save(self.surface, "tmp.png")
+        self.surface = pygame.image.load('Source/Image/board.png')
 
     def generate_board(self):
         self.board = []
         for i in range(8):
-            self.board.append(Pawn(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 1))
             self.board.append(Pawn(self.game, (i, 6), self.pieces_texture.subsurface((0, 150, 50, 150)), 0))
             if i % 7 == 0:
                 self.board.append(Rook(self.game, (i, 0), self.pieces_texture.subsurface((50, 0, 50, 150)), 1))
@@ -108,3 +99,4 @@ class Board:
             if i == 4:
                 self.board.append(King(self.game, (i, 0), self.pieces_texture.subsurface((150, 0, 50, 150)), 1))
                 self.board.append(King(self.game, (i, 7), self.pieces_texture.subsurface((150, 150, 50, 150)), 0))
+            self.board.append(Pawn(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 1))
