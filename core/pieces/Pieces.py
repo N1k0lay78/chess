@@ -5,7 +5,7 @@ class Pieces:
         self.cell = [0, 0]
         self.set_cell(cell)
         self.surface = surface
-        self.color = color
+        self.color = color  # 0 - downside (green), 1 - upside (red)
 
     def check_move(self, pos):
         return pos != self.pos
@@ -42,6 +42,7 @@ class Pieces:
         print(cell)
         if self.check_move(cell):
             self.set_cell(cell)
+            self.on_move()
             self.game.board.go_to_next_step()
             self.game.board.focused = None
         else:
@@ -58,6 +59,9 @@ class Pieces:
     def move(self, move):
         self.pos[0] -= move[0]
         self.pos[1] -= move[1]
+
+    def on_move(self):
+        pass
 
     def __repr__(self):
         return f"{self.color}"

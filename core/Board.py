@@ -80,23 +80,37 @@ class Board:
     def generate_surface(self):
         self.surface = pygame.image.load('Source/Image/board.png')
 
+    def add_figure(self, type, pos, color):
+        if type == 'p':
+            self.board.append(Pawn(self.game, pos, self.pieces_texture.subsurface((0, 0 if color else 150, 50, 150)), color))
+        elif type == 'r':
+            self.board.append(Rook(self.game, pos, self.pieces_texture.subsurface((50, 0 if color else 150, 50, 150)), color))
+        elif type == 'q':
+            self.board.append(Queen(self.game, pos, self.pieces_texture.subsurface((100, 0 if color else 150, 50, 150)), color))
+        elif type == 'k':
+            self.board.append(King(self.game, pos, self.pieces_texture.subsurface((150, 0 if color else 150, 50, 150)), color))
+        elif type == 'e':
+            self.board.append(Elephant(self.game, pos, self.pieces_texture.subsurface((200, 0 if color else 150, 50, 150)), color))
+        elif type == 'h':
+            self.board.append(Horse(self.game, pos, self.pieces_texture.subsurface((250, 0 if color else 150, 50, 150)), color))
+
     def generate_board(self):
         self.board = []
         for i in range(8):
-            self.board.append(Pawn(self.game, (i, 6), self.pieces_texture.subsurface((0, 150, 50, 150)), 0))
+            self.add_figure('p', (i, 6), 0)
             if i % 7 == 0:
-                self.board.append(Rook(self.game, (i, 0), self.pieces_texture.subsurface((50, 0, 50, 150)), 1))
-                self.board.append(Rook(self.game, (i, 7), self.pieces_texture.subsurface((50, 150, 50, 150)), 0))
+                self.add_figure('r', (i, 0), 1)
+                self.add_figure('r', (i, 7), 0)
             if i % 5 == 1:
-                self.board.append(Horse(self.game, (i, 0), self.pieces_texture.subsurface((250, 0, 50, 150)), 1))
-                self.board.append(Horse(self.game, (i, 7), self.pieces_texture.subsurface((250, 150, 50, 150)), 0))
+                self.add_figure('h', (i, 0), 1)
+                self.add_figure('h', (i, 7), 0)
             if i % 3 == 2:
-                self.board.append(Elephant(self.game, (i, 0), self.pieces_texture.subsurface((200, 0, 50, 150)), 1))
-                self.board.append(Elephant(self.game, (i, 7), self.pieces_texture.subsurface((200, 150, 50, 150)), 0))
+                self.add_figure('e', (i, 0), 1)
+                self.add_figure('e', (i, 7), 0)
             if i == 3:
-                self.board.append(Queen(self.game, (i, 0), self.pieces_texture.subsurface((100, 0, 50, 150)), 1))
-                self.board.append(Queen(self.game, (i, 7), self.pieces_texture.subsurface((100, 150, 50, 150)), 0))
+                self.add_figure('q', (i, 0), 1)
+                self.add_figure('q', (i, 7), 0)
             if i == 4:
-                self.board.append(King(self.game, (i, 0), self.pieces_texture.subsurface((150, 0, 50, 150)), 1))
-                self.board.append(King(self.game, (i, 7), self.pieces_texture.subsurface((150, 150, 50, 150)), 0))
-            self.board.append(Pawn(self.game, (i, 1), self.pieces_texture.subsurface((0, 0, 50, 150)), 1))
+                self.add_figure('k', (i, 0), 1)
+                self.add_figure('k', (i, 7), 0)
+            self.add_figure('p', (i, 1), 1)

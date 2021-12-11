@@ -18,3 +18,12 @@ class Pawn(Pieces):
             self.first_move = False
             return True
         return False
+
+    def on_move(self):
+        if (self.color == 0 and self.cell[1] == 0) or (self.color == 1 and self.cell[1] == 7):
+            print('choose a figure (q - Queen/h - Horse/r - Rook/e - Elephant)')
+            choose = input('Choice: ').lower()
+            while choose not in ['q', 'h', 'r', 'e']:
+                choose = input('Choice: ').lower()
+            self.game.board.add_figure(choose, self.cell, self.color)
+            self.game.board.remove_from_board(self)

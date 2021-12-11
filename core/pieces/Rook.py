@@ -12,8 +12,8 @@ class Rook(Pieces):
             move_x = 1 if move_x > 0 else (-1 if move_x < 0 else 0)
             move_y = 1 if move_y > 0 else (-1 if move_y < 0 else 0)
             # print([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0] + self.cell[1] - pos[1]))])
-            if all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0] + self.cell[1] - pos[1]))]) and self.check_not_friendly_cell(pos):
-                self.is_moved = True
-                return True
+            return all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0] + self.cell[1] - pos[1]))]) and self.check_not_friendly_cell(pos)
         return False
 
+    def on_move(self):
+        self.is_moved = True
