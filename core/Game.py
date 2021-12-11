@@ -1,6 +1,8 @@
 from core.Board import Board
 import pygame
 
+from core.FogOfWar import FogOfWar
+
 
 class Game:
     def __init__(self, size, title, fps=30, icon=None, **flags):
@@ -14,6 +16,7 @@ class Game:
         self.max_fps = fps
         self.board = Board(self, (100, 100), (50, 50))
         self.board.generate_board()
+        self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog')
 
     def update(self):
         for event in pygame.event.get():
@@ -25,6 +28,7 @@ class Game:
     def draw(self):
         self.screen.fill((20, 20, 50))
         self.board.draw()
+        self.fog.draw()
 
     def run(self):
         while self.running:

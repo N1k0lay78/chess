@@ -6,6 +6,7 @@ from core.pieces.Horse import Horse
 from core.pieces.Elephant import Elephant
 from core.pieces.Queen import Queen
 from core.pieces.Rook import Rook
+from core.textures.Tileset import TileSet
 
 
 class Board:
@@ -22,7 +23,7 @@ class Board:
         self.set_on_next = False
         self.last_mouse_pos = (0, 0)
         # surfaces
-        self.pieces_texture = pygame.image.load('Source/Image/pieces.png')
+        self.pieces_tile_set = TileSet('pieces', (50, 150))
         self.surface = pygame.image.load('Source/Image/board.png')
 
     def draw(self):
@@ -82,20 +83,21 @@ class Board:
         # flip the board
         for figure in self.board:
             figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
+        self.game.fog.update()
 
     def add_figure(self, type, pos, color):  # add a figure to the board
         if type == 'p':
-            self.board.append(Pawn(self.game, pos, self.pieces_texture.subsurface((0, 0 if color else 150, 50, 150)), color))
+            self.board.append(Pawn(self.game, pos, self.pieces_tile_set[0, not color], color))
         elif type == 'r':
-            self.board.append(Rook(self.game, pos, self.pieces_texture.subsurface((50, 0 if color else 150, 50, 150)), color))
+            self.board.append(Rook(self.game, pos, self.pieces_tile_set[1, not color], color))
         elif type == 'q':
-            self.board.append(Queen(self.game, pos, self.pieces_texture.subsurface((100, 0 if color else 150, 50, 150)), color))
+            self.board.append(Queen(self.game, pos, self.pieces_tile_set[2, not color], color))
         elif type == 'k':
-            self.board.append(King(self.game, pos, self.pieces_texture.subsurface((150, 0 if color else 150, 50, 150)), color))
+            self.board.append(King(self.game, pos, self.pieces_tile_set[3, not color], color))
         elif type == 'e':
-            self.board.append(Elephant(self.game, pos, self.pieces_texture.subsurface((200, 0 if color else 150, 50, 150)), color))
+            self.board.append(Elephant(self.game, pos, self.pieces_tile_set[4, not color], color))
         elif type == 'h':
-            self.board.append(Horse(self.game, pos, self.pieces_texture.subsurface((250, 0 if color else 150, 50, 150)), color))
+            self.board.append(Horse(self.game, pos, self.pieces_tile_set[5, not color], color))
 
     def generate_board(self):
         # clear board
