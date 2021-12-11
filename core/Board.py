@@ -1,7 +1,6 @@
 import pygame
 
 from core.pieces.King import King
-from core.pieces.Pieces import Pieces
 from core.pieces.Pawn import Pawn
 from core.pieces.Horse import Horse
 from core.pieces.Elephant import Elephant
@@ -10,7 +9,7 @@ from core.pieces.Rook import Rook
 
 
 class Board:
-    def __init__(self, game, pos, size, color_w, color_b):
+    def __init__(self, game, pos, size):
         # logic
         self.game = game
         self.position = pos
@@ -24,63 +23,67 @@ class Board:
         self.last_mouse_pos = (0, 0)
         # surfaces
         self.pieces_texture = pygame.image.load('Source/Image/pieces.png')
-        self.color_w = color_w
-        self.color_b = color_b
-        self.surface = pygame.Surface((8 * size[0], 8 * size[1]))
-        self.generate_surface()
+        self.surface = pygame.image.load('Source/Image/board.png')
 
     def draw(self):
+        # draw the background
         self.game.screen.blit(self.surface, self.position)
+        # draw the figures
+        layers = {}
         for piece in self.board:
-                piece.draw()
+            if self.focused == piece and self.dragging:
+                layers[100000] = [piece]
+            if piece.pos[1] in layers:
+                layers[piece.pos[1]].append(piece)
+            else:
+                layers[piece.pos[1]] = [piece]
+        for key in sorted(list(layers.keys())):
+            for figure in layers[key]:
+                figure.draw()
 
     def update(self, event):
-        """
-        use:
-        focused - action figure
-        dragging - is moving figure
-        set_on_next - ???
-        last_mouse_pos - move from last action
-        step - black move if step % 2 else white move
-        """
+        # focused - the figure we are moving
+        # dragging - whether to move the shape when moving the mouse
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.last_mouse_pos = event.pos
             figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
+            # is there a piece and check that its move
             if figure != None and figure.color == self.step % 2:
                 self.focused = figure
-                print(type(self.focused))
                 self.dragging = True
             elif figure is None:
                 self.dragging = False
         elif event.type == pygame.MOUSEMOTION:
+            # move figure if dragging
             if self.dragging and self.focused:
                 self.focused.move((self.last_mouse_pos[0] - event.pos[0], self.last_mouse_pos[1] - event.pos[1]))
                 self.last_mouse_pos = event.pos
         elif event.type == pygame.MOUSEBUTTONUP:
             self.dragging = False
+            # move figure to new cell
             if self.focused:
                 self.focused.update(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
 
-    def get_pos(self, pos):
-        for i in range(len(self.board) - 1, -1, -1):
+    def get_pos(self, pos):  # get a figure using position
+        for i in range(len(self.board)):
             if self.board[i].cell == pos:
                 return self.board[i]
 
     def remove_from_board(self, piece):
-        if piece:
-            if type(piece) == King:
-                print(f"win is {'white' if piece.color == 'b' else 'black'}")
-                self.generate_board()
-            else:
-                self.board.remove(piece)
+        # if the king died, then we recreate the game
+        if type(piece) == King:
+            print(f"win is {'red' if piece.color == 0 else 'green'}")
+            self.generate_board()
+        elif piece in self.board:
+            self.board.remove(piece)
 
     def go_to_next_step(self):
         self.step += 1
+        # flip the board
+        for figure in self.board:
+            figure.set_cell((figure.cell[0], 7 - figure.cell[1]))
 
-    def generate_surface(self):
-        self.surface = pygame.image.load('Source/Image/board.png')
-
-    def add_figure(self, type, pos, color):
+    def add_figure(self, type, pos, color):  # add a figure to the board
         if type == 'p':
             self.board.append(Pawn(self.game, pos, self.pieces_texture.subsurface((0, 0 if color else 150, 50, 150)), color))
         elif type == 'r':
@@ -95,7 +98,9 @@ class Board:
             self.board.append(Horse(self.game, pos, self.pieces_texture.subsurface((250, 0 if color else 150, 50, 150)), color))
 
     def generate_board(self):
+        # clear board
         self.board = []
+        # add figures to the field
         for i in range(8):
             self.add_figure('p', (i, 6), 0)
             if i % 7 == 0:

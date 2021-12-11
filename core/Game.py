@@ -3,7 +3,7 @@ import pygame
 
 
 class Game:
-    def __init__(self, size, title, fps=30, icon=None, flags={}):
+    def __init__(self, size, title, fps=30, icon=None, **flags):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
@@ -12,7 +12,7 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
         self.max_fps = fps
-        self.board = Board(self, (0, 100), (50, 50), (220, 220, 220), (50, 50, 50))
+        self.board = Board(self, (100, 100), (50, 50))
         self.board.generate_board()
 
     def update(self):
@@ -23,6 +23,7 @@ class Game:
                 self.board.update(event)
 
     def draw(self):
+        self.screen.fill((20, 20, 50))
         self.board.draw()
 
     def run(self):

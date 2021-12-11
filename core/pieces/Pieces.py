@@ -11,16 +11,17 @@ class Pieces:
         return pos != self.pos
 
     def draw(self):
-        self.game.screen.blit(self.surface, (self.pos[0],
-                                             self.pos[1] - 100))
+        if self.game.board.step % 2 == 0:
+            self.game.screen.blit(self.surface, (self.pos[0],
+                                                 self.pos[1] - 100))
+        else:
+            self.game.screen.blit(self.surface, (self.pos[0],
+                                                 self.pos[1] - 100))
 
-    def check_clear_cell(self, cell):
-        piece = self.game.board.get_pos(cell)
-        if piece:
-            return False
-        return True
+    def check_clear_cell(self, cell):  # cell is clear
+        return not self.game.board.get_pos(cell)
 
-    def check_not_friendly_cell(self, cell):
+    def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
         piece = self.game.board.get_pos(cell)
         if piece:
             if piece.color != self.color:
@@ -30,22 +31,22 @@ class Pieces:
                 return False
         return True
 
-    def can_eat(self, cell):
+    def can_eat(self, cell):  # enemy on cell
         piece = self.game.board.get_pos(cell)
-        if piece:
-            if piece.color != self.color:
-                self.game.board.remove_from_board(piece)
-                return True
+        if piece and piece.color != self.color:
+            self.game.board.remove_from_board(piece)
+            return True
         return False
 
     def update(self, cell):
-        print(cell)
-        if self.check_move(cell):
+        if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.check_move(cell):
+            # move
             self.set_cell(cell)
             self.on_move()
             self.game.board.go_to_next_step()
             self.game.board.focused = None
         else:
+            # move the figure to its original position
             self.set_cell(self.cell)
 
     def set_cell(self, cell):
