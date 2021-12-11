@@ -81,7 +81,7 @@ class Board:
         self.step += 1
         # flip the board
         for figure in self.board:
-            figure.set_cell((figure.cell[0], 7 - figure.cell[1]))
+            figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
 
     def add_figure(self, type, pos, color):  # add a figure to the board
         if type == 'p':
