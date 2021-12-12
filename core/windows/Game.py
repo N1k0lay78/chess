@@ -1,7 +1,6 @@
+from core.FogOfWar import FogOfWar
 from core.Board import Board
 import pygame
-
-from core.FogOfWar import FogOfWar
 
 
 class Game:

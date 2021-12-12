@@ -91,9 +91,9 @@ class Board:
         elif type == 'r':
             self.board.append(Rook(self.game, pos, self.pieces_tile_set[1, not color], color))
         elif type == 'q':
-            self.board.append(Queen(self.game, pos, self.pieces_tile_set[2, not color], color))
+            self.board.append(Queen(self.game, pos, self.pieces_tile_set[3, not color], color))
         elif type == 'k':
-            self.board.append(King(self.game, pos, self.pieces_tile_set[3, not color], color))
+            self.board.append(King(self.game, pos, self.pieces_tile_set[2, not color], color))
         elif type == 'e':
             self.board.append(Elephant(self.game, pos, self.pieces_tile_set[4, not color], color))
         elif type == 'h':
