@@ -8,6 +8,8 @@ class Window:
         self.active = None
         self.clock = pygame.time.Clock()
         self.max_fps = max_fps
+        self.last_time = pygame.time.get_ticks()
+        self.delta = 0
 
     def events(self):
         for event in pygame.event.get():
@@ -40,6 +42,8 @@ class Window:
 
     def run(self):
         while self.running:
+            self.delta = (pygame.time.get_ticks() - self.last_time) / 1000.0
+            self.last_time = pygame.time.get_ticks()
             self.events()
             self.update()
             self.draw()
