@@ -63,7 +63,9 @@ class Client:
                         print(data)
                         if data[:2] == "nm":
                             print("load new map")
-                            self.game.board.load_board(data[3:])
+                            self.game.board.step = int(data.split(":")[1])
+                            self.game.step = int(data.split(":")[1])
+                            self.game.board.load_board(data.split(":")[2])
                             self.game.board.go_to_next_step()
                 except:
                     print("Lost connection")

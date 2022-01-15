@@ -102,7 +102,7 @@ class Socket(Thread):
                         if self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))):
                             for address2, conn2, nickname2, color2 in users:
                                 print(self.board.can_view(color2))
-                                self.send_to_user(conn2, f"nm {self.board.can_view(color2)}")
+                                self.send_to_user(conn2, f"nm:{self.board.step}:{self.board.can_view(color2)}")
                         else:
                             self.send_to_user(conn, "Ты долбаёб?")
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))

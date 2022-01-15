@@ -82,7 +82,7 @@ class Board:
             self.board.remove(piece)
 
     def go_to_next_step(self):
-        self.step += 1
+        # self.step += 1
         # flip the board
         self.game.fog.update()
 
