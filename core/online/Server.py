@@ -57,7 +57,7 @@ class Socket(Thread):
             try:
                 if not f:
                     print(self.board.can_view(color), color)
-                    conn.send(self.to_bytes(f"su {color} {self.board.can_view(color)}"))
+                    conn.send(self.to_bytes(f"su {color} {self.board.step} {self.board.can_view(color)}"))
                     f = True
                 else:
                     conn.send(self.to_bytes("Check connection"))

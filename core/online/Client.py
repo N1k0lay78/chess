@@ -34,9 +34,10 @@ class Client:
                 print(data)
                 if data[:2] == "su":
                     print("Connected")
-                    self.game.board.color = int(data[3])
-                    self.game.color = int(data[3])
-                    self.game.board.load_board(data[5:])
+                    self.game.board.color = int(data.split()[1])
+                    self.game.color = int(data.split()[1])
+                    self.game.board.step = int(data.split()[2])
+                    self.game.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     self.socket = sock
             else:
                 try:
@@ -45,7 +46,7 @@ class Client:
                 except:
                     # print("a net, gay")
                     self.socket = None
-                time.sleep(5)
+                time.sleep(1)
 
     def to_bytes(self, message):
         return bytes(message, encoding="utf-8")
