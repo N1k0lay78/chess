@@ -28,6 +28,8 @@ class Socket(Thread):
                 conn.send(self.to_bytes(message))
             except:
                 print("Error with send message", message)
+                return False
+        return True
 
     def user_master(self):
         print("Success create user master")
@@ -43,8 +45,9 @@ class Socket(Thread):
             users = [[nickname, conn, address] for nickname, conn, address in self.queue]
             for nickname, conn, address in users:
                 if len(self.users) < self.max_users and (((nickname, 0) in self.players or (nickname, 1) in self.players) or len(self.players) < self.max_users) and nickname not in self.active_players:
-
+                    print(self.players, nickname)
                     if (nickname, 0) in self.players or (nickname, 1) in self.players:
+                        print("cyka")
                         color = list(filter(lambda x: x[0] == nickname, self.players))[0][1]
                     else:
                         color = len(self.active_players)
@@ -61,14 +64,13 @@ class Socket(Thread):
         f = False
         print("!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
-            try:
-                if not f:
-                    print(self.board.can_view(color), color, self.board.step)
-                    self.send_to_user(conn, f"su {color} {self.board.step} {self.board.can_view(color)}")
-                    f = True
-                else:
-                    self.send_to_user(conn, "Check connection")
-            except:
+            if not f:
+                print(self.board.can_view(color), color, self.board.step)
+                res = self.send_to_user(conn, f"su {color} {self.board.step} {self.board.can_view(color)}")
+                f = True
+            else:
+                res = self.send_to_user(conn, "Check connection")
+            if not res:
                 if address in self.users:
                     self.active_players.remove(nickname)
                     del self.users[address]
@@ -92,7 +94,7 @@ class Socket(Thread):
                 except:
                     print(f"Bad connection with {nickname} {address}")
                     time.sleep(0.3)
-                if data and data != "Check connection":
+                if data and data.count("Check connection") == 0:
                     if data[:2] == "mo":
                         print("Ход", data)
                         data = data[3:].split(":")
