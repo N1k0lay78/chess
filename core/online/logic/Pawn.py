@@ -2,12 +2,12 @@ from core.online.logic.Pieces import LogicPieces
 from core.pieces.Pieces import Pieces
 
 
-class Pawn(LogicPieces):
+class LogicPawn(LogicPieces):
     def __init__(self, cell, color):
         super().__init__(cell, color)
         self.first_move = True
 
-    def check_move(self, pos):
+    def can_move(self, pos):
         if pos[0] == self.cell[0]:
             # check that the point is 1 cell forward
             if pos[1] == self.cell[1] - 1 and self.check_clear_cell(pos):

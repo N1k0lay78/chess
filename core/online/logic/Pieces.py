@@ -48,4 +48,5 @@ class LogicPieces:
         pass
 
     def __repr__(self):
-        return f"{self.color} {self.cell}"
+        t = str(type(self)).split("'")[1].split('.')[-1]
+        return f"{t}({self.cell}, {self.color})"
