@@ -63,6 +63,11 @@ class Client:
                             self.game.step = int(data.split(":")[1])
                             self.game.board.load_board(data.split(":")[2])
                             self.game.board.go_to_next_step()
+                        elif data[:2] == "ch":
+                            print("We have success")
+                            answer = input()
+                            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                            self.sending_to_the_server(f"mc {answer}")
                 except:
                     print("Lost connection")
                     self.socket = None

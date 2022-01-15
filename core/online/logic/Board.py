@@ -8,7 +8,8 @@ from core.online.logic.Queen import LogicQueen
 
 
 class LogicBoard:
-    def __init__(self, line):
+    def __init__(self, server, line):
+        self.server = server
         self.pieces = []
         self.load_board(line)
         self.step = 0
