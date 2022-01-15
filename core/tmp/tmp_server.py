@@ -1,15 +1,12 @@
 import socket
 import time
-from Source.boards import boards
 from threading import Thread
-from core.online.logic.Board import LogicBoard
+from core.Board import Board
 
 
 class Socket(Thread):
     def __init__(self, port, ip_address, max_users, check_time):
         super().__init__()
-        self.line = boards['classic']
-        self.board = LogicBoard(self.line)
         self.port = port
         self.ip_address = ip_address
         self.max_users = max_users
@@ -35,32 +32,26 @@ class Socket(Thread):
         while True:
             users = [[nickname, conn, address] for nickname, conn, address in self.queue]
             for nickname, conn, address in users:
-                if len(self.users) < self.max_users and (((nickname, 0) in self.players or (nickname, 1) in self.players) or len(self.players) < self.max_users) and nickname not in self.active_players:
-
-                    if (nickname, 0) in self.players or (nickname, 1) in self.players:
-                        color = list(filter(lambda x: x[0] == nickname, self.players))[0][1]
-                    else:
-                        color = len(self.active_players)
-                    self.players.append((nickname, color))
+                if len(self.users) < self.max_users and (nickname in self.players or len(self.players) < self.max_users) and nickname not in self.active_players:
                     self.active_players.append(nickname)
+                    self.players.append(nickname)
                     self.users[address] = [conn, nickname]
                     print(f"{nickname} joined the game")
                     print(f"Users {len(self.users)}/{self.max_users}")
                     self.queue.remove([nickname, conn, address])
-                    Thread(target=self.check_user_connect, args=(nickname, address, conn, color)).start()
+                    Thread(target=self.listening_user, args=(nickname, address, conn)).start()
+                    Thread(target=self.check_user_connect, args=(nickname, address, conn)).start()
             time.sleep(1)
 
-    def check_user_connect(self, nickname, address, conn, color):
+    def check_user_connect(self, nickname, address, conn):
         f = False
-        print("!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
             try:
                 if not f:
-                    print(self.board.can_view(color), color)
-                    conn.send(self.to_bytes(f"su {self.board.can_view(color)}"))
+                    conn.send(b"Success connection")
                     f = True
                 else:
-                    conn.send(self.to_bytes("Check connection"))
+                    conn.send(b"Check connection")
             except:
                 if address in self.users:
                     self.active_players.remove(nickname)
@@ -71,6 +62,30 @@ class Socket(Thread):
                 break
             time.sleep(self.check_time)
 
+    def write_to_user(self, address, message):
+        if address in self.users:
+            try:
+                self.users[address][0].send(bytes(message, encoding="utf-8"))
+            except:
+                pass
+
+    def listening_user(self, nickname, address, conn):
+        while True:
+            if address in self.users:
+                try:
+                    data = str(conn.recv(1024))[2:-1]
+                    if data != "Check connection" and len(data) > 1:
+                        if data.startswith("Mo"):
+                            last_coord, new_coord, color, figure = data[2:].split(":")
+                            last_coord, new_coord, color = list(map(int, last_coord.split(','))), list(map(int, new_coord.split(','))), int(color)
+                            print(last_coord, new_coord, color, figure)
+                            self.write_to_user(address, "something")
+                except:
+                    print(f"Bad connection with {nickname} {address}")
+                    time.sleep(1)
+            else:
+                break
+
     def run(self):
         Thread(target=self.user_master).start()
         while True:
@@ -78,22 +93,16 @@ class Socket(Thread):
                 users = [[address, data[0], data[1]] for address, data in self.users.items()]
             except:
                 continue
-            for address, conn, nickname in users:
-                data = None
-                try:
-                    data = str(conn.recv(1024))[2:-1]
-                except:
-                    print(f"Bad connection with {nickname} {address}")
-                    time.sleep(1)
-                if data:
-                    print(f"Message from {nickname} - {data}")
-                    # Какие то данные какие то сравнения
-
-    def to_bytes(self, message):
-        return bytes(message, encoding="utf-8")
-
-    def to_text(self, message):
-        return str(message)[2:-1]
+            # for address, conn, nickname in users:
+            #     data = None
+            #     try:
+            #         data = str(conn.recv(1024))[2:-1]
+            #     except:
+            #         print(f"Bad connection with {nickname} {address}")
+            #         time.sleep(1)
+            #     if data:
+            #         print(f"Message from {nickname} - {data}")
+            #         # Какие то данные какие то сравнения
 
 
 class Server:

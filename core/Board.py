@@ -10,8 +10,9 @@ from core.textures.Tileset import TileSet
 
 
 class Board:
-    def __init__(self, game, pos, size):
+    def __init__(self, game, pos, size, color):
         # logic
+        self.color = color
         self.game = game
         self.position = pos
         self.size = size
@@ -49,7 +50,7 @@ class Board:
             self.last_mouse_pos = event.pos
             figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
             # is there a piece and check that its move
-            if figure != None and figure.color == self.step % 2:
+            if figure != None and figure.color == self.color == self.step % 2:
                 self.focused = figure
                 self.dragging = True
             elif figure is None:
@@ -81,8 +82,8 @@ class Board:
     def go_to_next_step(self):
         self.step += 1
         # flip the board
-        for figure in self.board:
-            figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
+        # for figure in self.board:
+        #     figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
         self.game.fog.update()
 
     def add_figure(self, piece):  # add a figure to the board

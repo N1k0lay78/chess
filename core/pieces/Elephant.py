@@ -16,3 +16,6 @@ class Elephant(Pieces):
             # we check that there is either nothing with the destination or the enemy
             return all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0]))]) and self.check_not_friendly_cell(pos)
         return False
+
+    def __repr__(self):
+        return "E"

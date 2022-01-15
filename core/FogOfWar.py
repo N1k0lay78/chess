@@ -8,7 +8,8 @@ import pygame
 
 
 class FogOfWar:
-    def __init__(self, game, pos, padding_count, size, filename):
+    def __init__(self, game, pos, padding_count, size, filename, color):
+        self.color = color
         self.game = game
         self.pos = pos
         self.padding = padding_count
@@ -23,7 +24,7 @@ class FogOfWar:
     def update(self):
         self.map = [[1] * (8 + self.padding * 2) for _ in range(8 + self.padding * 2)]
         for figure in self.game.board.board:
-            if figure.color == self.game.board.step % 2:
+            if figure.color == self.color:
                 if type(figure) == Pawn:
                     self.map[figure.cell[1] + self.padding - 1][figure.cell[0] + self.padding] = 0
                     self.map[figure.cell[1] + self.padding][figure.cell[0] + self.padding] = 0

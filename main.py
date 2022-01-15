@@ -9,8 +9,8 @@ screen = pygame.display.set_mode((700, 600))
 # test = Test(screen)
 # test.run()
 
-loading = LoadingGame(screen)
-loading.run()
-
-game = Game((600, 600), "Шахматы", icon=pygame.image.load('Source/Image/icon.png'))
+# loading = LoadingGame(screen)
+# loading.run()
+color = 0
+game = Game((600, 600), "Шахматы", color, icon=pygame.image.load('Source/Image/icon.png'))
 game.run()

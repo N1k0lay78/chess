@@ -1,3 +1,6 @@
+from threading import Thread
+
+
 class Pieces:
     def __init__(self, game, name, cell, surface, color):
         self.game = game
@@ -42,6 +45,7 @@ class Pieces:
     def update(self, cell):
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.check_move(cell):
             # move
+            self.game.client.sending_to_the_server(f"Mo{self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{self.color}:{self}")
             self.set_cell(cell)
             self.on_move()
             self.game.board.go_to_next_step()
