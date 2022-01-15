@@ -37,7 +37,7 @@ class Game:
     def draw(self):
         self.screen.fill((20, 20, 50))
         self.board.draw()
-        # self.fog.draw()
+        self.fog.draw()
 
     def run(self):
         while self.running:

@@ -42,7 +42,11 @@ class LogicBoard:
                 return piece
 
     def remove_piece(self, piece):
-        self.pieces.remove(piece)
+        if type(piece) == LogicKing:
+            print('won', ("white" if piece.color == 1 else "black"))
+            self.load_board(boards["classic"])
+        else:
+            self.pieces.remove(piece)
 
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))

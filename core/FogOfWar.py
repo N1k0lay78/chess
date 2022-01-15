@@ -24,7 +24,7 @@ class FogOfWar:
     def update(self):
         self.map = [[1] * (8 + self.padding * 2) for _ in range(8 + self.padding * 2)]
         for figure in self.game.board.board:
-            if figure.color == self.color:
+            if figure.color == self.game.color:
                 if type(figure) == Pawn:
                     self.map[figure.cell[1] + self.padding - 1][figure.cell[0] + self.padding] = 0
                     self.map[figure.cell[1] + self.padding][figure.cell[0] + self.padding] = 0

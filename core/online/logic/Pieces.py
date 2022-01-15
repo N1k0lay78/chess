@@ -27,7 +27,7 @@ class LogicPieces:
     def check_eat(self, cell):  # enemy on cell
         piece = self.board.get_piece(cell)
         if piece and piece.color != self.color:
-            self.board.remove_from_board(piece)
+            self.board.remove_piece(piece)
             return True
         return False
 

@@ -107,7 +107,8 @@ class Socket(Thread):
                         pass
                         # print(f"Message from {nickname} - {data}")
                     # Какие то данные какие то сравнения
-            except:
+            except Exception as e:
+                print(e)
                 print(f"Bad connection with {nickname} {address}")
                 time.sleep(1)
 

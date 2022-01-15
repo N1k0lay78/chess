@@ -26,9 +26,12 @@ class Pawn(Pieces):
         if self.cell[1] == 0:
             print('choose a figure (q - Queen/h - Horse/r - Rook/e - Elephant)')
             choose = input('Choice: ').lower()
-            while choose not in ['q', 'h', 'r', 'e']:
+            while choose.lower() not in ['q', 'h', 'r', 'e']:
                 choose = input('Choice: ').lower()
             self.game.board.remove_from_board(self)
             # if a new game has started, then you do not need to add a piece
             if self.check_clear_cell(self.cell):
-                self.game.board.add_figure(choose, self.cell, self.color)
+                if self.color == 0:
+                    self.game.board.add_figure(f"{choose.upper()}{chr(104-self.cell[0])}{8-self.cell[1]}{'b' if self.color else 'w'}")
+                else:
+                    self.game.board.add_figure(f"{choose.upper()}{chr(97+self.cell[0])}{self.cell[1]+1}{'b' if self.color else 'w'}")
