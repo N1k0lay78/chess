@@ -3,7 +3,6 @@ from threading import Thread
 import time
 import pygame
 
-
 # Получаем свой локальный ip адрес
 self_ip = socket.gethostbyname(socket.gethostname())
 
@@ -35,6 +34,9 @@ class Client:
                 print(data)
                 if data[:2] == "su":
                     print("Connected")
+                    self.game.board.color = int(data[3])
+                    self.game.color = int(data[3])
+                    self.game.board.load_board(data[5:])
                     self.socket = sock
             else:
                 try:
@@ -87,6 +89,5 @@ class Client:
 
 
 if __name__ == '__main__':
-    # game = Game((600, 600), "Шахматы", 0, icon=pygame.image.load('Source/Image/icon.png'))
     client = Client(None, "Nickolausus", self_ip, 9090)
     client.run()
