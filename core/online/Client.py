@@ -37,7 +37,7 @@ class Client:
                     self.game.board.color = int(data.split()[1])
                     self.game.color = int(data.split()[1])
                     self.game.board.step = int(data.split()[2])
-                    self.game.board.load_board(data[7:])
+                    self.game.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     self.socket = sock
             else:
                 try:
