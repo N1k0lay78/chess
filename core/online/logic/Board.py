@@ -14,8 +14,11 @@ class LogicBoard:
         self.step = 0
 
     def move(self, from_cell, to_cell):
+        print(from_cell, to_cell, type(from_cell[0]))
         piece = self.get_piece(from_cell)
+        print(piece)
         if piece and piece.update(to_cell):
+            self.step += 1
             return True
         else:
             return False

@@ -22,6 +22,13 @@ class Socket(Thread):
         self.players = []
         self.active_players = []
 
+    def send_to_user(self, conn, message):
+        if conn and message:
+            try:
+                conn.send(self.to_bytes(message))
+            except:
+                print("Error with send message", message)
+
     def user_master(self):
         print("Success create user master")
         Thread(target=self.user_queue).start()
@@ -43,7 +50,7 @@ class Socket(Thread):
                         color = len(self.active_players)
                     self.players.append((nickname, color))
                     self.active_players.append(nickname)
-                    self.users[address] = [conn, nickname]
+                    self.users[address] = [conn, nickname, color]
                     print(f"{nickname} joined the game")
                     print(f"Users {len(self.users)}/{self.max_users}")
                     self.queue.remove([nickname, conn, address])
@@ -56,11 +63,11 @@ class Socket(Thread):
         while True:
             try:
                 if not f:
-                    print(self.board.can_view(color), color)
-                    conn.send(self.to_bytes(f"su {color} {self.board.step} {self.board.can_view(color)}"))
+                    print(self.board.can_view(color), color, self.board.step)
+                    self.send_to_user(conn, f"su {color} {self.board.step} {self.board.can_view(color)}")
                     f = True
                 else:
-                    conn.send(self.to_bytes("Check connection"))
+                    self.send_to_user(conn, "Check connection")
             except:
                 if address in self.users:
                     self.active_players.remove(nickname)
@@ -75,18 +82,30 @@ class Socket(Thread):
         Thread(target=self.user_master).start()
         while True:
             try:
-                users = [[address, data[0], data[1]] for address, data in self.users.items()]
+                users = [[address, data[0], data[1], data[2]] for address, data in self.users.items()]
             except:
                 continue
-            for address, conn, nickname in users:
+            for address, conn, nickname, color in users:
                 data = None
                 try:
                     data = str(conn.recv(1024))[2:-1]
                 except:
                     print(f"Bad connection with {nickname} {address}")
-                    time.sleep(1)
-                if data:
-                    print(f"Message from {nickname} - {data}")
+                    time.sleep(0.3)
+                if data and data != "Check connection":
+                    if data[:2] == "mo":
+                        print("Ход", data)
+                        data = data[3:].split(":")
+                        print(data)
+                        if self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))):
+                            for address2, conn2, nickname2, color2 in users:
+                                print(self.board.can_view(color2))
+                                self.send_to_user(conn2, f"nm {self.board.can_view(color2)}")
+                        else:
+                            self.send_to_user(conn, "Ты долбаёб?")
+                        # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                    else:
+                        print(f"Message from {nickname} - {data}")
                     # Какие то данные какие то сравнения
 
     def to_bytes(self, message):

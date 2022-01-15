@@ -61,7 +61,10 @@ class Client:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
                         print(data)
-                        self.game.board.go_to_next_step()
+                        if data[:2] == "nm":
+                            print("load new map")
+                            self.game.board.load_board(data[3:])
+                            self.game.board.go_to_next_step()
                 except:
                     print("Lost connection")
                     self.socket = None

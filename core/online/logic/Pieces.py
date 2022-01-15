@@ -32,6 +32,7 @@ class LogicPieces:
         return False
 
     def update(self, cell):
+        print(cell, self.cell)
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
             self.set_cell(cell)
             self.on_move()

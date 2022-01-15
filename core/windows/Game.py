@@ -8,7 +8,7 @@ import pygame
 
 
 class Game:
-    def __init__(self, size, title, color, fps=30, icon=None, **flags):
+    def __init__(self, nickanme, size, title, color, fps=30, icon=None, **flags):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
@@ -18,7 +18,7 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
         self.max_fps = fps
-        self.client = Client(self, "Nikolausus", socket.gethostbyname(socket.gethostname()), 9090)
+        self.client = Client(self, nickanme, socket.gethostbyname(socket.gethostname()), 9090)
         self.client_thread = Thread(target=self.client.run)
         self.client_thread.start()
         self.board = Board(self, (100, 100), (50, 50), 0)
