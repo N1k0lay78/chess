@@ -38,7 +38,7 @@ class LogicBoard:
 
     def get_piece(self, cell):
         for piece in self.pieces:
-            if piece.cell == cell:
+            if piece.cell[0] == cell[0] and piece.cell[1] == cell[1]:
                 return piece
 
     def remove_piece(self, piece):
