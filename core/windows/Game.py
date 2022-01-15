@@ -1,3 +1,4 @@
+from Source.boards import boards
 from core.online.Client import Client
 from core.FogOfWar import FogOfWar
 from core.Board import Board
@@ -17,12 +18,12 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
         self.max_fps = fps
-        self.board = Board(self, (100, 100), (50, 50), color)
-        self.board.generate_board()
-        self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog', color)
         self.client = Client(self, "Nikolausus", socket.gethostbyname(socket.gethostname()), 9090)
         self.client_thread = Thread(target=self.client.run)
         self.client_thread.start()
+        self.board = Board(self, (100, 100), (50, 50), 2)
+        self.board.load_board(boards["classic"])
+        self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog', color)
 
     def update(self):
         for event in pygame.event.get():
