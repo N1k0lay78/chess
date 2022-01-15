@@ -89,11 +89,13 @@ class LogicBoard:
                 if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
                     self.pieces.append(LogicPawn([104-ord(piece[0]), 8 - int(piece[1])], (0 if piece[2] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
+                else:
+                    print(f"File have ERROR {piece}")
             else:
                 print(f"File have ERROR {piece}")
 
 
 if __name__ == '__main__':
-    board = LogicBoard()
+    board = LogicBoard("")
     board.load_board(boards["classic"])
     print(board.can_view(1))
