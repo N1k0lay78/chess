@@ -3,7 +3,7 @@ from core.pieces.Pieces import Pieces
 
 class Horse(Pieces):
     def __init__(self, game, cell, surface, color):
-        super().__init__(game, cell, surface, color)
+        super().__init__(game, "N", cell, surface, color)
 
     def check_move(self, pos):
         # clockwise from 12 o'clock

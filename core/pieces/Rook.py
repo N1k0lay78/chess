@@ -3,7 +3,7 @@ from core.pieces.Pieces import Pieces
 
 class Rook(Pieces):
     def __init__(self, game, cell, surface, color):
-        super().__init__(game, cell, surface, color)
+        super().__init__(game, "R", cell, surface, color)
         self.is_moved = False
 
     def check_move(self, pos):

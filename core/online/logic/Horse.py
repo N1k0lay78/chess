@@ -3,7 +3,7 @@ from core.online.logic.Pieces import LogicPieces
 
 class LogicHorse(LogicPieces):
     def __init__(self, cell, color):
-        super().__init__(cell, color)
+        super().__init__("N", cell, color)
 
     def can_view(self, cell):
         return self.cell[0] - 2 <= cell[0] <= self.cell[0] + 2 and self.cell[1] - 1 <= cell[1] <= self.cell[1] + 1

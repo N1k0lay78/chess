@@ -3,7 +3,7 @@ from core.online.logic.Pieces import LogicPieces
 
 class LogicElephant(LogicPieces):
     def __init__(self, cell, color):
-        super().__init__(cell, color)
+        super().__init__("B", cell, color)
 
     def can_move(self, pos):
         move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]

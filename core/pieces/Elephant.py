@@ -3,7 +3,7 @@ from core.pieces.Pieces import Pieces
 
 class Elephant(Pieces):
     def __init__(self, game, cell, surface, color):
-        super().__init__(game, cell, surface, color)
+        super().__init__(game, "B", cell, surface, color)
 
     def check_move(self, pos):
         move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]

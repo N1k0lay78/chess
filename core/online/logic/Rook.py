@@ -3,7 +3,7 @@ from core.online.logic.Pieces import LogicPieces
 
 class LogicRook(LogicPieces):
     def __init__(self, cell, color):
-        super().__init__(cell, color)
+        super().__init__("R", cell, color)
         self.is_moved = False
 
     def can_move(self, pos):

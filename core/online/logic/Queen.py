@@ -1,9 +1,9 @@
-from core.pieces.Pieces import Pieces
+from core.online.logic.Pieces import LogicPieces
 
 
-class Queen(Pieces):
-    def __init__(self, game, cell, surface, color):
-        super().__init__(game, cell, surface, color)
+class LogicQueen(LogicPieces):
+    def __init__(self, cell, color):
+        super().__init__("Q", cell, color)
 
     def can_move(self, pos):
         move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]
