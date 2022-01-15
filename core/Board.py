@@ -46,7 +46,6 @@ class Board:
     def update(self, event):
         # focused - the figure we are moving
         # dragging - whether to move the shape when moving the mouse
-        # print("adasdas", self.focused)
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.last_mouse_pos = event.pos
             figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
@@ -85,9 +84,10 @@ class Board:
     def go_to_next_step(self):
         self.step += 1
         # flip the board
-        # for figure in self.board:
-        #     figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
         self.game.fog.update()
+
+    def set_color(self, color):
+        self.color = color
 
     def add_figure(self, piece):  # add a figure to the board
         if len(piece) == 4:
@@ -122,6 +122,9 @@ class Board:
         self.board = []
         for piece in line.split():
             self.add_figure(piece)
+        if self.color == 1:
+            for figure in self.board:
+                figure.set_cell((7 - figure.cell[0], 7 - figure.cell[1]))
 
     def generate_board(self):
         # legacy

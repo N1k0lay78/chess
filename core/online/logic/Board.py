@@ -14,9 +14,7 @@ class LogicBoard:
         self.step = 0
 
     def move(self, from_cell, to_cell):
-        print(from_cell, to_cell, type(from_cell[0]))
         piece = self.get_piece(from_cell)
-        print(piece)
         if piece and piece.update(to_cell):
             self.step += 1
             return True
@@ -43,19 +41,6 @@ class LogicBoard:
 
     def remove_piece(self, piece):
         self.pieces.remove(piece)
-
-    def add_figure(self, choose, cell, color):
-        if choose == 'r':
-            self.pieces.append(LogicRook(cell, color))
-        elif choose == 'q':
-            self.pieces.append(LogicQueen(cell, color))
-        elif choose == 'k':
-            self.pieces.append(LogicKing(cell, color))
-        elif choose == 'e':
-            self.pieces.append(LogicElephant(cell, color))
-        elif choose == 'h':
-            self.pieces.append(LogicHorse(cell, color))
-        self.pieces[-1].set_board(self)
 
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))

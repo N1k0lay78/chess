@@ -32,6 +32,3 @@ class Pawn(Pieces):
             # if a new game has started, then you do not need to add a piece
             if self.check_clear_cell(self.cell):
                 self.game.board.add_figure(choose, self.cell, self.color)
-
-    def __repr__(self):
-        return "P"

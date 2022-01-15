@@ -20,6 +20,3 @@ class King(Pieces):
 
     def on_move(self):
         self.can_castled = False
-
-    def __repr__(self):
-        return "K"

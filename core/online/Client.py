@@ -34,7 +34,7 @@ class Client:
                 print(data)
                 if data[:2] == "su":
                     print("Connected")
-                    self.game.board.color = int(data.split()[1])
+                    self.game.board.set_color(int(data.split()[1]))
                     self.game.color = int(data.split()[1])
                     self.game.board.step = int(data.split()[2])
                     self.game.board.load_board(data[7 + len(data.split()[2]) - 1:])

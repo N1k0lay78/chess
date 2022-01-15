@@ -71,4 +71,7 @@ class Pieces:
         pass
 
     def __repr__(self):
-        return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}"
+        if self.game.color:
+            return f"{self.name}{chr(97+self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}"
+        else:
+            return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}"
