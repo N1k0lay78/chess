@@ -32,7 +32,7 @@ class LogicBoard:
                     if player_piece.can_view(piece.cell):
                         visible.append(piece)
                         break
-        return visible
+        return self.get_board_line(visible)
 
     def get_piece(self, cell):
         for piece in self.pieces:
@@ -58,9 +58,9 @@ class LogicBoard:
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))
 
-    def get_board_line(self):
+    def get_board_line(self, pieces):
         res = ''
-        for piece in self.pieces:
+        for piece in pieces:
             res += str(piece) + ' '
         return res[:-1]
 
@@ -97,4 +97,4 @@ class LogicBoard:
 if __name__ == '__main__':
     board = LogicBoard()
     board.load_board(boards["classic"])
-    print(board.get_board_line())
+    print(board.can_view(1))
