@@ -2,10 +2,11 @@ from threading import Thread
 
 
 class Pieces:
-    def __init__(self, game, cell, surface, color):
+    def __init__(self, game, name, cell, surface, color):
         self.game = game
         self.pos = [0, 0]
         self.cell = [0, 0]
+        self.name = name
         self.set_cell(cell)
         self.surface = surface
         self.color = color  # 0 - downside (green), 1 - upside (red)
@@ -69,4 +70,4 @@ class Pieces:
         pass
 
     def __repr__(self):
-        return f"{self.color}"
+        return f"{self.name}{chr(104-self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}"

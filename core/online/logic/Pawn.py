@@ -4,7 +4,7 @@ from core.pieces.Pieces import Pieces
 
 class LogicPawn(LogicPieces):
     def __init__(self, cell, color):
-        super().__init__(cell, color)
+        super().__init__("", cell, color)
         self.first_move = True
 
     def can_move(self, pos):

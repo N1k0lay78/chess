@@ -4,7 +4,7 @@ from core.online.logic.Horse import LogicHorse
 from core.online.logic.King import LogicKing
 from core.online.logic.Pawn import LogicPawn
 from core.online.logic.Rook import LogicRook
-from core.pieces.Queen import LogicQueen
+from core.online.logic.Queen import LogicQueen
 
 
 class LogicBoard:
@@ -58,6 +58,12 @@ class LogicBoard:
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))
 
+    def get_board_line(self):
+        res = ''
+        for piece in self.pieces:
+            res += str(piece) + ' '
+        return res[:-1]
+
     def load_board(self, line):
         # loading pieces from line with pieces info
         self.pieces = []
@@ -78,12 +84,17 @@ class LogicBoard:
                 elif piece[0] == "B" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
                     self.pieces.append(LogicElephant([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
+                else:
+                    print(f"File have ERROR {piece}")
             elif len(piece) == 3:
                 if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
                     self.pieces.append(LogicPawn([104-ord(piece[0]), int(piece[1]) - 1], (0 if piece[2] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
+            else:
+                print(f"File have ERROR {piece}")
 
 
 if __name__ == '__main__':
     board = LogicBoard()
     board.load_board(boards["classic"])
+    print(board.get_board_line())

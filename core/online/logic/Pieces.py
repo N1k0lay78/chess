@@ -1,6 +1,7 @@
 class LogicPieces:
-    def __init__(self, cell, color):
+    def __init__(self, name, cell, color):
         self.board = None
+        self.name = name
         self.cell = cell
         self.color = color  # 0 - downside (green), 1 - upside (red)
 
@@ -48,5 +49,4 @@ class LogicPieces:
         pass
 
     def __repr__(self):
-        t = str(type(self)).split("'")[1].split('.')[-1]
-        return f"{t}({self.cell}, {self.color})"
+        return f"{self.name}{chr(104-self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}"

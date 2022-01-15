@@ -4,7 +4,7 @@ from core.pieces.Rook import Rook
 
 class King(Pieces):
     def __init__(self, game, cell, surface, color):
-        super().__init__(game, cell, surface, color)
+        super().__init__(game, "K", cell, surface, color)
         self.can_castled = True
 
     def check_move(self, pos):

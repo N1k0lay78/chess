@@ -4,7 +4,7 @@ from core.online.logic.Rook import LogicRook
 
 class LogicKing(LogicPieces):
     def __init__(self, cell, color):
-        super().__init__(cell, color)
+        super().__init__("K", cell, color)
         self.can_castled = True
 
     def can_view(self, cell):
