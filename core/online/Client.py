@@ -31,7 +31,7 @@ class Client:
                     # print("pidor")
                     continue
                 # print(data, "ne ponimat")
-                print(data)
+                print(data, 'adsada')
                 if data[:2] == "su":
                     print("Connected")
                     self.game.board.set_color(int(data.split()[1]))

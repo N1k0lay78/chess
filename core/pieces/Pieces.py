@@ -46,7 +46,10 @@ class Pieces:
         # print(cell, self.check_move(cell))
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.check_move(cell):
             # move
-            self.game.client.sending_to_the_server(f"mo {self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{str(self).lower()}")
+            if self.game.board.color == 1:
+                self.game.client.sending_to_the_server(f"mo {7-self.cell[0]},{7-self.cell[1]}:{7-cell[0]},{7-cell[1]}:{str(self).lower()}")
+            else:
+                self.game.client.sending_to_the_server(f"mo {self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{str(self).lower()}")
             self.set_cell(cell)
             self.on_move()
             self.game.board.go_to_next_step()

@@ -50,6 +50,7 @@ class Board:
             self.last_mouse_pos = event.pos
             figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
             # is there a piece and check that its move
+            print(figure)
             if figure != None and figure.color == self.color == self.step % 2:
                 self.focused = figure
                 self.dragging = True

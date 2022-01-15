@@ -12,7 +12,7 @@ class LogicPieces:
         return self.cell[0] - 1 <= cell[0] <= self.cell[0] + 1 and self.cell[1] - 1 <= cell[1] <= self.cell[1] + 1
 
     def check_clear_cell(self, cell):  # cell is clear
-        return not self.board.get_pos(cell)
+        return not self.board.get_piece(cell)
 
     def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
         piece = self.board.get_piece(cell)
