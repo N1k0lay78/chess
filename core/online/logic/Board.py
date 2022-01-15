@@ -8,10 +8,9 @@ from core.online.logic.Queen import LogicQueen
 
 
 class LogicBoard:
-    def __init__(self):
+    def __init__(self, line):
         self.pieces = []
-        for piece in self.pieces:
-            piece.set_board(self)
+        self.load_board(line)
         self.step = 0
 
     def move(self, from_cell, to_cell):

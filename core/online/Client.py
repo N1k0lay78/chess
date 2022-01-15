@@ -1,6 +1,8 @@
 import socket
 from threading import Thread
 import time
+import pygame
+
 
 # Получаем свой локальный ip адрес
 self_ip = socket.gethostbyname(socket.gethostname())
@@ -27,14 +29,19 @@ class Client:
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
                 except:
+                    # print("pidor")
                     continue
-                if data == "Success connection":
+                # print(data, "ne ponimat")
+                print(data)
+                if data[:2] == "su":
                     print("Connected")
                     self.socket = sock
             else:
                 try:
-                    self.socket.send(b"Check connection")
+                    # print("norm")
+                    self.socket.send(self.to_bytes("Check connection"))
                 except:
+                    # print("a net, gay")
                     self.socket = None
                 time.sleep(5)
 
@@ -68,7 +75,6 @@ class Client:
             break
 
     def run(self):
-        print(123)
         self.connection_monitoring_thread = Thread(target=self.connection_monitoring)
         self.connection_monitoring_thread.start()
         self.getting_from_the_server_thread = Thread(target=self.getting_from_the_server)
@@ -79,6 +85,8 @@ class Client:
         self.connection_monitoring_thread.join(0.1)
         self.getting_from_the_server_thread.join()
 
-# if __name__ == '__main__':
-#     client = Client("Nickolausus", self_ip, 9090)
-#     client.run()
+
+if __name__ == '__main__':
+    # game = Game((600, 600), "Шахматы", 0, icon=pygame.image.load('Source/Image/icon.png'))
+    client = Client(None, "Nickolausus", self_ip, 9090)
+    client.run()

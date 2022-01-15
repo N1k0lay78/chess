@@ -1,11 +1,15 @@
 import socket
 import time
+from Source.boards import boards
 from threading import Thread
+from core.online.logic.Board import LogicBoard
 
 
 class Socket(Thread):
     def __init__(self, port, ip_address, max_users, check_time):
         super().__init__()
+        self.line = boards['classic']
+        self.board = LogicBoard(self.line)
         self.port = port
         self.ip_address = ip_address
         self.max_users = max_users
@@ -31,25 +35,32 @@ class Socket(Thread):
         while True:
             users = [[nickname, conn, address] for nickname, conn, address in self.queue]
             for nickname, conn, address in users:
-                if len(self.users) < self.max_users and (nickname in self.players or len(self.players) < self.max_users) and nickname not in self.active_players:
+                if len(self.users) < self.max_users and (((nickname, 0) in self.players or (nickname, 1) in self.players) or len(self.players) < self.max_users) and nickname not in self.active_players:
+
+                    if (nickname, 0) in self.players or (nickname, 1) in self.players:
+                        color = list(filter(lambda x: x[0] == nickname, self.players))[0][1]
+                    else:
+                        color = len(self.active_players)
+                    self.players.append((nickname, color))
                     self.active_players.append(nickname)
-                    self.players.append(nickname)
                     self.users[address] = [conn, nickname]
                     print(f"{nickname} joined the game")
                     print(f"Users {len(self.users)}/{self.max_users}")
                     self.queue.remove([nickname, conn, address])
-                    Thread(target=self.check_user_connect, args=(nickname, address, conn)).start()
+                    Thread(target=self.check_user_connect, args=(nickname, address, conn, color)).start()
             time.sleep(1)
 
-    def check_user_connect(self, nickname, address, conn):
+    def check_user_connect(self, nickname, address, conn, color):
         f = False
+        print("!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
             try:
                 if not f:
-                    conn.send(b"Success connection")
+                    print(self.board.can_view(color), color)
+                    conn.send(self.to_bytes(f"su {self.board.can_view(color)}"))
                     f = True
                 else:
-                    conn.send(b"Check connection")
+                    conn.send(self.to_bytes("Check connection"))
             except:
                 if address in self.users:
                     self.active_players.remove(nickname)
@@ -77,6 +88,12 @@ class Socket(Thread):
                 if data:
                     print(f"Message from {nickname} - {data}")
                     # Какие то данные какие то сравнения
+
+    def to_bytes(self, message):
+        return bytes(message, encoding="utf-8")
+
+    def to_text(self, message):
+        return str(message)[2:-1]
 
 
 class Server:
