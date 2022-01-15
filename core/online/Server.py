@@ -95,6 +95,7 @@ class Socket(Thread):
                     print(f"Bad connection with {nickname} {address}")
                     time.sleep(0.3)
                 if data and data.count("Check connection") == 0:
+                    print(data)
                     if data[:2] == "mo":
                         print("Ход", data)
                         data = data[3:].split(":")
