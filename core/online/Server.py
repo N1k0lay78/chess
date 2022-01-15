@@ -58,6 +58,7 @@ class Socket(Thread):
                     print(f"Users {len(self.users)}/{self.max_users}")
                     self.queue.remove([nickname, conn, address])
                     Thread(target=self.check_user_connect, args=(nickname, address, conn, color)).start()
+                    Thread(target=self.get_user_message, args=(nickname, address, conn, color)).start()
             time.sleep(1)
 
     def check_user_connect(self, nickname, address, conn, color):
@@ -80,37 +81,38 @@ class Socket(Thread):
                 break
             time.sleep(self.check_time)
 
-    def run(self):
-        Thread(target=self.user_master).start()
+    def update_all_users_condition(self):
         while True:
             try:
-                users = [[address, data[0], data[1], data[2]] for address, data in self.users.items()]
+                for address, data in self.users.items():
+                    self.send_to_user(data[0], f"nm:{self.board.step}:{self.board.can_view(data[2])}")
+                break
             except:
                 continue
-            for address, conn, nickname, color in users:
-                data = None
-                try:
-                    data = str(conn.recv(1024))[2:-1]
-                except:
-                    print(f"Bad connection with {nickname} {address}")
-                    time.sleep(0.3)
-                if data and data.count("Check connection") == 0:
+
+    def get_user_message(self, nickname, address, conn, color):
+        while True:
+            try:
+                data = str(conn.recv(1024))[2:-1]
+                if data and data != "Check connection":
                     print(data)
                     if data[:2] == "mo":
                         print("Ход", data)
                         data = data[3:].split(":")
                         print(data)
-                        if self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))):
-                            for address2, conn2, nickname2, color2 in users:
-                                print(self.board.can_view(color2))
-                                self.send_to_user(conn2, f"nm:{self.board.step}:{self.board.can_view(color2)}")
-                        else:
-                            self.send_to_user(conn, f"nm:{self.board.step}:{self.board.can_view(color)}")
-                            self.send_to_user(conn, "EASDADAS???")
+                        print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                        self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                     else:
-                        print(f"Message from {nickname} - {data}")
+                        pass
+                        # print(f"Message from {nickname} - {data}")
                     # Какие то данные какие то сравнения
+            except:
+                print(f"Bad connection with {nickname} {address}")
+                time.sleep(1)
+
+    def run(self):
+        Thread(target=self.user_master).start()
 
     def to_bytes(self, message):
         return bytes(message, encoding="utf-8")

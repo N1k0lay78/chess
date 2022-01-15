@@ -40,11 +40,7 @@ class Client:
                     self.game.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     self.socket = sock
             else:
-                try:
-                    # print("norm")
-                    self.socket.send(self.to_bytes("Check connection"))
-                except:
-                    # print("a net, gay")
+                if not self.sending_to_the_server("Check connection"):
                     self.socket = None
                 time.sleep(1)
 
@@ -72,15 +68,14 @@ class Client:
                     self.socket = None
 
     def sending_to_the_server(self, message):
-        while self.running:
-            if self.socket:
-                try:
-                    self.socket.send(self.to_bytes(message))
-                except:
-                    print("Lost connection")
-                    self.socket = None
-                    continue
-            break
+        if self.socket:
+            try:
+                self.socket.send(self.to_bytes(message))
+            except:
+                print("Lost connection")
+                self.socket = None
+                return False
+        return True
 
     def run(self):
         self.connection_monitoring_thread = Thread(target=self.connection_monitoring)
