@@ -69,25 +69,25 @@ class LogicBoard:
         for piece in line.split():
             if len(piece) == 4:
                 if piece[0] == "K" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicKing([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces.append(LogicKing([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
                 elif piece[0] == "Q" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicQueen([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces.append(LogicQueen([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
                 elif piece[0] == "R" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicRook([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces.append(LogicRook([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
                 elif piece[0] == "N" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicHorse([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces.append(LogicHorse([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
                 elif piece[0] == "B" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicElephant([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces.append(LogicElephant([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
                 else:
                     print(f"File have ERROR {piece}")
             elif len(piece) == 3:
                 if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
-                    self.pieces.append(LogicPawn([104-ord(piece[0]), int(piece[1]) - 1], (0 if piece[2] == 'w' else 1)))
+                    self.pieces.append(LogicPawn([104-ord(piece[0]), 8 - int(piece[1])], (0 if piece[2] == 'w' else 1)))
                     self.pieces[-1].set_board(self)
             else:
                 print(f"File have ERROR {piece}")

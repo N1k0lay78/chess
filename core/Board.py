@@ -89,25 +89,25 @@ class Board:
     def add_figure(self, piece):  # add a figure to the board
         if len(piece) == 4:
             if piece[0] == "K" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                self.board.append(King(self.game, [104-ord(piece[1]), int(piece[2]) - 1], self.pieces_tile_set[2, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
+                self.board.append(King(self.game, [104-ord(piece[1]), 8 - int(piece[2])], self.pieces_tile_set[2, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             elif piece[0] == "Q" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                self.board.append(Queen(self.game, [104-ord(piece[1]), int(piece[2]) - 1], self.pieces_tile_set[3, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
+                self.board.append(Queen(self.game, [104-ord(piece[1]), 8 - int(piece[2])], self.pieces_tile_set[3, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             elif piece[0] == "R" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                self.board.append(Rook(self.game, [104-ord(piece[1]), int(piece[2]) - 1], self.pieces_tile_set[1, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
+                self.board.append(Rook(self.game, [104-ord(piece[1]), 8 - int(piece[2])], self.pieces_tile_set[1, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             elif piece[0] == "N" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                self.board.append(Horse(self.game, [104-ord(piece[1]), int(piece[2]) - 1], self.pieces_tile_set[5, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
+                self.board.append(Horse(self.game, [104-ord(piece[1]), 8 - int(piece[2])], self.pieces_tile_set[5, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             elif piece[0] == "B" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                self.board.append(Elephant(self.game, [104-ord(piece[1]), int(piece[2]) - 1], self.pieces_tile_set[4, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
+                self.board.append(Elephant(self.game, [104-ord(piece[1]), 8 - int(piece[2])], self.pieces_tile_set[4, piece[3] == 'b'], (0 if piece[3] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             else:
                 print(f"LoadingBoardError have ERROR {piece}")
         elif len(piece) == 3:
             if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
-                self.board.append(Pawn(self.game, [104-ord(piece[0]), int(piece[1]) - 1], self.pieces_tile_set[0, piece[2] == 'b'], (0 if piece[2] == 'w' else 1)))
+                self.board.append(Pawn(self.game, [104-ord(piece[0]), 8 - int(piece[1])], self.pieces_tile_set[0, piece[2] == 'b'], (0 if piece[2] == 'w' else 1)))
                 # self.board[-1].set_board(self)
             else:
                 print(f"LoadingBoardError have ERROR {piece}")
