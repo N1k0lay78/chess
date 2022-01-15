@@ -1,3 +1,4 @@
+from Source.boards import boards
 from core.FogOfWar import FogOfWar
 from core.Board import Board
 import pygame
@@ -14,7 +15,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.max_fps = fps
         self.board = Board(self, (100, 100), (50, 50))
-        self.board.generate_board()
+        self.board.load_board(boards["classic"])
         self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog')
 
     def update(self):
