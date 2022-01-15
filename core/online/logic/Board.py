@@ -1,14 +1,15 @@
+from Source.boards import boards
 from core.online.logic.Elephant import LogicElephant
 from core.online.logic.Horse import LogicHorse
 from core.online.logic.King import LogicKing
-from core.online.logic.Pieces import LogicPieces
+from core.online.logic.Pawn import LogicPawn
 from core.online.logic.Rook import LogicRook
 from core.pieces.Queen import LogicQueen
 
 
 class LogicBoard:
-    def __init__(self, pieces=[]):
-        self.pieces = pieces
+    def __init__(self):
+        self.pieces = []
         for piece in self.pieces:
             piece.set_board(self)
         self.step = 0
@@ -43,27 +44,46 @@ class LogicBoard:
 
     def add_figure(self, choose, cell, color):
         if choose == 'r':
-            self.board.append(LogicRook(cell, color))
+            self.pieces.append(LogicRook(cell, color))
         elif choose == 'q':
-            self.board.append(LogicQueen(cell, color))
+            self.pieces.append(LogicQueen(cell, color))
         elif choose == 'k':
-            self.board.append(LogicKing(cell, color))
+            self.pieces.append(LogicKing(cell, color))
         elif choose == 'e':
-            self.board.append(LogicElephant(cell, color))
+            self.pieces.append(LogicElephant(cell, color))
         elif choose == 'h':
-            self.board.append(LogicHorse(cell, color))
+            self.pieces.append(LogicHorse(cell, color))
+        self.pieces[-1].set_board(self)
 
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))
 
+    def load_board(self, line):
+        # loading pieces from line with pieces info
+        self.pieces = []
+        for piece in line.split():
+            if len(piece) == 4:
+                if piece[0] == "K" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
+                    self.pieces.append(LogicKing([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+                elif piece[0] == "Q" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
+                    self.pieces.append(LogicQueen([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+                elif piece[0] == "R" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
+                    self.pieces.append(LogicRook([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+                elif piece[0] == "N" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
+                    self.pieces.append(LogicHorse([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+                elif piece[0] == "B" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
+                    self.pieces.append(LogicElephant([104-ord(piece[1]), int(piece[2]) - 1], (0 if piece[3] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+            elif len(piece) == 3:
+                if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
+                    self.pieces.append(LogicPawn([104-ord(piece[0]), int(piece[1]) - 1], (0 if piece[2] == 'w' else 1)))
+                    self.pieces[-1].set_board(self)
+
 
 if __name__ == '__main__':
-    pieces_1 = [LogicPieces((0, 0), 0), LogicPieces((2, 0), 1), LogicHorse((2, 1), 1)]
-    lb = LogicBoard(pieces_1)
-    print(lb.get_pieces(1))
-    print(lb.get_pieces(0))
-    print(lb.can_view(1))
-    print(lb.can_view(0))
-    print(lb.move((2, 1), (0, 0)))
-    print(lb.get_pieces(1))
-    print(lb.get_pieces(0))
+    board = LogicBoard()
+    board.load_board(boards["classic"])
