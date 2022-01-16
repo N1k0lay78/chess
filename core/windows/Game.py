@@ -1,4 +1,5 @@
 from Source.boards import boards
+from Source.settings import is_on_fog_of_war
 from core.online.Client import Client
 from core.FogOfWar import FogOfWar
 from core.Board import Board
@@ -25,11 +26,13 @@ class Game:
         self.board.load_board(boards["classic"])
         self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog', color)
 
+    def disconnect(self):
+        self.client.stop()
+        self.client_thread.join()
+
     def update(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.client.stop()
-                self.client_thread.join(1)
                 self.running = False
             if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP]:
                 self.board.update(event)
@@ -37,14 +40,19 @@ class Game:
     def draw(self):
         self.screen.fill((20, 20, 50))
         self.board.draw()
-        self.fog.draw()
+        if is_on_fog_of_war:
+            self.fog.draw()
 
     def run(self):
-        while self.running:
-            self.update()
-            self.draw()
-            pygame.display.update()
-            self.clock.tick(self.max_fps)
+        try:
+            while self.running:
+                self.update()
+                self.draw()
+                pygame.display.update()
+                self.clock.tick(self.max_fps)
+        except KeyboardInterrupt:
+            pass
+        self.disconnect()
         self.save()
 
     def save(self):

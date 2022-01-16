@@ -7,7 +7,7 @@ class King(Pieces):
         super().__init__(game, "K", cell, surface, color)
         self.can_castled = True
 
-    def check_move(self, pos):
+    def can_move(self, pos):
         # check that we are moving one cell
         if abs(self.cell[0] - pos[0]) < 2 and abs(self.cell[1] - pos[1]) < 2:
             return self.check_not_friendly_cell(pos)

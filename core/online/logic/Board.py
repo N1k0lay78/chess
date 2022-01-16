@@ -1,4 +1,5 @@
 from Source.boards import boards
+from Source.settings import name_board_to_play, is_on_fog_of_war
 from core.online.logic.Elephant import LogicElephant
 from core.online.logic.Horse import LogicHorse
 from core.online.logic.King import LogicKing
@@ -24,17 +25,20 @@ class LogicBoard:
             return False
 
     def can_view(self, color):
-        visible = []
-        player_pieces = self.get_pieces(color)
-        for piece in self.pieces:
-            if piece.color == color:
-                visible.append(piece)
-            else:
-                for player_piece in player_pieces:
-                    if player_piece.can_view(piece.cell):
-                        visible.append(piece)
-                        break
-        return self.get_board_line(visible)
+        if is_on_fog_of_war:
+            visible = []
+            player_pieces = self.get_pieces(color)
+            for piece in self.pieces:
+                if piece.color == color:
+                    visible.append(piece)
+                else:
+                    for player_piece in player_pieces:
+                        if player_piece.can_view(piece.cell):
+                            visible.append(piece)
+                            break
+            return self.get_board_line(visible)
+        else:
+            return self.get_board_line(self.pieces)
 
     def get_piece(self, cell):
         for piece in self.pieces:
@@ -44,7 +48,7 @@ class LogicBoard:
     def remove_piece(self, piece):
         if type(piece) == LogicKing:
             print('won', ("white" if piece.color == 1 else "black"))
-            self.load_board(boards["classic"])
+            self.load_board(boards[name_board_to_play])
         else:
             self.pieces.remove(piece)
 

@@ -5,7 +5,7 @@ class Horse(Pieces):
     def __init__(self, game, cell, surface, color):
         super().__init__(game, "N", cell, surface, color)
 
-    def check_move(self, pos):
+    def can_move(self, pos):
         # clockwise from 12 o'clock
         moves = ((2, 1), (1, 2), (-1, 2), (-2, 1), (-2, -1), (-1, -2), (1, -2), (2, -1))
         # heck that the target is where we can move

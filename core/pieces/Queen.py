@@ -5,7 +5,7 @@ class Queen(Pieces):
     def __init__(self, game, cell, surface, color):
         super().__init__(game, "Q", cell, surface, color)
 
-    def check_move(self, pos):
+    def can_move(self, pos):
         move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]
         # check that we are moving diagonally, or vertically, or horizontally
         if (move_x != move_y and (move_x == 0 or move_y == 0)) or (move_y != 0 and move_x / move_y in (-1, 1)):

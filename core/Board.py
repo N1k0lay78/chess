@@ -1,5 +1,6 @@
 import pygame
 
+from Source.settings import debug
 from core.pieces.King import King
 from core.pieces.Pawn import Pawn
 from core.pieces.Horse import Horse
@@ -42,6 +43,8 @@ class Board:
         for key in sorted(list(layers.keys())):
             for figure in layers[key]:
                 figure.draw()
+        if self.focused and debug:
+            pygame.draw.circle(self.game.screen, (255, 255, 255), (self.focused.pos[0] + 25, self.focused.pos[1]+35), 5)
 
     def update(self, event):
         # focused - the figure we are moving
@@ -50,7 +53,6 @@ class Board:
             self.last_mouse_pos = event.pos
             figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
             # is there a piece and check that its move
-            print(figure)
             if figure != None and figure.color == self.color == self.step % 2:
                 self.focused = figure
                 self.dragging = True
@@ -65,7 +67,7 @@ class Board:
             self.dragging = False
             # move figure to new cell
             if self.focused:
-                self.focused.update(((event.pos[0] - self.position[0]) // self.size[0], (event.pos[1] - self.position[1]) // self.size[1]))
+                self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0], (self.focused.pos[0] + 35 - self.position[1]) // self.size[1]))
 
     def get_pos(self, pos):  # get a figure using position
         # print(pos)

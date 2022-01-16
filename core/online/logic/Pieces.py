@@ -2,7 +2,8 @@ class LogicPieces:
     def __init__(self, name, cell, color):
         self.board = None
         self.name = name
-        self.cell = cell
+        self.cell = [0, 0]
+        self.set_cell(cell)
         self.color = color  # 0 - downside (green), 1 - upside (red)
 
     def can_move(self, cell):  # can move to cell
@@ -11,28 +12,33 @@ class LogicPieces:
     def can_view(self, cell):  # can view figure
         return self.cell[0] - 1 <= cell[0] <= self.cell[0] + 1 and self.cell[1] - 1 <= cell[1] <= self.cell[1] + 1
 
+    def get_piece(self, cell):  # get figure from board
+        return self.board.get_piece(cell)
+
+    def remove_piece(self, piece):  # remove figure from board
+        return self.board.remove_piece(piece)
+
     def check_clear_cell(self, cell):  # cell is clear
-        return not self.board.get_piece(cell)
+        return not self.get_piece(cell)
 
     def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
-        piece = self.board.get_piece(cell)
+        piece = self.get_piece(cell)
         if piece:
             if piece.color != self.color:
-                self.board.remove_piece(piece)
+                self.remove_piece(piece)
                 return True
             else:
                 return False
         return True
 
     def check_eat(self, cell):  # enemy on cell
-        piece = self.board.get_piece(cell)
+        piece = self.get_piece(cell)
         if piece and piece.color != self.color:
-            self.board.remove_piece(piece)
+            self.remove_piece(piece)
             return True
         return False
 
     def update(self, cell):
-        print(cell, self.cell)
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
             self.set_cell(cell)
             self.on_move()

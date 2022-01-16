@@ -2,13 +2,15 @@ import socket
 import time
 from Source.boards import boards
 from threading import Thread
+
+from Source.settings import name_board_to_play
 from core.online.logic.Board import LogicBoard
 
 
 class Socket(Thread):
     def __init__(self, port, ip_address, max_users, check_time):
         super().__init__()
-        self.line = boards['classic']
+        self.line = boards[name_board_to_play]
         self.board = LogicBoard(self.line)
         self.port = port
         self.ip_address = ip_address
