@@ -11,7 +11,7 @@ class Socket(Thread):
     def __init__(self, port, ip_address, max_users, check_time):
         super().__init__()
         self.line = boards[name_board_to_play]
-        self.board = LogicBoard(self.line)
+        self.board = LogicBoard(self, self.line)
         self.port = port
         self.ip_address = ip_address
         self.max_users = max_users
@@ -23,6 +23,22 @@ class Socket(Thread):
         self.queue = []
         self.players = []
         self.active_players = []
+        self.wait_choice = False
+        self.pawn_coord = []
+        self.choice_color = 4
+
+    def ask_user_choice(self, color, coord):
+        while True:
+            try:
+                for address, data in self.users.items():
+                    if data[2] == color:
+                        self.wait_choice = True
+                        self.pawn_coord = coord
+                        self.choice_color = color
+                        self.send_to_user(data[0], "ch make right choice")
+                break
+            except:
+                continue
 
     def send_to_user(self, conn, message):
         if conn and message:
@@ -103,8 +119,14 @@ class Socket(Thread):
                         data = data[3:].split(":")
                         print(data)
                         print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
-                        self.update_all_users_condition()
+                        if not self.wait_choice:
+                            self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                    elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
+                        if self.board.get_piece(self.pawn_coord).replace(data[3]):
+                            self.update_all_users_condition()
+                        else:
+                            self.ask_user_choice(self.choice_color, self.pawn_coord)
                     else:
                         pass
                         # print(f"Message from {nickname} - {data}")
