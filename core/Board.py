@@ -98,6 +98,9 @@ class Board:
         except LoadingBoardError as e:
             print(e)
 
+    def update_board(self, line):
+        self.board = self.pieces_manager.update(line, self.board)
+
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
             self.board = self.pieces_manager.read_line(line)

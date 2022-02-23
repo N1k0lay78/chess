@@ -50,6 +50,9 @@ class PiecesManager:
         else:
             raise LoadingBoardError(f"can't decode {code}")
 
+    def update(self, line: str, pieces: list) -> list:
+        pass
+
     def read_line(self, line: str) -> list:
         loaded_pieces = []
 
@@ -81,9 +84,9 @@ if __name__ == '__main__':
 
     pieces = {"P": Nothing1, "K": Nothing2}
     pieces_manager = PiecesManager(None, pieces)
-    assert list(map(str, board_line.read_line(boards["test2"]))) == ["K:7x0:1", "K:0x7:0", "P:5x1:0", "P:5x6:1"]
+    assert list(map(str, pieces_manager.read_line(boards["test2"]))) == ["K:7x0:1", "K:0x7:0", "P:5x1:0", "P:5x6:1"]
     try:
-        board_line.read_line("0235")
+        pieces_manager.read_line("0235")
         print("Wrong")
     except LoadingBoardError:
         pass
