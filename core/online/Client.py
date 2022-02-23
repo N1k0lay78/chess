@@ -29,10 +29,8 @@ class Client:
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
                 except:
-                    # print("pidor")
                     continue
-                # print(data, "ne ponimat")
-                print(data, 'adsada')
+
                 if data[:2] == "su":
                     print("Connected")
                     self.game.board.set_color(int(data.split()[1]))
@@ -57,15 +55,12 @@ class Client:
                 try:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
-                        print(data)
                         if data[:2] == "nm":
-                            print("load new map")
                             self.game.board.step = int(data.split(":")[1])
                             self.game.step = int(data.split(":")[1])
                             self.game.board.load_board(data.split(":")[2])
                             self.game.board.go_to_next_step()
                         elif data[:2] == "ch":
-                            print("We have success")
                             wait_user_choice_thread = Thread(target=self.wait_user_choice)
                             wait_user_choice_thread.start()
                 except:

@@ -3,9 +3,8 @@ from core.logic.pieces_move import king_move
 
 
 class LogicKing(LogicPieces):
-    def __init__(self, board, cell, color):
-        super().__init__(board, "K", cell, color)
-        self.can_castled = True
+    def __init__(self, board, cell, color, is_can):
+        super().__init__(board, "K", cell, color, is_can)
 
     def can_view(self, cell):
         return self.cell[0] - 2 <= cell[0] <= self.cell[0] + 2 and self.cell[1] - 1 <= cell[1] <= self.cell[1] + 1
@@ -13,4 +12,4 @@ class LogicKing(LogicPieces):
     can_move = king_move
 
     def on_move(self):
-        self.can_castled = False
+        self.is_can = False

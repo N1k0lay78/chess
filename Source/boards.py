@@ -1,12 +1,12 @@
-# K{a-h}{1-8}{w/b} - King
-# Q{a-h}{1-8}{w/b} - Queen
-# N{a-h}{1-8}{w/b} - Knight (Horse)
-# R{a-h}{1-8}{w/b} - Rook
-# B{a-h}{1-8}{w/b} - Bishop (Elephant)
-# {a-h}{1-8}{w/b}  - Pawn
+# K{a-h}{1-8}{w/b}{0/1} - King
+# Q{a-h}{1-8}{w/b}{0/1} - Queen
+# N{a-h}{1-8}{w/b}{0/1} - Knight (Horse)
+# R{a-h}{1-8}{w/b}{0/1} - Rook
+# B{a-h}{1-8}{w/b}{0/1} - Bishop (Elephant)
+# {a-h}{1-8}{w/b}{0/1}  - Pawn
 
 boards = {
-    "classic": "a7b b7b c7b d7b e7b f7b g7b h7b a2w b2w c2w d2w e2w f2w g2w h2w Bc8b Bf8b Bc1w Bf1w Nb8b Ng8b Nb1w Ng1w Ra8b Rh8b Ra1w Rh1w Qd8b Qd1w Ke8b Ke1w",
-    "test": "Ka8b Kh1w",
-    "test2": "Ka8b Kh1w c7w c2b"
+    "classic": "a7b1 b7b1 c7b1 d7b1 e7b1 f7b1 g7b1 h7b1 a2w1 b2w1 c2w1 d2w1 e2w1 f2w1 g2w1 h2w1 Bc8b1 Bf8b1 Bc1w1 Bf1w1 Nb8b1 Ng8b1 Nb1w1 Ng1w1 Ra8b1 Rh8b1 Ra1w1 Rh1w1 Qd8b1 Qd1w1 Ke8b1 Ke1w1",
+    "test": "Ka8b1 Kh1w1",
+    "test2": "Ka8b1 Kh1w1 c3w1 b5b1 Rd8b1 Rd1w1"
 }

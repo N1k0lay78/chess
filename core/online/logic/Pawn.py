@@ -1,18 +1,16 @@
 from core.online.logic.Pieces import LogicPieces
-from core.pieces.Pieces import Pieces
 from core.logic.pieces_move import logic_pawn_move
 
 
 class LogicPawn(LogicPieces):
-    def __init__(self, board, cell, color):
-        super().__init__(board, "", cell, color)
-        self.first_move = True
+    def __init__(self, board, cell, color, is_can):
+        super().__init__(board, "", cell, color, is_can)
 
     can_move = logic_pawn_move
 
     def on_move(self):
         # we cannot walk 2 cells
-        self.first_move = False
+        self.is_can = False
         if self.cell[1] in [0, 7]:
             self.board.server.ask_user_choice(self.color, self.cell)
         # if we reach the other end of the map, then we change the figure

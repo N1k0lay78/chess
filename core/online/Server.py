@@ -63,9 +63,7 @@ class Socket(Thread):
             users = [[nickname, conn, address] for nickname, conn, address in self.queue]
             for nickname, conn, address in users:
                 if len(self.users) < self.max_users and (((nickname, 0) in self.players or (nickname, 1) in self.players) or len(self.players) < self.max_users) and nickname not in self.active_players:
-                    print(self.players, nickname)
                     if (nickname, 0) in self.players or (nickname, 1) in self.players:
-                        print("cyka")
                         color = list(filter(lambda x: x[0] == nickname, self.players))[0][1]
                     else:
                         color = len(self.active_players)
@@ -81,10 +79,8 @@ class Socket(Thread):
 
     def check_user_connect(self, nickname, address, conn, color):
         f = False
-        print("!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
             if not f:
-                print(self.board.can_view(color), color, self.board.step)
                 res = self.send_to_user(conn, f"su {color} {self.board.step} {self.board.can_view(color)}")
                 f = True
             else:
@@ -113,24 +109,17 @@ class Socket(Thread):
             try:
                 data = str(conn.recv(1024))[2:-1]
                 if data and data != "Check connection":
-                    print(data)
                     if data[:2] == "mo":
-                        print("Ход", data)
                         data = data[3:].split(":")
-                        print(data)
-                        print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                        move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
                         if not self.wait_choice:
-                            print("Update")
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                     elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
-                        print("CHOICE!!!", data)
                         if self.board.get_piece(self.pawn_coord).replace(data[3]):
-                            print(1)
                             self.update_all_users_condition()
                             self.wait_choice = False
                         else:
-                            print(2)
                             self.ask_user_choice(self.choice_color, self.pawn_coord)
                     else:
                         pass
