@@ -87,7 +87,6 @@ class Board:
 
     def go_to_next_step(self):
         # self.step += 1
-        # flip the board
         self.game.fog.update()
 
     def set_color(self, color):
@@ -102,6 +101,10 @@ class Board:
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
             self.board = self.pieces_manager.read_line(line)
+            # flip the board
+            if self.color == 1:
+                for piece in self.board:
+                    piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
         except LoadingBoardError as e:
             self.board = []
             print(e)

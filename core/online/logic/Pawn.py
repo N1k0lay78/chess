@@ -1,6 +1,6 @@
 from core.online.logic.Pieces import LogicPieces
 from core.pieces.Pieces import Pieces
-from core.logic.pieces_move import pawn_move
+from core.logic.pieces_move import logic_pawn_move
 
 
 class LogicPawn(LogicPieces):
@@ -8,7 +8,7 @@ class LogicPawn(LogicPieces):
         super().__init__(board, "", cell, color)
         self.first_move = True
 
-    can_move = pawn_move
+    can_move = logic_pawn_move
 
     def on_move(self):
         # we cannot walk 2 cells
@@ -18,8 +18,7 @@ class LogicPawn(LogicPieces):
         # if we reach the other end of the map, then we change the figure
 
     def replace(self, choose):
-        print("PIDARAS", choose)
-        if self.cell[1] == 0 and choose in ['Q', 'N', 'R', 'B']:
+        if self.cell[1] in [0, 7] and choose in ['Q', 'N', 'R', 'B']:
             self.board.remove_piece(self)
             # if a new game has started, then you do not need to add a piece
             if self.check_clear_cell(self.cell):

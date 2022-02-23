@@ -31,16 +31,33 @@ def king_move(self, pos):
     return False
 
 
-def pawn_move(self, pos):
+def logic_pawn_move(self, pos):
     if pos[0] == self.cell[0]:
         # check that the point is 1 cell forward
         if pos[1] == self.cell[1] - (1 if self.color % 2 == 0 else -1) and self.check_clear_cell(pos):
             return True
         # if this is the first move, then we can move 2 cells
-        elif self.first_move and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2) and self.check_clear_cell(pos):
+        elif self.first_move and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2) and \
+                self.check_clear_cell(pos):
             return True
     # if they want to go sideways, then we check that we can go and that there is an enemy
-    elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and pos[1] == self.cell[1] - (1 if self.color % 2 == 0 else -1) and self.check_eat(pos):
+    elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and \
+            pos[1] == self.cell[1] - (1 if self.color % 2 == 0 else -1) and self.check_eat(pos):
+        return True
+    return False
+
+
+def game_pawn_move(self, pos):
+    if pos[0] == self.cell[0]:
+        # check that the point is 1 cell forward
+        if pos[1] == self.cell[1] - 1 and self.check_clear_cell(pos):
+            return True
+        # if this is the first move, then we can move 2 cells
+        elif self.first_move and pos[1] == self.cell[1] - 2 and self.check_clear_cell(pos):
+            return True
+    # if they want to go sideways, then we check that we can go and that there is an enemy
+    elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and \
+            pos[1] == self.cell[1] - 1 and self.check_eat(pos):
         return True
     return False
 

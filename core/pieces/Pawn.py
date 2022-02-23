@@ -1,5 +1,5 @@
 from core.pieces.Pieces import Pieces
-from core.logic.pieces_move import pawn_move
+from core.logic.pieces_move import game_pawn_move
 
 
 class Pawn(Pieces):
@@ -10,7 +10,7 @@ class Pawn(Pieces):
     def load_surface(self):
         return self.board.board.pieces_tile_set[0, self.color]
 
-    can_move = pawn_move
+    can_move = game_pawn_move
 
     def on_move(self):
         # we cannot walk 2 cells
