@@ -14,6 +14,7 @@ class Board:
         self.position = pos
         self.size = size
         self.board = []
+        self.pause = False
         self.pieces_manager = PiecesManager(self.game, game_pieces_dict)
         self.step = 0
         # control
@@ -47,28 +48,29 @@ class Board:
     def update(self, event):
         # focused - the figure we are moving
         # dragging - whether to move the shape when moving the mouse
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            self.last_mouse_pos = event.pos
-            figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
-                                   (event.pos[1] - self.position[1]) // self.size[1]))
-            # is there a piece and check that its move
-            if figure != None and figure.color == self.color == self.step % 2:
-                self.focused = figure
-                self.dragging = True
-            elif figure is None:
-                self.dragging = False
-        elif event.type == pygame.MOUSEMOTION:
-            # move figure if dragging
-            if self.dragging and self.focused:
-                self.focused.move((self.last_mouse_pos[0] - event.pos[0],
-                                   self.last_mouse_pos[1] - event.pos[1]))
+        if not self.pause:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 self.last_mouse_pos = event.pos
-        elif event.type == pygame.MOUSEBUTTONUP:
-            self.dragging = False
-            # move figure to new cell
-            if self.focused:
-                self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
-                                     (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
+                figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
+                                       (event.pos[1] - self.position[1]) // self.size[1]))
+                # is there a piece and check that its move
+                if figure != None and figure.color == self.color == self.step % 2:
+                    self.focused = figure
+                    self.dragging = True
+                elif figure is None:
+                    self.dragging = False
+            elif event.type == pygame.MOUSEMOTION:
+                # move figure if dragging
+                if self.dragging and self.focused:
+                    self.focused.move((self.last_mouse_pos[0] - event.pos[0],
+                                       self.last_mouse_pos[1] - event.pos[1]))
+                    self.last_mouse_pos = event.pos
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.dragging = False
+                # move figure to new cell
+                if self.focused:
+                    self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
+                                         (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
 
     def get_pos(self, pos):  # get a figure using position
         for i in range(len(self.board)):
@@ -99,3 +101,6 @@ class Board:
 
     def load_board(self, line):  # loading pieces from line with pieces info
         self.board = self.pieces_manager.read_line(line)
+
+    def set_pause(self, pause):
+        self.pause = pause
