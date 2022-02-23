@@ -20,7 +20,7 @@ class LogicPawn(LogicPieces):
     def replace(self, choose):
         print("PIDARAS", choose)
         if self.cell[1] == 0 and choose in ['q', 'h', 'r', 'e']:
-            self.board.remove_figure(self)
+            self.board.remove_piece(self)
             # if a new game has started, then you do not need to add a piece
             if self.check_clear_cell(self.cell):
                 self.board.add_figure(choose, self.cell, self.color)
