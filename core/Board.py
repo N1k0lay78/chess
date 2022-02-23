@@ -100,7 +100,11 @@ class Board:
             print(e)
 
     def load_board(self, line):  # loading pieces from line with pieces info
-        self.board = self.pieces_manager.read_line(line)
+        try:
+            self.board = self.pieces_manager.read_line(line)
+        except LoadingBoardError as e:
+            self.board = []
+            print(e)
 
     def set_pause(self, pause):
         self.pause = pause

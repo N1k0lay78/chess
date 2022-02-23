@@ -35,15 +35,18 @@ class PiecesManager:
             self.classes_dict[val] = key
 
         self.board = board
-        self.check_line_rule = f"[{''.join(self.pieces_dict.keys())}][a-h][1-8][wb]"
+        self.check_line_rule = f"[{''.join(self.pieces_dict.keys()).lower()}][a-h][1-8][wb]"
+        print(self.check_line_rule)
 
     def add_piece(self, code: str):
-        if len(code) == 3 and re.match("[a-h][1-8][wb]", code):
-            code = "P" + code
+        if len(code) == 3:
+            code = "p" + code
 
-        if code[0] in self.pieces_dict and re.match(self.check_line_rule, code):
-            piece = self.pieces_dict[code[0]](self.board, [104 - ord(code[1]), 8 - int(code[2])],
-                                              int(code[3] != 'w'))
+        code = code.lower()
+
+        if code[0].upper() in self.pieces_dict and re.match(self.check_line_rule, code):
+            piece = self.pieces_dict[code[0].upper()](self.board, [104 - ord(code[1]), 8 - int(code[2])],
+                                                      int(code[3] != 'w'))
             return piece
         else:
             raise LoadingBoardError(f"can't decode {code}")

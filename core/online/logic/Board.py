@@ -62,7 +62,11 @@ class LogicBoard:
             print(e)
 
     def load_board(self, line):  # loading pieces from line with pieces info
-        self.pieces = self.pieces_manager.read_line(line)
+        try:
+            self.pieces = self.pieces_manager.read_line(line)
+        except LoadingBoardError as e:
+            self.pieces = []
+            print(e)
 
 
 if __name__ == '__main__':
