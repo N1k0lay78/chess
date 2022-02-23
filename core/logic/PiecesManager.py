@@ -36,7 +36,6 @@ class PiecesManager:
 
         self.board = board
         self.check_line_rule = f"[{''.join(self.pieces_dict.keys()).lower()}][a-h][1-8][wb]"
-        print(self.check_line_rule)
 
     def add_piece(self, code: str):
         if len(code) == 3:
