@@ -1,4 +1,5 @@
 from core.pieces.Pieces import Pieces
+from core.logic.pieces_move import pawn_move
 
 
 class Pawn(Pieces):
@@ -6,18 +7,7 @@ class Pawn(Pieces):
         super().__init__(game, "", cell, surface, color)
         self.first_move = True
 
-    def can_move(self, pos):
-        if pos[0] == self.cell[0]:
-            # check that the point is 1 cell forward
-            if pos[1] == self.cell[1] - 1 and self.check_clear_cell(pos):
-                return True
-            # if this is the first move, then we can move 2 cells
-            elif self.first_move and pos[1] == self.cell[1] - 2 and self.check_clear_cell(pos):
-                return True
-        # if they want to go sideways, then we check that we can go and that there is an enemy
-        elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and pos[1] == self.cell[1] - 1 and self.can_eat(pos):
-            return True
-        return False
+    can_move = pawn_move
 
     def on_move(self):
         # we cannot walk 2 cells
