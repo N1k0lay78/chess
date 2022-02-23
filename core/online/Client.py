@@ -73,11 +73,9 @@ class Client:
                     self.socket = None
 
     def wait_user_choice(self):
-        print("Вот сообщение")
-        self.is_choice = True
+        self.game.board.set_pause(True)
         self.sending_to_the_server(f"mc {input()}")
-        self.is_choice = False
-        print("Сообщение послали")
+        self.game.board.set_pause(False)
 
     def sending_to_the_server(self, message):
         if self.socket:

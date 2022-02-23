@@ -40,7 +40,6 @@ class PiecesManager:
     def add_piece(self, code: str):
         if len(code) == 3 and re.match("[a-h][1-8][wb]", code):
             code = "P" + code
-
         if code[0] in self.pieces_dict and re.match(self.check_line_rule, code):
             piece = self.pieces_dict[code[0]](self.board, [104 - ord(code[1]), 8 - int(code[2])],
                                               int(code[3] != 'w'))

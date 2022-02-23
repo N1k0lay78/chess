@@ -43,7 +43,7 @@ class LogicBoard:
                 return piece
 
     def remove_piece(self, piece):
-        if type(piece) == LogicKing:
+        if type(piece) == logic_pieces_dict["K"]:
             print('won', ("white" if piece.color == 1 else "black"))
             self.load_board(boards[name_board_to_play])
         else:
