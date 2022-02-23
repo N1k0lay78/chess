@@ -3,7 +3,7 @@ from core.logic.pieces_move import queen_move
 
 
 class LogicQueen(LogicPieces):
-    def __init__(self, cell, color):
-        super().__init__("Q", cell, color)
+    def __init__(self, board, cell, color):
+        super().__init__(board, "Q", cell, color)
 
     can_move = queen_move

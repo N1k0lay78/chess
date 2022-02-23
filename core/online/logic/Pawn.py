@@ -4,8 +4,8 @@ from core.logic.pieces_move import pawn_move
 
 
 class LogicPawn(LogicPieces):
-    def __init__(self, cell, color):
-        super().__init__("", cell, color)
+    def __init__(self, board, cell, color):
+        super().__init__(board, "", cell, color)
         self.first_move = True
 
     can_move = pawn_move
@@ -23,6 +23,6 @@ class LogicPawn(LogicPieces):
             self.board.remove_figure(self)
             # if a new game has started, then you do not need to add a piece
             if self.check_clear_cell(self.cell):
-                self.board.add_figure(choose, self.cell, self.color)
+                self.board.add_piece(choose, self.cell, self.color)
                 return True
         return False

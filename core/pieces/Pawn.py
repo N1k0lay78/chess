@@ -3,9 +3,12 @@ from core.logic.pieces_move import pawn_move
 
 
 class Pawn(Pieces):
-    def __init__(self, game, cell, surface, color):
-        super().__init__(game, "", cell, surface, color)
+    def __init__(self, game, cell, color):
+        super().__init__(game, "", cell, color)
         self.first_move = True
+
+    def load_surface(self):
+        return self.board.board.pieces_tile_set[0, self.color]
 
     can_move = pawn_move
 

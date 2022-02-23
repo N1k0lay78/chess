@@ -1,19 +1,15 @@
 from Source.boards import boards
 from Source.settings import name_board_to_play, is_on_fog_of_war
-from core.online.logic.Elephant import LogicElephant
-from core.online.logic.Horse import LogicHorse
-from core.online.logic.King import LogicKing
-from core.online.logic.Pawn import LogicPawn
-from core.online.logic.Rook import LogicRook
-from core.online.logic.Queen import LogicQueen
+from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
 
 
 class LogicBoard:
     def __init__(self, server, line):
         self.server = server
         self.pieces = []
-        self.load_board(line)
         self.step = 0
+        self.pieces_manager = PiecesManager(self, logic_pieces_dict)
+        self.load_board(line)
 
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
@@ -57,41 +53,16 @@ class LogicBoard:
         return list(filter(lambda p: p.color == color, self.pieces))
 
     def get_board_line(self, pieces):
-        res = ''
-        for piece in pieces:
-            res += str(piece) + ' '
-        return res[:-1]
+        return self.pieces_manager.get_line(pieces)
 
-    def load_board(self, line):
-        # loading pieces from line with pieces info
-        self.pieces = []
-        for piece in line.split():
-            if len(piece) == 4:
-                if piece[0] == "K" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicKing([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                elif piece[0] == "Q" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicQueen([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                elif piece[0] == "R" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicRook([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                elif piece[0] == "N" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicHorse([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                elif piece[0] == "B" and piece[1] in 'abcdefgh' and piece[2] in '12345678' and piece[3] in "bw":
-                    self.pieces.append(LogicElephant([104-ord(piece[1]), 8 - int(piece[2])], (0 if piece[3] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                else:
-                    print(f"File have ERROR {piece}")
-            elif len(piece) == 3:
-                if piece[0] in 'abcdefgh' and piece[1] in '12345678' and piece[2] in "bw":
-                    self.pieces.append(LogicPawn([104-ord(piece[0]), 8 - int(piece[1])], (0 if piece[2] == 'w' else 1)))
-                    self.pieces[-1].set_board(self)
-                else:
-                    print(f"File have ERROR {piece}")
-            else:
-                print(f"File have ERROR {piece}")
+    def add_piece(self, code):
+        try:
+            self.pieces.append(self.pieces_manager.add_piece(code))
+        except LoadingBoardError as e:
+            print(e)
+
+    def load_board(self, line):  # loading pieces from line with pieces info
+        self.pieces = self.pieces_manager.read_line(line)
 
 
 if __name__ == '__main__':

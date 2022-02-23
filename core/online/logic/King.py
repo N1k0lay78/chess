@@ -3,8 +3,8 @@ from core.logic.pieces_move import king_move
 
 
 class LogicKing(LogicPieces):
-    def __init__(self, cell, color):
-        super().__init__("K", cell, color)
+    def __init__(self, board, cell, color):
+        super().__init__(board, "K", cell, color)
         self.can_castled = True
 
     def can_view(self, cell):

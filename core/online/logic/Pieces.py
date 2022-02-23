@@ -1,6 +1,6 @@
 class LogicPieces:
-    def __init__(self, name, cell, color):
-        self.board = None
+    def __init__(self, board, name, cell, color):
+        self.board = board
         self.name = name
         self.cell = [0, 0]
         self.set_cell(cell)
