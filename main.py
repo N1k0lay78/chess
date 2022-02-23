@@ -12,8 +12,8 @@ screen = pygame.display.set_mode((700, 600))
 
 # loading = LoadingGame(screen)
 # loading.run()
-nickname = "Nickolausus"
-# nickname = input()
+# nickname = "Nickolausus"
+nickname = input()
 color = 0
 game = Game(nickname, (600, 600), "Шахматы", color, icon=pygame.image.load('Source/Image/icon.png'))
 game.run()

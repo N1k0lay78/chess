@@ -120,6 +120,7 @@ class Socket(Thread):
                         print(data)
                         print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                         if not self.wait_choice:
+                            print("Update")
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                     elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
@@ -127,6 +128,7 @@ class Socket(Thread):
                         if self.board.get_piece(self.pawn_coord).replace(data[3]):
                             print(1)
                             self.update_all_users_condition()
+                            self.wait_choice = False
                         else:
                             print(2)
                             self.ask_user_choice(self.choice_color, self.pawn_coord)
