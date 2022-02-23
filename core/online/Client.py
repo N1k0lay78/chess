@@ -18,6 +18,7 @@ class Client:
         self.connection_monitoring_thread = None
         self.getting_from_the_server_thread = None
         self.running = True
+        self.is_choice = False
 
     def connection_monitoring(self):
         while self.running:
@@ -65,12 +66,18 @@ class Client:
                             self.game.board.go_to_next_step()
                         elif data[:2] == "ch":
                             print("We have success")
-                            answer = input()
-                            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                            self.sending_to_the_server(f"mc {answer}")
+                            wait_user_choice_thread = Thread(target=self.wait_user_choice)
+                            wait_user_choice_thread.start()
                 except:
                     print("Lost connection")
                     self.socket = None
+
+    def wait_user_choice(self):
+        print("Вот сообщение")
+        self.is_choice = True
+        self.sending_to_the_server(f"mc {input()}")
+        self.is_choice = False
+        print("Сообщение послали")
 
     def sending_to_the_server(self, message):
         if self.socket:
