@@ -20,7 +20,6 @@ class Board:
         # control
         self.focused = None
         self.dragging = False
-        self.set_on_next = False
         self.last_mouse_pos = (0, 0)
         # surfaces
         self.pieces_tile_set = TileSet('pieces', (50, 150))
@@ -43,7 +42,7 @@ class Board:
                 figure.draw()
         if self.focused and debug:
             pygame.draw.circle(self.game.screen, (255, 255, 255), (self.focused.pos[0] + 25,
-                                                                   self.focused.pos[1]+35), 5)
+                                                                   self.focused.pos[1] + 35), 5)
 
     def update(self, event):
         # focused - the figure we are moving
@@ -54,7 +53,7 @@ class Board:
                 figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
                                        (event.pos[1] - self.position[1]) // self.size[1]))
                 # is there a piece and check that its move
-                if figure != None and figure.color == self.color == self.step % 2:
+                if figure is not None and figure.color == self.color == self.step % 2:
                     self.focused = figure
                     self.dragging = True
                 elif figure is None:
@@ -96,6 +95,9 @@ class Board:
 
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
+            self.step = 0
+            self.color = 0
+            self.focused = None
             self.board = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.board = []

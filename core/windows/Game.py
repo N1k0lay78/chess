@@ -56,6 +56,7 @@ class Game:
             while self.running:
                 if self.restart:
                     self.judge.restart()
+                    self.restart = False
                 self.update()
                 self.draw()
                 pygame.display.update()
