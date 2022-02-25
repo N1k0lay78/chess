@@ -7,8 +7,8 @@ from core.online.Server import Server
 server = Server()
 have_game = False
 ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg']
-application = Flask(__name__)
-application.config.from_object(config)
+app = Flask(__name__)
+app.config.from_object(config)
 
 
 def get_render_template(template_name, title, **kwargs):
@@ -16,16 +16,16 @@ def get_render_template(template_name, title, **kwargs):
 
 
 def main(port=8000):
-    application.run(port=8000)
+    app.run(port=8000)
 
 
 # Стартовая страница
-@application.route("/")
+@app.route("/")
 def website_main_page():
     return redirect("/create_game")
 
 
-@application.route("/create_game")
+@app.route("/create_game")
 def create_game():
     global have_game
     self_ip = socket.gethostbyname(socket.gethostname())
@@ -35,7 +35,7 @@ def create_game():
     return f"""{self_ip}"""
 
 
-@application.route("/restart_game")
+@app.route("/restart_game")
 def restart_game():
     global have_game
     have_game = False
