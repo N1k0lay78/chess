@@ -157,10 +157,12 @@ class Server:
             return {"error": "This port is already in use"}  # Просим так больше не делать
 
 
-self_ip = socket.gethostbyname(socket.gethostname())
+if __name__ == '__main__':
 
-print(self_ip)
+    self_ip = socket.gethostbyname(socket.gethostname())
 
-server = Server()
-print(server.create_socket(9090, self_ip))
-# print(server.create_socket(9091, self_ip))
+    print(self_ip)
+
+    server = Server()
+    print(server.create_socket(9090, self_ip))
+    # print(server.create_socket(9091, self_ip))

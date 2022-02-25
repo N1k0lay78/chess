@@ -3,7 +3,7 @@ class Judge:
         self.board = board
         self.board_line = board_line
 
-    def on_move(self, fr: tuple[int, int], to: tuple[int, int]) -> None:
+    def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""
         if self.board.get_pos(to).name == "" and to[1] in [0, 7] and not self.board.game.restart:
             self.on_swap(to)
@@ -18,7 +18,7 @@ class Judge:
         if name == "K":
             self.board.game.restart = True
 
-    def on_swap(self, cell: tuple[int, int]) -> None:
+    def on_swap(self, cell: tuple) -> None:
         """swap pawn"""
         pawn = self.board.get_pos(cell)
         self.board.remove_piece(pawn)

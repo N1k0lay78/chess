@@ -20,7 +20,7 @@ class Pieces(LogicPieces):
             self.board.screen.blit(self.surface, (self.pos[0],
                                                   self.pos[1] - 100))
 
-    def update(self, cell: tuple[int, int]):
+    def update(self, cell: tuple):
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
             # move
             # if self.board.board.color == 1:
