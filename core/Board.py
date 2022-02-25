@@ -7,7 +7,7 @@ from core.textures.load_image import load_image
 
 
 class Board:
-    def __init__(self, game, pos: tuple[int, int], size: tuple[int, int], color: int):
+    def __init__(self, game, pos: tuple, size: tuple, color: int):
         # logic
         self.color = color
         self.game = game

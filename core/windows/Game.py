@@ -10,7 +10,7 @@ import pygame
 
 
 class Game:
-    def __init__(self, nickanme: str, size: tuple[int, int], title: str, color: int, fps=30, icon=None, **flags):
+    def __init__(self, nickanme: str, size: tuple, title: str, color: int, fps=30, icon=None, **flags):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
