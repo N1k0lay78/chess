@@ -30,7 +30,7 @@ def create_game():
     global have_game
     self_ip = socket.gethostbyname(socket.gethostname())
     if not have_game:
-        server.create_socket(8000, self_ip)
+        server.create_socket(9000, self_ip)
         have_game = True
     return f"""{self_ip}"""
 
