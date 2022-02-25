@@ -11,5 +11,9 @@ class LogicKing(LogicPieces):
 
     can_move = king_move
 
+    def check_castling(self, figure,  pos) -> bool:
+        figure.set_cell(self.cell[:])
+        return True
+
     def on_move(self):
         self.is_can = False
