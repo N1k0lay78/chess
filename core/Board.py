@@ -7,7 +7,7 @@ from core.textures.load_image import load_image
 
 
 class Board:
-    def __init__(self, game, pos, size, color):
+    def __init__(self, game, pos: tuple[int, int], size: tuple[int, int], color: int):
         # logic
         self.color = color
         self.game = game
@@ -77,16 +77,12 @@ class Board:
             if self.board[i].cell[0] == pos[0] and self.board[i].cell[1] == pos[1]:
                 return self.board[i]
 
-    def remove_from_board(self, piece):
-        # if the king died, then we recreate the game
-        # if type(piece) == King:
-        #     print(f"win is {'red' if piece.color == 0 else 'green'}")
-        #     self.generate_board()
-        # elif piece in self.board:
+    def remove_piece(self, piece):
         self.board.remove(piece)
+        self.game.judge.on_remove(piece.name)
 
     def go_to_next_step(self):
-        # self.step += 1
+        self.step += 1
         self.game.fog.update()
 
     def set_color(self, color):
@@ -101,10 +97,6 @@ class Board:
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
             self.board = self.pieces_manager.read_line(line)
-            # flip the board
-            if self.color == 1:
-                for piece in self.board:
-                    piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
         except LoadingBoardError as e:
             self.board = []
             print(e)

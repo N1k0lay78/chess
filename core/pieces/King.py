@@ -11,5 +11,10 @@ class King(Pieces):
 
     can_move = king_move
 
-    def on_move(self):
+    def check_castling(self, pos) -> bool:
+        figure.set_cell(self.cell[:])
+        self.board.judge.on_castling(pos[0] > self.cell[0], self.color)
+        return True
+
+    def on_move(self) -> None:
         self.is_can = False

@@ -25,8 +25,7 @@ def king_move(self, pos):
     # castling check
     figure = self.get_piece(pos)
     if self.is_can and figure.name == "R" and not figure.is_can and figure.color == self.color:
-        figure.set_cell(self.cell[:])
-        return True
+        return self.check_castling(pos)
     return False
 
 

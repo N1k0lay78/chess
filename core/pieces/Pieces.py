@@ -20,17 +20,19 @@ class Pieces(LogicPieces):
             self.board.screen.blit(self.surface, (self.pos[0],
                                                   self.pos[1] - 100))
 
-    def update(self, cell):
+    def update(self, cell: tuple[int, int]):
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
             # move
-            if self.board.board.color == 1:
-                self.board.client.sending_to_the_server(f"mo {7-self.cell[0]},{7-self.cell[1]}:{7-cell[0]},{7-cell[1]}:{str(self).lower()}")
-            else:
-                self.board.client.sending_to_the_server(f"mo {self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{str(self).lower()}")
+            # if self.board.board.color == 1:
+            #     self.board.client.sending_to_the_server(f"mo {7-self.cell[0]},{7-self.cell[1]}:{7-cell[0]},{7-cell[1]}:{str(self).lower()}")
+            # else:
+            #     self.board.client.sending_to_the_server(f"mo {self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{str(self).lower()}")
+            fr = self.cell[:]
             self.set_cell(cell)
             self.on_move()
-            self.board.board.go_to_next_step()
+            # self.board.board.go_to_next_step()
             self.board.board.focused = None
+            self.board.judge.on_move(fr, cell)
         else:
             # move the figure to its original position
             self.set_cell(self.cell)
@@ -51,7 +53,7 @@ class Pieces(LogicPieces):
         return self.board.board.get_pos(cell)
 
     def remove_piece(self, piece):
-        return self.board.board.remove_from_board(piece)
+        return self.board.board.remove_piece(piece)
 
     def __repr__(self):
         # everyone is watching from their side
