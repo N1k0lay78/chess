@@ -38,7 +38,7 @@ class PiecesManager:
         self.check_line_rule = f"[{''.join(self.pieces_dict.keys()).lower()}][a-h][1-8][wb][0-1]"
 
     def add_piece(self, code: str):
-        if len(code) == 4:
+        if re.match("[a-h][1-8][wb][0-1]", code):
             code = "p" + code
 
         code = code.lower()
