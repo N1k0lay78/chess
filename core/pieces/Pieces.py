@@ -4,9 +4,9 @@ from core.online.logic.Pieces import LogicPieces
 
 
 class Pieces(LogicPieces):
-    def __init__(self, game, name, cell, color):
+    def __init__(self, game, name, cell, color, is_can):
         self.pos = [0, 0]
-        super().__init__(game, name, cell, color)
+        super().__init__(game, name, cell, color, is_can)
         self.surface = self.load_surface()
 
     def load_surface(self):
@@ -56,6 +56,6 @@ class Pieces(LogicPieces):
     def __repr__(self):
         # everyone is watching from their side
         if self.board.color:
-            return f"{self.name}{chr(97+self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}"
+            return f"{self.name}{chr(97+self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
         else:
-            return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}"
+            return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"

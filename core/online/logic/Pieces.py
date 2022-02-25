@@ -1,9 +1,10 @@
 class LogicPieces:
-    def __init__(self, board, name, cell, color):
+    def __init__(self, board, name, cell, color, is_can):
         self.board = board
         self.name = name
         self.cell = [0, 0]
         self.set_cell(cell)
+        self.is_can = is_can
         self.color = color  # 0 - downside (green), 1 - upside (red)
 
     def can_move(self, cell):  # can move to cell
@@ -56,4 +57,4 @@ class LogicPieces:
         pass
 
     def __repr__(self):
-        return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}"
+        return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"

@@ -28,7 +28,6 @@ class LoadingGame(Window):
     def update(self):
         [x.update(None) for x in self.transformLogo]
         if pygame.time.get_ticks() - self.time_st > 3100:
-            print('end')
             self.running = False
 
     def draw(self):
