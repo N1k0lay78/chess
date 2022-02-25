@@ -24,8 +24,7 @@ def king_move(self, pos):
         return self.check_not_friendly_cell(pos)
     # castling check
     figure = self.get_piece(pos)
-    rook_classes = ["<class 'core.online.logic.Rook'>", "<class 'core.pieces.Rook.Rook'>"]
-    if self.can_castled and str(type(figure)) in rook_classes and not figure.is_moved and figure.color == self.color:
+    if self.can_castled and figure.name == "R" and not figure.is_moved and figure.color == self.color:
         figure.set_cell(self.cell[:])
         return True
     return False
