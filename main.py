@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((700, 600))
 # test = Test(screen)
 # test.run()
 
-# loading = LoadingGame(screen)
+# loading = LoadingGame(screen) 
 # loading.run()
 # nickname = "Nickolausus"
 # nickname = "Rjkz"
