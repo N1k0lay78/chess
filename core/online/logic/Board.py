@@ -15,6 +15,7 @@ class LogicBoard:
         piece = self.get_piece(from_cell)
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
+            print("NEXT MOVE")
             self.step += 1
             return True
         else:

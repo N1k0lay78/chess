@@ -2,6 +2,7 @@ from Source.boards import boards
 from Source.settings import is_on_fog_of_war, is_online, name_board_to_play
 from core.online.Client import Client
 from core.Judge import Judge
+from core.OnlineJudge import OnlineJudge
 from core.FogOfWar import FogOfWar
 from core.Board import Board
 from threading import Thread
@@ -10,7 +11,7 @@ import pygame
 
 
 class Game:
-    def __init__(self, nickanme: str, size: tuple, title: str, color: int, fps=30, icon=None, **flags):
+    def __init__(self, size: tuple, title: str, color: int, fps=30, icon=None, **flags):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
@@ -27,8 +28,8 @@ class Game:
         self.restart = False
         if is_online:
             # OnlineJudge initialization
-            self.judge = Judge(self.board, boards[name_board_to_play])
-            self.board.load_board(boards["classic"])  # legacy
+            self.judge = OnlineJudge(self.board, boards[name_board_to_play])
+            # self.board.load_board(boards["classic"])  # legacy
         else:
             self.judge = Judge(self.board, boards[name_board_to_play])
         self.judge.restart()

@@ -53,6 +53,7 @@ class Board:
                 figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
                                        (event.pos[1] - self.position[1]) // self.size[1]))
                 # is there a piece and check that its move
+                print(figure.color, self.color, self.step)
                 if figure is not None and figure.color == self.color == self.step % 2:
                     self.focused = figure
                     self.dragging = True
@@ -93,11 +94,14 @@ class Board:
         except LoadingBoardError as e:
             print(e)
 
+    def restart(self, line):
+        self.step = 0
+        self.color = 0
+        self.focused = None
+        self.load_board(line)
+
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
-            self.step = 0
-            self.color = 0
-            self.focused = None
             self.board = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.board = []

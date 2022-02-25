@@ -92,7 +92,7 @@ class Socket(Thread):
                 print(f"{nickname} left the game")
                 print(f"Connection timed out with {address[0]}:{address[1]}")
                 print(f"Users {len(self.users)}/{self.max_users}")
-                break
+                return
             time.sleep(self.check_time)
 
     def update_all_users_condition(self):
@@ -100,7 +100,7 @@ class Socket(Thread):
             try:
                 for address, data in self.users.items():
                     self.send_to_user(data[0], f"nm:{self.board.step}:{self.board.can_view(data[2])}")
-                break
+                return
             except:
                 continue
 
@@ -109,10 +109,12 @@ class Socket(Thread):
             try:
                 data = str(conn.recv(1024))[2:-1]
                 if data and data != "Check connection":
+                    print(data)
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
-                        if not self.wait_choice:
+                        print(move)
+                        if not self.wait_choice and move:
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                     elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
@@ -128,7 +130,7 @@ class Socket(Thread):
             except Exception as e:
                 print(e)
                 print(f"Bad connection with {nickname} {address}")
-                time.sleep(1)
+                return
 
     def run(self):
         Thread(target=self.user_master).start()

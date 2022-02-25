@@ -16,7 +16,7 @@ def get_render_template(template_name, title, **kwargs):
 
 
 def main(port=8000):
-    app.run(port=8000)
+    app.run(port=port)
 
 
 # Стартовая страница

@@ -8,8 +8,9 @@ self_ip = socket.gethostbyname(socket.gethostname())
 
 
 class Client:
-    def __init__(self, game, nickname, server, port):
-        self.game = game
+    def __init__(self, board, nickname, server, port, judge):
+        self.judge = judge
+        self.board = board
         self.nickname = nickname
         self.server = server
         self.port = port
@@ -19,24 +20,30 @@ class Client:
         self.getting_from_the_server_thread = None
         self.running = True
         self.is_choice = False
+        self.color = 0
 
     def connection_monitoring(self):
         while self.running:
             if not self.socket:
                 try:
                     sock = socket.socket()
-                    sock.connect((self_ip, 9090))
+                    sock.connect((self.server, self.port))
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
                 except:
                     continue
 
                 if data[:2] == "su":
+                    self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     print("Connected")
-                    self.game.board.set_color(int(data.split()[1]))
-                    self.game.color = int(data.split()[1])
-                    self.game.board.step = int(data.split()[2])
-                    self.game.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                    print(int(data.split()[1]))
+                    self.color = int(data.split()[1])
+                    if self.color:
+                        self.judge.flip()
+                        # self.judge.color = int(data.split()[1])
+                    # self.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                    # self.board.set_color(int(data.split()[1]))
+                    # self.board.step = int(data.split()[2])
                     self.socket = sock
             else:
                 if not self.sending_to_the_server("Check connection"):
@@ -56,10 +63,12 @@ class Client:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
                         if data[:2] == "nm":
-                            self.game.board.step = int(data.split(":")[1])
-                            self.game.step = int(data.split(":")[1])
-                            self.game.board.load_board(data.split(":")[2])
-                            self.game.board.go_to_next_step()
+                            print(data)
+                            self.board.step = int(data.split(":")[1])
+                            print(self.board.step)
+                            self.board.load_board(data.split(":")[2])
+                            if self.color:
+                                self.judge.flip()
                         elif data[:2] == "ch":
                             wait_user_choice_thread = Thread(target=self.wait_user_choice)
                             wait_user_choice_thread.start()
@@ -68,9 +77,9 @@ class Client:
                     self.socket = None
 
     def wait_user_choice(self):
-        self.game.board.set_pause(True)
+        self.board.set_pause(True)
         self.sending_to_the_server(f"mc {input()}")
-        self.game.board.set_pause(False)
+        self.board.set_pause(False)
 
     def sending_to_the_server(self, message):
         if self.socket:

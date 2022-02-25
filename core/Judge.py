@@ -32,7 +32,7 @@ class Judge:
         pass
 
     def restart(self) -> None:
-        self.board.load_board(self.board_line)
+        self.board.restart(self.board_line)
 
     def flip(self):
         for piece in self.board.board:
