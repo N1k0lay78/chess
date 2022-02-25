@@ -7,7 +7,7 @@ class OnlineJudge:
         self.board = board
         self.board_line = board_line
         self.nickname = input()
-        self.socket, self.port = "192.168.1.13", 8080
+        self.socket, self.port = "172.16.148.190", 8080
         self.client = Client(board, self.nickname, self.socket, self.port, self)
         self.client_thread = Thread(target=self.client.run)
         self.client_thread.start()
