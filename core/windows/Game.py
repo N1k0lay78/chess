@@ -19,7 +19,7 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
         self.max_fps = fps
-        self.client = Client(self, nickanme, socket.gethostbyname(socket.gethostname()), 9090)
+        self.client = Client(self, nickanme, "192.168.1.13", 9090)
         self.client_thread = Thread(target=self.client.run)
         self.client_thread.start()
         self.board = Board(self, (100, 100), (50, 50), 0)
