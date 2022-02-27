@@ -10,22 +10,26 @@ from core.online.logic.Board import LogicBoard
 class Socket(Thread):
     def __init__(self, port, ip_address, max_users, check_time):
         super().__init__()
-        self.line = boards[name_board_to_play]
-        self.board = LogicBoard(self, self.line)
+        # settings
         self.port = port
         self.ip_address = ip_address
         self.max_users = max_users
+        self.check_time = check_time
+        # socket
         self.sock = socket.socket()
         self.sock.bind((self.ip_address, self.port))
         self.sock.listen(self.max_users)
-        self.check_time = check_time
-        self.users = {}
         self.queue = []
+        # work with user
+        self.users = {}
         self.players = []
         self.active_players = []
         self.wait_choice = False
+        # logic of game
         self.pawn_coord = []
         self.choice_color = 4
+        self.line = boards[name_board_to_play]
+        self.board = LogicBoard(self, self.line)
 
     def ask_user_choice(self, color, coord):
         while True:
@@ -109,11 +113,9 @@ class Socket(Thread):
             try:
                 data = str(conn.recv(1024))[2:-1]
                 if data and data != "Check connection":
-                    print(data)
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
-                        print(move)
                         if not self.wait_choice and move:
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
@@ -126,7 +128,7 @@ class Socket(Thread):
                     else:
                         pass
                         # print(f"Message from {nickname} - {data}")
-                    # Какие то данные какие то сравнения
+                    # Какие-то данные, какие-то сравнения
             except Exception as e:
                 print(e)
                 print(f"Bad connection with {nickname} {address}")

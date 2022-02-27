@@ -1,5 +1,6 @@
 import socket
 from threading import Thread
+from Source.settings import debug
 import time
 import pygame
 
@@ -9,16 +10,19 @@ self_ip = socket.gethostbyname(socket.gethostname())
 
 class Client:
     def __init__(self, board, nickname, server, port, judge):
-        self.judge = judge
+        # settings
         self.board = board
         self.nickname = nickname
         self.server = server
         self.port = port
+        self.judge = judge
+        # server
         self.is_connected = False
         self.socket = None
         self.connection_monitoring_thread = None
         self.getting_from_the_server_thread = None
         self.running = True
+        # game
         self.is_choice = False
         self.color = 0
 
@@ -36,14 +40,11 @@ class Client:
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     print("Connected")
-                    print(int(data.split()[1]))
+                    if debug:
+                        print(int(data.split()[1]))
                     self.color = int(data.split()[1])
                     if self.color:
                         self.judge.flip()
-                        # self.judge.color = int(data.split()[1])
-                    # self.board.load_board(data[7 + len(data.split()[2]) - 1:])
-                    # self.board.set_color(int(data.split()[1]))
-                    # self.board.step = int(data.split()[2])
                     self.socket = sock
             else:
                 if not self.sending_to_the_server("Check connection"):
@@ -63,9 +64,10 @@ class Client:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
                         if data[:2] == "nm":
-                            print(data)
                             self.board.step = int(data.split(":")[1])
-                            print(self.board.step)
+                            if debug:
+                                print(data)
+                                print(self.board.step)
                             self.board.load_board(data.split(":")[2])
                             if self.color:
                                 self.judge.flip()

@@ -13,12 +13,7 @@ class Pieces(LogicPieces):
         return pygame.Surface((100, 100))
 
     def draw(self):
-        if self.board.board.step % 2 == 0:
-            self.board.screen.blit(self.surface, (self.pos[0],
-                                                  self.pos[1] - 100))
-        else:
-            self.board.screen.blit(self.surface, (self.pos[0],
-                                                  self.pos[1] - 100))
+        self.board.screen.blit(self.surface, (self.pos[0], self.pos[1] - 100))
 
     def update(self, cell: tuple):
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
@@ -26,11 +21,10 @@ class Pieces(LogicPieces):
             fr = self.cell[:]
             self.set_cell(cell)
             self.on_move()
-            # self.board.board.go_to_next_step()
             self.board.board.focused = None
             self.board.judge.on_move(fr, cell)
         else:
-            # move the figure to its original position
+            # move the piece to its original position
             self.set_cell(self.cell)
 
     def eval_pos(self):
@@ -53,7 +47,7 @@ class Pieces(LogicPieces):
 
     def __repr__(self):
         # everyone is watching from their side
-        if self.board.color:
+        if self.board.board.color:
             return f"{self.name}{chr(97+self.cell[0])}{self.cell[1]+1}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
         else:
             return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"

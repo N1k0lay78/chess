@@ -1,13 +1,17 @@
 from Source.boards import boards
 from Source.settings import name_board_to_play, is_on_fog_of_war
 from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
+from Source.settings import debug
 
 
 class LogicBoard:
     def __init__(self, server, line):
+        # settings
         self.server = server
+        # game logic
         self.pieces = []
         self.step = 0
+        # init
         self.pieces_manager = PiecesManager(self, logic_pieces_dict)
         self.load_board(line)
 
@@ -15,7 +19,9 @@ class LogicBoard:
         piece = self.get_piece(from_cell)
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
-            print("NEXT MOVE")
+            if debug:
+                print("NEXT MOVE")
+
             self.step += 1
             return True
         else:
