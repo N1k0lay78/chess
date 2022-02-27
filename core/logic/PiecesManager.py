@@ -44,7 +44,7 @@ class PiecesManager:
         code = code.lower()
 
         if code[0].upper() in self.pieces_dict and re.match(self.check_line_rule, code):
-            piece = self.pieces_dict[code[0].upper()](self.board, [104 - ord(code[1]), 8 - int(code[2])],
+            piece = self.pieces_dict[code[0].upper()](self.board, [ord(code[1]) - 97, 8 - int(code[2])],
                                                       int(code[3] != 'w'), code[4] == "1")
             return piece
         else:
