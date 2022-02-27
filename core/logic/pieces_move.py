@@ -24,7 +24,7 @@ def king_move(self, pos):
         return self.check_not_friendly_cell(pos)
     # castling check
     figure = self.get_piece(pos)
-    if self.is_can and figure.name == "R" and figure.is_can and figure.color == self.color:
+    if figure and self.is_can and figure.name == "R" and figure.is_can and figure.color == self.color:
         return self.check_castling(figure, pos)
     return False
 

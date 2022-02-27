@@ -41,14 +41,15 @@ class Client:
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     print("Connected")
                     if debug:
-                        print(int(data.split()[1]))
+                        a = data.split()
+                        print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
                     self.color = int(data.split()[1])
+                    self.board.step = int(data.split()[2])
                     if self.color:
                         self.judge.flip()
                         # self.judge.color = int(data.split()[1])
                     # self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     # self.board.set_color(int(data.split()[1]))
-                    # self.board.step = int(data.split()[2])
                     self.socket = sock
             else:
                 if not self.sending_to_the_server("Check connection"):

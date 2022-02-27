@@ -71,11 +71,11 @@ class Board:
             # move piece to new cell
             if self.focused and self.dragging:
                 self.dragging = False
-                self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
-                                     (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
+                self.focused.update([(self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
+                                     (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]])
             elif self.focused:
-                self.focused.update(((event.pos[0] - self.position[0]) // self.size[0],
-                                     (event.pos[1] - self.position[1]) // self.size[1]))
+                self.focused.update([(event.pos[0] - self.position[0]) // self.size[0],
+                                     (event.pos[1] - self.position[1]) // self.size[1]])
 
     def get_pos(self, pos):  # get a piece using position
         for i in range(len(self.board)):

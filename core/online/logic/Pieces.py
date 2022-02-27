@@ -59,4 +59,4 @@ class LogicPieces:
         pass
 
     def __repr__(self):
-        return f"{self.name}{chr(104-self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
+        return f"{self.name}{chr(97+self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
