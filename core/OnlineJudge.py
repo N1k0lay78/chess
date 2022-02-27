@@ -1,4 +1,5 @@
 from threading import Thread
+from Source.settings import online_host_ip, online_host_port, nickname
 from core.online.Client import Client
 
 
@@ -6,8 +7,8 @@ class OnlineJudge:
     def __init__(self, board, board_line: str):
         self.board = board
         self.board_line = board_line
-        self.nickname = input()
-        self.socket, self.port = "192.168.1.13", 8080
+        self.nickname = nickname if nickname else input()
+        self.socket, self.port = online_host_ip, online_host_port
         self.client = Client(board, self.nickname, self.socket, self.port, self)
         self.client_thread = Thread(target=self.client.run)
         self.client_thread.start()
@@ -26,14 +27,20 @@ class OnlineJudge:
     def on_remove(self, name: str) -> None:
         """on pieces eat"""
         # if the king died, then we restart the game
-        if name == "K":
-            self.board.game.restart = True
+
+        # TODO: this
+
+        # if name == "K":
+        #     self.board.game.restart = True
 
     def on_swap(self, cell: tuple) -> None:
         """swap pawn"""
-        pawn = self.board.get_pos(cell)
-        self.board.remove_piece(pawn)
-        self.board.add_piece(input("CHOICE: ").upper() + str(pawn))
+
+        # TODO: this
+
+        # pawn = self.board.get_pos(cell)
+        # self.board.remove_piece(pawn)
+        # self.board.add_piece(input("CHOICE: ").upper() + str(pawn))
 
     def on_castling(self, is_right: bool, color: int) -> None:
         """king make castling"""
@@ -44,10 +51,8 @@ class OnlineJudge:
 
     def restart(self) -> None:
         pass
-        # self.board.load_board(self.board_line)
 
     def flip(self):
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         self.board.color = 1
         for piece in self.board.board:
             piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
