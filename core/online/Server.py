@@ -108,6 +108,15 @@ class Socket(Thread):
             except:
                 continue
 
+    def return_all_back(self):
+        while True:
+            try:
+                for address, data in self.users.items():
+                    self.send_to_user(data[0], f"im:{self.board.step}:{self.board.can_view(data[2])}")
+                return
+            except:
+                continue
+
     def get_user_message(self, nickname, address, conn, color):
         while True:
             try:
@@ -118,6 +127,8 @@ class Socket(Thread):
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
                         if not self.wait_choice and move:
                             self.update_all_users_condition()
+                        elif not move:
+                            self.return_all_back()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
                     elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
                         if self.board.get_piece(self.pawn_coord).replace(data[3]):
