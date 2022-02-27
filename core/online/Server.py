@@ -109,11 +109,11 @@ class Socket(Thread):
             try:
                 data = str(conn.recv(1024))[2:-1]
                 if data and data != "Check connection":
-                    print(data)
+                    # print(data)
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
-                        print(move)
+                        # print(move)
                         if not self.wait_choice and move:
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))

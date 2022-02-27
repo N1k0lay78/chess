@@ -36,7 +36,7 @@ class Client:
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     print("Connected")
-                    print(int(data.split()[1]))
+                    # print(int(data.split()[1]))
                     self.color = int(data.split()[1])
                     if self.color:
                         self.judge.flip()
@@ -63,9 +63,9 @@ class Client:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
                         if data[:2] == "nm":
-                            print(data)
+                            # print(data)
                             self.board.step = int(data.split(":")[1])
-                            print(self.board.step)
+                            # print(self.board.step)
                             self.board.load_board(data.split(":")[2])
                             if self.color:
                                 self.judge.flip()
