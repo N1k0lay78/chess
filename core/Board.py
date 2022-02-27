@@ -38,41 +38,46 @@ class Board:
             else:
                 layers[piece.pos[1]] = [piece]
         for key in sorted(list(layers.keys())):
-            for figure in layers[key]:
-                figure.draw()
+            for piece in layers[key]:
+                piece.draw()
         if self.focused and debug:
             pygame.draw.circle(self.game.screen, (255, 255, 255), (self.focused.pos[0] + 25,
                                                                    self.focused.pos[1] + 35), 5)
 
     def update(self, event):
-        # focused - the figure we are moving
+        # focused - the piece we are moving
         # dragging - whether to move the shape when moving the mouse
-        if not self.pause:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.last_mouse_pos = event.pos
-                figure = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
-                                       (event.pos[1] - self.position[1]) // self.size[1]))
-                # is there a piece and check that its move
-                print(figure.color, self.color, self.step)
-                if figure is not None and figure.color == self.color == self.step % 2:
-                    self.focused = figure
-                    self.dragging = True
-                elif figure is None:
-                    self.dragging = False
-            elif event.type == pygame.MOUSEMOTION:
-                # move figure if dragging
-                if self.dragging and self.focused:
-                    self.focused.move((self.last_mouse_pos[0] - event.pos[0],
-                                       self.last_mouse_pos[1] - event.pos[1]))
-                    self.last_mouse_pos = event.pos
-            elif event.type == pygame.MOUSEBUTTONUP:
-                self.dragging = False
-                # move figure to new cell
-                if self.focused:
-                    self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
-                                         (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
+        
+        if self.pause:
+            return
 
-    def get_pos(self, pos):  # get a figure using position
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.last_mouse_pos = event.pos
+            piece = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
+                                   (event.pos[1] - self.position[1]) // self.size[1]))
+            # is there a piece and check that its move
+            if piece is not None and piece.color == self.color == self.step % 2:
+                self.focused = piece
+                self.dragging = True
+            elif piece is None:
+                self.dragging = False
+        elif event.type == pygame.MOUSEMOTION:
+            # move piece if dragging
+            if self.dragging and self.focused:
+                self.focused.move((self.last_mouse_pos[0] - event.pos[0],
+                                   self.last_mouse_pos[1] - event.pos[1]))
+                self.last_mouse_pos = event.pos
+        elif event.type == pygame.MOUSEBUTTONUP:
+            # move piece to new cell
+            if self.focused and self.dragging:
+                self.dragging = False
+                self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
+                                     (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
+            else:
+                self.focused.update(((event.pos[0] - self.position[0]) // self.size[0],
+                                     (event.pos[1] - self.position[1]) // self.size[1]))
+
+    def get_pos(self, pos):  # get a piece using position
         for i in range(len(self.board)):
             if self.board[i].cell[0] == pos[0] and self.board[i].cell[1] == pos[1]:
                 return self.board[i]
