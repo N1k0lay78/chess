@@ -1,11 +1,13 @@
 class LogicPieces:
     def __init__(self, board, name, cell, color, is_can):
+        # settings
         self.board = board
         self.name = name
+        self.color = color  # 0 - downside (green), 1 - upside (red)
+        self.is_can = is_can
+        # init
         self.cell = [0, 0]
         self.set_cell(cell)
-        self.is_can = is_can
-        self.color = color  # 0 - downside (green), 1 - upside (red)
 
     def can_move(self, cell):  # can move to cell
         return cell != self.cell
