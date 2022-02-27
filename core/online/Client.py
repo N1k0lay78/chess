@@ -67,7 +67,7 @@ class Client:
                 try:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection":
-                        if data[:2] == "nm":
+                        if data[:2] in ["nm", "im"]:
                             self.board.step = int(data.split(":")[1])
                             if debug:
                                 print(data)
