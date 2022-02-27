@@ -47,7 +47,7 @@ class Board:
     def update(self, event):
         # focused - the piece we are moving
         # dragging - whether to move the shape when moving the mouse
-        
+
         if self.pause:
             return
 
@@ -73,7 +73,7 @@ class Board:
                 self.dragging = False
                 self.focused.update(((self.focused.pos[0] + 25 - self.position[0]) // self.size[0],
                                      (self.focused.pos[1] + 35 - self.position[1]) // self.size[1]))
-            else:
+            elif self.focused:
                 self.focused.update(((event.pos[0] - self.position[0]) // self.size[0],
                                      (event.pos[1] - self.position[1]) // self.size[1]))
 
