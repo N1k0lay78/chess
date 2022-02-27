@@ -3,7 +3,7 @@ import time
 from Source.boards import boards
 from threading import Thread
 
-from Source.settings import name_board_to_play
+from Source.settings import name_board_to_play, debug
 from core.online.logic.Board import LogicBoard
 
 
@@ -116,6 +116,8 @@ class Socket(Thread):
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
+                        if debug:
+                            print(("can" if move else "can't") + " move")
                         if not self.wait_choice and move:
                             self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
