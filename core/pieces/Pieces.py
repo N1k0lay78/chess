@@ -23,10 +23,6 @@ class Pieces(LogicPieces):
     def update(self, cell: tuple):
         if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
             # move
-            # if self.board.board.color == 1:
-            #     self.board.client.sending_to_the_server(f"mo {7-self.cell[0]},{7-self.cell[1]}:{7-cell[0]},{7-cell[1]}:{str(self).lower()}")
-            # else:
-            #     self.board.client.sending_to_the_server(f"mo {self.cell[0]},{self.cell[1]}:{cell[0]},{cell[1]}:{str(self).lower()}")
             fr = self.cell[:]
             self.set_cell(cell)
             self.on_move()
