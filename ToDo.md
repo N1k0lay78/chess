@@ -25,6 +25,8 @@
 - online connection
 
 ### future
+- scale of game
+- logging
 - settings file (not .py)
 - make creation board
 - UI main menu
