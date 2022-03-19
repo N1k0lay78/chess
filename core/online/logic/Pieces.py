@@ -1,3 +1,6 @@
+from core.logic.pieces_view import small_view
+
+
 class LogicPieces:
     def __init__(self, board, name, cell, color, is_can):
         # settings
@@ -12,8 +15,7 @@ class LogicPieces:
     def can_move(self, cell):  # can move to cell
         return cell != self.cell
 
-    def can_view(self, cell):  # can view figure
-        return self.cell[0] - 1 <= cell[0] <= self.cell[0] + 1 and self.cell[1] - 1 <= cell[1] <= self.cell[1] + 1
+    can_view = small_view
 
     def get_piece(self, cell):  # get figure from board
         return self.board.get_piece(cell)

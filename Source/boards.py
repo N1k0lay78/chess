@@ -11,4 +11,6 @@ boards = {
     "test2": "Ka8b1 Kh1w1 c3w1 b5b1 Rd8b1 Rd1w1",
     "test3": "Ra8b1 Rh8b1 Ra1w1 Rh1w1 Ke8b1 Ke1w1",
     "test4": "Ra1w1 Ke1w1",
+    "test5": "Ka1w0 Qb1w1 Nc1w1 Rd1w0 Be1w0 f1w0 Kg1b0",
+    "test6": "Ka1w0 Qb1b1 Nc1b1 Rd1w0 Be1w0 f1w0 Kg1b0",
 }

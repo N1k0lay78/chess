@@ -1,13 +1,14 @@
 from Source.boards import boards
-from Source.settings import name_board_to_play, is_on_fog_of_war
+from Source.settings import name_board_to_play
 from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
 from Source.settings import debug
 
 
 class LogicBoard:
-    def __init__(self, server):
+    def __init__(self, server, is_on_fog_of_war=False):
         # settings
         self.server = server
+        self.with_fog_of_war = is_on_fog_of_war
         # game logic
         self.pieces = []
         self.step = 0
@@ -27,7 +28,8 @@ class LogicBoard:
             return False
 
     def can_view(self, color):
-        if is_on_fog_of_war:
+
+        if self.with_fog_of_war:
             visible = []
             player_pieces = self.get_pieces(color)
             for piece in self.pieces:

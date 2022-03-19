@@ -25,11 +25,11 @@ class FogOfWar:
         self.map = [[1] * (8 + self.padding * 2) for _ in range(8 + self.padding * 2)]
         for figure in self.game.board.board:
             if figure.color == self.game.board.color:
-                if type(figure) == Pawn:
-                    for y in range(-1, 1):  # [-1;0]
-                        for x in range(-1, 2):  # [-1;1]
-                            self.map[figure.cell[1] + self.padding + y][figure.cell[0] + self.padding + x] = 0
-                if type(figure) in [Horse, King, Queen]:
+                # if type(figure) == Pawn:
+                #     for y in range(-1, 1):  # [-1;0]
+                #         for x in range(-1, 2):  # [-1;1]
+                #             self.map[figure.cell[1] + self.padding + y][figure.cell[0] + self.padding + x] = 0
+                if figure.name in "NKQ":
                     for y in range(-1, 2):  # [-1;-1]
                         for x in range(-2, 3):  # [-2;2]
                             self.map[figure.cell[1] + self.padding + y][figure.cell[0] + self.padding + x] = 0

@@ -3,7 +3,7 @@ import time
 from Source.boards import boards
 from threading import Thread
 
-from Source.settings import name_board_to_play, debug
+from Source.settings import name_board_to_play, debug, is_on_fog_of_war
 from core.online.logic.Board import LogicBoard
 
 
@@ -29,7 +29,7 @@ class Socket(Thread):
         self.pawn_coord = []
         self.choice_color = 4
         self.line = boards[name_board_to_play]
-        self.board = LogicBoard(self)
+        self.board = LogicBoard(self, is_on_fog_of_war)
         self.board.load_board(self.line)
 
     def ask_user_choice(self, color, coord):
