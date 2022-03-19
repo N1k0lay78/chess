@@ -28,6 +28,7 @@
 - scale of game
 - logging
 - remake class Game separate logic and view
+- one class one do
 - settings file (not .py)
 - make creation board
 - UI main menu

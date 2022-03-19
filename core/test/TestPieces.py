@@ -24,6 +24,8 @@ testing_boards = [
     "b2w1 Qa3w1 Qc3b1",  # Black Pawn at B2 not move and White Queen at A3 and Black Queen at C3
 
     "b3w0",              # White pawn make move
+
+    "Kd1w0 Qd3w0 Rc3w0 Bd2w0 c2w1 Nc1w0 Kh8b0",  # test move in or over
 ]
 
 
@@ -157,3 +159,59 @@ class TestPiecesMove(TestCase):
         self.logic_board.load_board(testing_boards[17])
         self.assertEqual(self.logic_board.pieces[0].can_move([1, 4]), True,  'Pawn Up')
         self.assertEqual(self.logic_board.pieces[0].can_move([1, 3]), False, 'Pawn 2Up')
+
+    def test_move_in(self):
+        self.logic_board.load_board(testing_boards[18])
+
+        # King
+        self.logic_board.move([3, 7], [3, 6])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'King move into friendly figure')
+
+        # Queen
+        self.logic_board.move([3, 5], [2, 5])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Queen move into friendly figure')
+
+        # Horse (Knight)
+        self.logic_board.move([2, 7], [3, 5])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Horse move into friendly figure')
+
+        # Rook
+        self.logic_board.move([2, 5], [2, 6])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Rook move into friendly figure')
+
+        # Elephant (Bishop)
+        self.logic_board.move([3, 6], [2, 7])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Elephant move into friendly figure')
+
+        # Pawn
+        self.logic_board.move([2, 6], [2, 5])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Pawn move into friendly figure')
+
+    def test_move_over(self):
+        self.logic_board.load_board(testing_boards[18])
+
+        # Queen
+        self.logic_board.move([3, 5], [1, 5])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Queen move over friendly figure')
+
+        # Rook
+        self.logic_board.move([2, 5], [4, 5])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Rook move over friendly figure')
+
+        # Elephant (Bishop)
+        self.logic_board.move([3, 6], [1, 4])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Elephant move over friendly figure')
+
+        # Pawn
+        self.logic_board.move([2, 6], [2, 4])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Pawn move over friendly figure')
