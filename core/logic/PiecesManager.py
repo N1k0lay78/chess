@@ -60,30 +60,3 @@ class PiecesManager:
 
     def get_line(self, pieces_to_line):
         return " ".join(map(str, pieces_to_line))
-
-
-if __name__ == '__main__':
-    from Source.boards import boards
-
-    class Nothing1:
-        type = "P"
-
-        def __init__(self, board, pos, color):
-            self.board = board
-            self.pos = pos
-            self.color = color
-
-        def __repr__(self):
-            return f"{self.type}:{self.pos[0]}x{self.pos[1]}:{self.color}"
-
-    class Nothing2(Nothing1):
-        type = "K"
-
-    pieces = {"P": Nothing1, "K": Nothing2}
-    pieces_manager = PiecesManager(None, pieces)
-    assert list(map(str, pieces_manager.read_line(boards["test2"]))) == ["K:7x0:1", "K:0x7:0", "P:5x1:0", "P:5x6:1"]
-    try:
-        pieces_manager.read_line("0235")
-        print("Wrong")
-    except LoadingBoardError:
-        pass

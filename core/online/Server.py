@@ -29,7 +29,8 @@ class Socket(Thread):
         self.pawn_coord = []
         self.choice_color = 4
         self.line = boards[name_board_to_play]
-        self.board = LogicBoard(self, self.line)
+        self.board = LogicBoard(self)
+        self.board.load_board(self.line)
 
     def ask_user_choice(self, color, coord):
         while True:

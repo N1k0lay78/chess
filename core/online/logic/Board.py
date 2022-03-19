@@ -5,7 +5,7 @@ from Source.settings import debug
 
 
 class LogicBoard:
-    def __init__(self, server, line):
+    def __init__(self, server):
         # settings
         self.server = server
         # game logic
@@ -13,7 +13,6 @@ class LogicBoard:
         self.step = 0
         # init
         self.pieces_manager = PiecesManager(self, logic_pieces_dict)
-        self.load_board(line)
 
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
@@ -73,9 +72,3 @@ class LogicBoard:
         except LoadingBoardError as e:
             self.pieces = []
             print(e)
-
-
-if __name__ == '__main__':
-    board = LogicBoard("")
-    board.load_board(boards["classic"])
-    print(board.can_view(1))

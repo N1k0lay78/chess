@@ -1,6 +1,8 @@
 # What needs to do
 
 ## need to fix
+- online connection not work  (commit "make all tests for PiecesManager")
+- online pawn eat king (starting swap and reloading -> crash)
 - pawn move over figure
 - close game in online mode
 
@@ -20,7 +22,6 @@
 ### tests
 - moving a figure
 - board
-- PiecesManager
 - online board
 - online connection
 
