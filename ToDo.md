@@ -20,9 +20,8 @@
 - mate
 
 ### tests
-- moving a figure
 - board
-- online board
+- make test for swap in online board
 - online connection
 
 ### future
