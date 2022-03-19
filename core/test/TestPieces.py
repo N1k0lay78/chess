@@ -65,7 +65,7 @@ class TestPiecesMove(TestCase):
     def test_horse(self):
         self.logic_board.load_board(testing_boards[2])
         self.assertEqual(self.logic_board.pieces[0].can_move([0, 0]), False, 'Horse (-2,  2)')
-        self.assertEqual(self.logic_board.pieces[0].can_move([1, 0]), True, 'Horse  (-1,  2)')
+        self.assertEqual(self.logic_board.pieces[0].can_move([1, 0]), True,  'Horse (-1,  2)')
         self.assertEqual(self.logic_board.pieces[0].can_move([2, 0]), False, 'Horse (0,   2)')
         self.assertEqual(self.logic_board.pieces[0].can_move([3, 0]), True,  'Horse (1,   2)')
         self.assertEqual(self.logic_board.pieces[0].can_move([4, 0]), False, 'Horse (2,   2)')
