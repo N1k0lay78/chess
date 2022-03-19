@@ -4,9 +4,8 @@ from core.online.Client import Client
 
 
 class OnlineJudge:
-    def __init__(self, board, board_line: str):
+    def __init__(self, board):
         self.board = board
-        self.board_line = board_line
         self.nickname = nickname if nickname else input()
         self.socket, self.port = online_host_ip, online_host_port
         self.client = Client(board, self.nickname, self.socket, self.port, self)

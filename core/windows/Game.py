@@ -1,5 +1,5 @@
 from Source.boards import boards
-from Source.settings import is_on_fog_of_war, is_online, name_board_to_play
+from Source.settings import is_on_fog_of_war
 from core.online.Client import Client
 from core.Judge import Judge
 from core.OnlineJudge import OnlineJudge
@@ -11,7 +11,8 @@ import pygame
 
 
 class Game:
-    def __init__(self, size: tuple, title: str, color: int, fps=30, icon=None, **flags):
+    def __init__(self, size: tuple, title: str, color: int, is_online: bool, board_to_play: str,
+                 fps=30, icon=None, **flags):
         self.screen = pygame.display.set_mode(size, **flags)
         if title:
             pygame.display.set_caption(title)
@@ -23,9 +24,9 @@ class Game:
         self.board = Board(self, (100, 100), (50, 50), 0)
         self.restart = False
         if is_online:
-            self.judge = OnlineJudge(self.board, boards[name_board_to_play])
+            self.judge = OnlineJudge(self.board)
         else:
-            self.judge = Judge(self.board, boards[name_board_to_play])
+            self.judge = Judge(self.board, boards[board_to_play])
         self.judge.restart()
         self.fog = FogOfWar(self, (-50, -50), 3, (50, 50), 'fog', color)
 

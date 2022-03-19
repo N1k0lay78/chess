@@ -28,6 +28,7 @@
 ### future
 - scale of game
 - logging
+- remake class Game separate logic and view
 - settings file (not .py)
 - make creation board
 - UI main menu
