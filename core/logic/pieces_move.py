@@ -38,7 +38,8 @@ def logic_pawn_move(self, pos):
             return True
         # if this is the first move, then we can move 2 cells
         elif self.is_can and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2) and \
-                self.check_clear_cell(pos):
+                self.check_clear_cell(pos) and \
+                self.check_clear_cell((self.cell[0], self.cell[1] + (1 if self.color % 2 == 0 else -1))):
             return True
     # if they want to go sideways, then we check that we can go and that there is an enemy
     elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and \
