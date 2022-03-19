@@ -54,7 +54,7 @@ class Board:
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.last_mouse_pos = event.pos
             piece = self.get_pos(((event.pos[0] - self.position[0]) // self.size[0],
-                                   (event.pos[1] - self.position[1]) // self.size[1]))
+                                  (event.pos[1] - self.position[1]) // self.size[1]))
             # is there a piece and check that its move
             if piece is not None and piece.color == self.color == self.step % 2:
                 self.focused = piece
