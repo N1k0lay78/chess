@@ -41,6 +41,7 @@ class Socket(Thread):
                         self.pawn_coord = coord
                         self.choice_color = color
                         self.send_to_user(data[0], "ch make right choice")
+                        self.update_all_users_condition()
                 break
             except:
                 continue
@@ -141,7 +142,6 @@ class Socket(Thread):
                     else:
                         pass
                         # special_print(f"Message from {nickname} - {data}", level=10)
-                    # Какие-то данные, какие-то сравнения
             except Exception as e:
                 special_print(e, level=10)
                 special_print(f"Bad connection with {nickname} {address}", level=10)
@@ -155,6 +155,11 @@ class Socket(Thread):
 
     def to_text(self, message):
         return str(message)[2:-1]
+
+    def restart(self):
+        self.wait_choice = False
+        self.pawn_coord = []
+        self.choice_color = 4
 
 
 class Server:

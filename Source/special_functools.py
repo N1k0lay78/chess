@@ -1,4 +1,4 @@
-from settings import debug
+from Source.settings import debug
 
 
 def special_print(*message, **args):
