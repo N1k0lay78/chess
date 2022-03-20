@@ -1,7 +1,7 @@
 import socket
 from threading import Thread
-from Source.settings import debug
 import time
+from Source.special_functools import special_print
 import pygame
 
 # Получаем свой локальный ip адрес
@@ -39,10 +39,9 @@ class Client:
 
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
-                    print("Connected")
-                    if debug:
-                        a = data.split()
-                        print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
+                    special_print("Connected", level=10)
+                    a = data.split()
+                    special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
                     self.color = int(data.split()[1])
                     self.board.step = int(data.split()[2])
                     if self.color:
@@ -70,9 +69,8 @@ class Client:
                     if data != "Check connection":
                         if data[:2] in ["nm", "im"]:
                             self.board.step = int(data.split(":")[1])
-                            if debug:
-                                print(data)
-                                print(self.board.step)
+                            special_print(data, level=10)
+                            special_print(self.board.step, level=10)
                             self.board.load_board(data.split(":")[2])
                             if self.color:
                                 self.judge.flip()
@@ -80,7 +78,7 @@ class Client:
                             wait_user_choice_thread = Thread(target=self.wait_user_choice)
                             wait_user_choice_thread.start()
                 except:
-                    print("Lost connection")
+                    special_print("Lost connection", level=10)
                     self.socket = None
 
     def wait_user_choice(self):
@@ -93,7 +91,7 @@ class Client:
             try:
                 self.socket.send(self.to_bytes(message))
             except:
-                print("Lost connection")
+                special_print("Lost connection", level=10)
                 self.socket = None
                 return False
         return True

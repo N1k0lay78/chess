@@ -2,8 +2,8 @@ import socket
 import time
 from Source.boards import boards
 from threading import Thread
-
-from Source.settings import name_board_to_play, debug, is_on_fog_of_war
+from Source.settings import name_board_to_play, is_on_fog_of_war
+from Source.special_functools import special_print
 from core.online.logic.Board import LogicBoard
 
 
@@ -50,17 +50,17 @@ class Socket(Thread):
             try:
                 conn.send(self.to_bytes(message))
             except:
-                print("Error with send message", message)
+                special_print("Error with send message", message, level=10)
                 return False
         return True
 
     def user_master(self):
-        print("Success create user master")
+        special_print("Success create user master")
         Thread(target=self.user_queue).start()
         while True:
             conn, address = self.sock.accept()
             nickname = str(conn.recv(1024))[2:-1]
-            print(f"{nickname} try to connect")
+            special_print(f"{nickname} try to connect")
             self.queue.append([nickname, conn, address])
 
     def user_queue(self):
@@ -75,8 +75,8 @@ class Socket(Thread):
                     self.players.append((nickname, color))
                     self.active_players.append(nickname)
                     self.users[address] = [conn, nickname, color]
-                    print(f"{nickname} joined the game")
-                    print(f"Users {len(self.users)}/{self.max_users}")
+                    special_print(f"{nickname} joined the game", level=10)
+                    special_print(f"Users {len(self.users)}/{self.max_users}", level=10)
                     self.queue.remove([nickname, conn, address])
                     Thread(target=self.check_user_connect, args=(nickname, address, conn, color)).start()
                     Thread(target=self.get_user_message, args=(nickname, address, conn, color)).start()
@@ -94,9 +94,9 @@ class Socket(Thread):
                 if address in self.users:
                     self.active_players.remove(nickname)
                     del self.users[address]
-                print(f"{nickname} left the game")
-                print(f"Connection timed out with {address[0]}:{address[1]}")
-                print(f"Users {len(self.users)}/{self.max_users}")
+                special_print(f"{nickname} left the game", level=10)
+                special_print(f"Connection timed out with {address[0]}:{address[1]}", level=10)
+                special_print(f"Users {len(self.users)}/{self.max_users}", level=10)
                 return
             time.sleep(self.check_time)
 
@@ -126,13 +126,12 @@ class Socket(Thread):
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
-                        if debug:
-                            print(("can" if move else "can't") + " move")
+                        special_print(("can" if move else "can't") + " move", level=10)
                         if not self.wait_choice and move:
                             self.update_all_users_condition()
                         elif not move:
                             self.return_all_back()
-                        # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                        # special_print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))), level=10)
                     elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
                         if self.board.get_piece(self.pawn_coord).replace(data[3]):
                             self.update_all_users_condition()
@@ -141,11 +140,11 @@ class Socket(Thread):
                             self.ask_user_choice(self.choice_color, self.pawn_coord)
                     else:
                         pass
-                        # print(f"Message from {nickname} - {data}")
+                        # special_print(f"Message from {nickname} - {data}", level=10)
                     # Какие-то данные, какие-то сравнения
             except Exception as e:
-                print(e)
-                print(f"Bad connection with {nickname} {address}")
+                special_print(e, level=10)
+                special_print(f"Bad connection with {nickname} {address}", level=10)
                 return
 
     def run(self):

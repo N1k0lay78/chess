@@ -1,7 +1,7 @@
 from Source.boards import boards
 from Source.settings import name_board_to_play
 from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
-from Source.settings import debug
+from Source.special_functools import special_print
 
 
 class LogicBoard:
@@ -19,9 +19,7 @@ class LogicBoard:
         piece = self.get_piece(from_cell)
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
-            if debug:
-                print("NEXT MOVE")
-
+            special_print("NEXT MOVE", level=10)
             self.step += 1
             return True
         else:
@@ -51,10 +49,14 @@ class LogicBoard:
 
     def remove_piece(self, piece):
         if type(piece) == logic_pieces_dict["K"]:
-            print('won', ("white" if piece.color == 1 else "black"))
-            self.load_board(boards[name_board_to_play])
+            self.restart_game(piece.color)
         else:
             self.pieces.remove(piece)
+
+    def restart_game(self, color):
+        special_print('won', ("white" if color == 1 else "black"), level=10)
+        self.step = -1
+        self.load_board(boards[name_board_to_play])
 
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))
@@ -66,11 +68,11 @@ class LogicBoard:
         try:
             self.pieces.append(self.pieces_manager.add_piece(code))
         except LoadingBoardError as e:
-            print(e)
+            special_print(e, level=10)
 
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
             self.pieces = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.pieces = []
-            print(e)
+            special_print(e, level=10)

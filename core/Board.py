@@ -1,9 +1,7 @@
-import pygame
-
-from Source.settings import debug
 from core.logic.PiecesManager import PiecesManager, game_pieces_dict, LoadingBoardError
 from core.textures.Tileset import TileSet
-from core.textures.load_image import load_image
+from Source.special_functools import special_print
+import pygame
 
 
 class Board:
@@ -40,7 +38,7 @@ class Board:
         for key in sorted(list(layers.keys())):
             for piece in layers[key]:
                 piece.draw()
-        if self.focused and debug:
+        if self.focused:  # Тут был дебаг, но фича заслуживает релиза
             pygame.draw.circle(self.game.screen, (255, 255, 255), (self.focused.pos[0] + 25,
                                                                    self.focused.pos[1] + 35), 5)
 
@@ -97,7 +95,7 @@ class Board:
         try:
             self.board.append(self.pieces_manager.add_piece(code))
         except LoadingBoardError as e:
-            print(e)
+            special_print(e, level=10)
 
     def restart(self, line):
         self.step = 0
@@ -110,7 +108,7 @@ class Board:
             self.board = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.board = []
-            print(e)
+            special_print(e, level=10)
 
     def set_pause(self, pause):
         self.pause = pause
