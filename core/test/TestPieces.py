@@ -25,7 +25,9 @@ testing_boards = [
 
     "b3w0",              # White pawn make move
 
-    "Kd1w0 Qd3w0 Rc3w0 Bd2w0 c2w1 Nc1w0 Kh8b0",  # test move in or over
+    "Kd1w0 Qd3w0 Rc3w0 Bd2w0 c2w1 Nc1w0 Kh8b0 a2w1 a1w0 b2w1 b3w0 a7b1 a8b0 b7b1 b6b0",  # test move in or over
+    "Kd1w0 Qd3w0 Rc3w0 Bd2w0 c2w1 Nc1w0 Kh8b0 a4w0 a1w0 b2w1 b3w0 a7b1 a8b0 b7b1 b6b0",
+    "Kd1w0 Qd3w0 Rc3w0 Bd2w0 c2w1 Nc1w0 Kh8b0 a4w0 a1w0 b2w1 b3w0 a5b0 a8b0 b7b1 b6b0",
 ]
 
 
@@ -215,3 +217,19 @@ class TestPiecesMove(TestCase):
         self.logic_board.move([2, 6], [2, 4])
         self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
                          'Pawn move over friendly figure')
+
+        self.logic_board.move([1, 6], [1, 4])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Pawn move over friendly figure')
+
+        self.logic_board.move([1, 1], [1, 3])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[18],
+                         'Pawn move over friendly figure')
+
+        self.logic_board.move([0, 6], [0, 4])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[19],
+                         'Pawn pawn can make this move')
+
+        self.logic_board.move([0, 1], [0, 3])
+        self.assertEqual(self.logic_board.get_board_line(self.logic_board.pieces), testing_boards[20],
+                         'Pawn pawn can make this move')
