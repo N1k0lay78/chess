@@ -11,6 +11,7 @@
 - shah
 - mate
 - save game history
+- try to delete replace of code (logic and game pieces, boards and other)
 
 ### UI
 - to swap pawn
