@@ -1,5 +1,5 @@
 def elephant_move(self, pos):
-    move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]
+    move_x, move_y = pos[0] - self.c, pos[1] - self.r
     # check that we are moving diagonally
     if move_y != 0 and move_x / move_y in (-1, 1):
         # get direction
@@ -7,7 +7,8 @@ def elephant_move(self, pos):
         move_y = 1 if move_y > 0 else -1
         # make ray cast to the target, if it did not intersect with anything, then we go to the cell
         # we check that there is either nothing with the destination or the enemy
-        return all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0]))]) and self.check_not_friendly_cell(pos)
+        return all([self.check_clear_cell((self.c + move_x * i, self.r + move_y * i))
+                    for i in range(1, abs(self.c - pos[0]))]) and self.check_not_friendly_cell(pos)
     return False
 
 
@@ -16,57 +17,59 @@ def horse_move(self, pos):
     moves = ((2, 1), (1, 2), (-1, 2), (-2, 1), (-2, -1), (-1, -2), (1, -2), (2, -1))
     # heck that the target is where we can move
     return any([True for move in moves
-                if pos[0] == self.cell[0] + move[0] and pos[1] == self.cell[1] + move[1]
+                if pos[0] == self.c + move[0] and pos[1] == self.r + move[1]
                 and self.check_not_friendly_cell(pos)])
 
 
 def king_move(self, pos):
     # check that we are moving one cell
-    if abs(self.cell[0] - pos[0]) < 2 and abs(self.cell[1] - pos[1]) < 2:
+    if abs(self.c - pos[0]) < 2 and abs(self.r - pos[1]) < 2:
         return self.check_not_friendly_cell(pos)
     # castling check
     figure = self.get_piece(pos)
-    if figure and self.is_can and figure.name == "R" and figure.is_can and figure.color == self.color:
+    if figure and self.i and figure.t == "R" and figure.i and figure.s == self.s:
         return self.check_castling(figure, pos)
     return False
 
 
 def logic_pawn_move(self, pos):
-    if pos[0] == self.cell[0]:
+    if pos[0] == self.c:
         # check that the point is 1 cell forward
-        # print(self.is_can and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2), self.check_clear_cell(pos), self.check_clear_cell((self.cell[0], self.cell[1] - (1 if self.color % 2 == 0 else -1))))
-        if pos[1] == self.cell[1] - (1 if self.color % 2 == 0 else -1) and self.check_clear_cell(pos):
+        # print(self.is_can and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2),
+        #       self.check_clear_cell(pos),
+        #       self.check_clear_cell((self.cell[0], self.cell[1] - (1 if self.color % 2 == 0 else -1))))
+        if pos[1] == self.r - (1 if self.s % 2 == 0 else -1) and self.check_clear_cell(pos):
             return True
         # if this is the first move, then we can move 2 cells
-        elif self.is_can and pos[1] == self.cell[1] - (2 if self.color % 2 == 0 else -2) and \
+        elif self.i and pos[1] == self.r - (2 if self.s % 2 == 0 else -2) and \
                 self.check_clear_cell(pos) and \
-                self.check_clear_cell((self.cell[0], self.cell[1] - (1 if self.color % 2 == 0 else -1))):
+                self.check_clear_cell((self.c, self.r - (1 if self.s % 2 == 0 else -1))):
             return True
     # if they want to go sideways, then we check that we can go and that there is an enemy
-    elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and \
-            pos[1] == self.cell[1] - (1 if self.color % 2 == 0 else -1) and self.check_eat(pos):
+    elif (pos[0] + 1 == self.c or pos[0] - 1 == self.c) and \
+            pos[1] == self.r - (1 if self.s % 2 == 0 else -1) and self.check_eat(pos):
         return True
     return False
 
 
 def game_pawn_move(self, pos):
-    if pos[0] == self.cell[0]:
+    if pos[0] == self.c:
         # check that the point is 1 cell forward
-        if pos[1] == self.cell[1] - 1 and self.check_clear_cell(pos):
+        if pos[1] == self.r - 1 and self.check_clear_cell(pos):
             return True
         # if this is the first move, then we can move 2 cells
-        elif self.is_can and pos[1] == self.cell[1] - 2 and self.check_clear_cell(pos)\
-                and self.check_clear_cell((self.cell[0], self.cell[1] - 1)):
+        elif self.i and pos[1] == self.r - 2 and self.check_clear_cell(pos)\
+                and self.check_clear_cell((self.c, self.r - 1)):
             return True
     # if they want to go sideways, then we check that we can go and that there is an enemy
-    elif (pos[0] + 1 == self.cell[0] or pos[0] - 1 == self.cell[0]) and \
-            pos[1] == self.cell[1] - 1 and self.check_eat(pos):
+    elif (pos[0] + 1 == self.c or pos[0] - 1 == self.c) and \
+            pos[1] == self.r - 1 and self.check_eat(pos):
         return True
     return False
 
 
 def queen_move(self, pos):
-    move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]
+    move_x, move_y = pos[0] - self.c, pos[1] - self.r
     # check that we are moving diagonally, or vertically, or horizontally
     if (move_x != move_y and (move_x == 0 or move_y == 0)) or (move_y != 0 and move_x / move_y in (-1, 1)):
         # get direction
@@ -74,12 +77,13 @@ def queen_move(self, pos):
         move_y = 1 if move_y > 0 else (-1 if move_y < 0 else 0)
         # make ray cast to the target, if it did not intersect with anything, then we go to the cell
         # we check that there is either nothing with the destination or the enemy
-        return all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0] if move_x else self.cell[1] - pos[1]))]) and self.check_not_friendly_cell(pos)
+        return all([self.check_clear_cell((self.c + move_x * i, self.r + move_y * i))
+                    for i in range(1, abs(self.c - pos[0] if move_x else self.r - pos[1]))]) and self.check_not_friendly_cell(pos)
     return False
 
 
 def rook_move(self, pos):
-    move_x, move_y = pos[0] - self.cell[0], pos[1] - self.cell[1]
+    move_x, move_y = pos[0] - self.c, pos[1] - self.r
     # check that we are moving vertically or horizontally
     if move_x != move_y and (move_x == 0 or move_y == 0):
         # get direction
@@ -87,5 +91,6 @@ def rook_move(self, pos):
         move_y = 1 if move_y > 0 else (-1 if move_y < 0 else 0)
         # make ray cast to the target, if it did not intersect with anything, then we go to the cell
         # we check that there is either nothing with the destination or the enemy
-        return all([self.check_clear_cell((self.cell[0] + move_x * i, self.cell[1] + move_y * i)) for i in range(1, abs(self.cell[0] - pos[0] + self.cell[1] - pos[1]))]) and self.check_not_friendly_cell(pos)
+        return all([self.check_clear_cell((self.c + move_x * i, self.r + move_y * i))
+                    for i in range(1, abs(self.c - pos[0] + self.r - pos[1]))]) and self.check_not_friendly_cell(pos)
     return False

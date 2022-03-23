@@ -29,7 +29,7 @@ class LogicPieces:
     def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
         piece = self.get_piece(cell)
         if piece:
-            if piece.color != self.color:
+            if piece.s != self.s:
                 self.remove_piece(piece)
                 return True
             else:
@@ -38,13 +38,13 @@ class LogicPieces:
 
     def check_eat(self, cell):  # enemy on cell
         piece = self.get_piece(cell)
-        if piece and piece.color != self.color:
+        if piece and piece.s != self.s:
             self.remove_piece(piece)
             return True
         return False
 
     def update(self, cell):
-        if 0 <= cell[0] <= 7 and 0 <= cell[1] <= 7 and self.can_move(cell):
+        if 0 <= self.r <= 7 and 0 <= self.c <= 7 and self.can_move(cell):
             self.set_cell(cell)
             self.on_move()
             return True
@@ -54,14 +54,33 @@ class LogicPieces:
     def set_cell(self, cell):
         self.cell = cell
 
-    def set_board(self, board):
-        self.board = board
-
     def on_move(self):
         pass
 
     def __repr__(self):
         return f"{self.name}{chr(97+self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
+
+    def __getattr__(self, item):
+        res = []
+        for ch in item.lower():
+            if ch == 'r':
+                res.append(self.cell[1])
+            elif ch == 'c':
+                res.append(self.cell[0])
+            elif ch == 't':
+                res.append(self.name)
+            elif ch == 's':  # s is side (c is column)
+                res.append(self.color)
+            elif ch == 'x':
+                res.append(self.pos[0])
+            elif ch == 'y':
+                res.append(self.pos[1])
+            elif ch == 'i':
+                res.append(self.is_can)
+        if len(res) != 1:
+            return res
+        else:
+            return res[0]
 
     def test(self):
         return [self.cell, self.name, self.is_can, self.color]
