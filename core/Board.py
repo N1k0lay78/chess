@@ -56,7 +56,7 @@ class Board:
             # is there a piece and check that its move
             if piece is not None and piece.color == self.color == self.step % 2:
                 if self.focused:
-                    self.focused.set_cell([-1, -1])
+                    self.focused.update([-1, -1])
                 self.focused = piece
                 self.dragging = True
             elif piece is None:
