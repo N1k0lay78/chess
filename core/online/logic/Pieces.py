@@ -30,7 +30,8 @@ class LogicPieces:
         piece = self.get_piece(cell)
         if piece:
             if piece.s != self.s:
-                self.remove_piece(piece)
+                # for offline
+                # self.remove_piece(piece)
                 return True
             else:
                 return False
@@ -39,12 +40,16 @@ class LogicPieces:
     def check_eat(self, cell):  # enemy on cell
         piece = self.get_piece(cell)
         if piece and piece.s != self.s:
-            self.remove_piece(piece)
+            # for offline
+            # self.remove_piece(piece)
             return True
         return False
 
     def update(self, cell):
         if 0 <= self.r <= 7 and 0 <= self.c <= 7 and self.can_move(cell):
+            piece = self.get_piece(cell)
+            if piece:
+                self.remove_piece(piece)
             self.set_cell(cell)
             self.on_move()
             return True
@@ -63,19 +68,19 @@ class LogicPieces:
     def __getattr__(self, item):
         res = []
         for ch in item.lower():
-            if ch == 'r':
+            if ch == 'r':  # row
                 res.append(self.cell[1])
-            elif ch == 'c':
+            elif ch == 'c':  # column
                 res.append(self.cell[0])
-            elif ch == 't':
+            elif ch == 't':  # type (name)
                 res.append(self.name)
-            elif ch == 's':  # s is side (c is column)
+            elif ch == 's':  # s is side like color (c is column)
                 res.append(self.color)
-            elif ch == 'x':
+            elif ch == 'x':  # x position
                 res.append(self.pos[0])
-            elif ch == 'y':
+            elif ch == 'y':  # y position
                 res.append(self.pos[1])
-            elif ch == 'i':
+            elif ch == 'i':  # is can
                 res.append(self.is_can)
         if len(res) != 1:
             return res

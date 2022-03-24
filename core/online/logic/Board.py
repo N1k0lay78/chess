@@ -18,10 +18,16 @@ class LogicBoard:
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
 
+        line_board = self.get_board_line(self.pieces)
+
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
-            special_print("NEXT MOVE", level=10)
-            self.step += 1
-            return True
+            if not self.check_shah(self.step % 2):
+                special_print("NEXT MOVE", level=10)
+                self.step += 1
+                return True
+            else:
+                self.load_board(line_board)
+                return False
         else:
             return False
 
@@ -76,3 +82,20 @@ class LogicBoard:
         except LoadingBoardError as e:
             self.pieces = []
             special_print(e, level=10)
+
+    def check_shah(self, color):
+        king = None
+        for piece in self.pieces:
+            if piece.st == [color, "K"]:
+                king = piece
+
+        if not king:
+            return True
+
+        for piece in self.get_pieces((color + 1) % 2):
+            if piece.can_move(king.cr):
+                king.is_can = False
+                return True
+
+        return False
+
