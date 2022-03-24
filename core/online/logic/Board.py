@@ -94,8 +94,46 @@ class LogicBoard:
 
         for piece in self.get_pieces((color + 1) % 2):
             if piece.can_move(king.cr):
+                # after check cannot castling
                 king.is_can = False
                 return True
 
         return False
 
+    def check_mat(self, color):
+        king = None
+        for piece in self.pieces:
+            if piece.st == [color, "K"]:
+                king = piece
+
+        if not king:
+            return True
+
+        attacking_pieces = []
+        for piece in self.get_pieces((color + 1) % 2):
+            if piece.can_move(king.cr):
+                attacking_pieces.append(piece)
+
+        if len(attacking_pieces) == 0:
+            return False
+        elif self.check_move_out(king, attacking_pieces):
+            return False
+        elif len(attacking_pieces) > 1:
+            return True
+
+        elif len(attacking_pieces) == 1 and attacking_pieces[0].t != "N":
+            pass
+
+    def under_attack(self, cell, pieces):
+        return any(piece.can_move(cell) for piece in pieces)
+
+    def check_king_move_out(self, king, pieces):
+        # if the king is under the check, he cannot castling
+        moves = ([0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1])
+        # check that the king can make this move, and nothing threatens him there
+        # (they won’t eat it on the next move)
+        return any(
+            king.can_move([king.c + move[0], king.r + move[1]]) and
+            not self.under_attack([king.c + move[0], king.r + move[1]], pieces)
+            for move in moves
+        )
