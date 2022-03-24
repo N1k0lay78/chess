@@ -114,15 +114,14 @@ class LogicBoard:
             if piece.can_move(king.cr):
                 attacking_pieces.append(piece)
 
-        if len(attacking_pieces) == 0:
+        if len(attacking_pieces) == 0:  # no attacking pieces
             return False
-        elif self.check_move_out(king, attacking_pieces):
+        elif self.check_move_out(king, attacking_pieces):  # can move out
             return False
-        elif len(attacking_pieces) > 1:
+        elif len(attacking_pieces) > 1:  # count attacking pieces > 1 and king can't move out
             return True
+        elif attacking_pieces[0].t not in "NP":  # if Not (Horse or Pawn) and count attacking pieces == 1
 
-        elif len(attacking_pieces) == 1 and attacking_pieces[0].t != "N":
-            pass
 
     def under_attack(self, cell, pieces):
         return any(piece.can_move(cell) for piece in pieces)

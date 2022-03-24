@@ -10,6 +10,8 @@ class LogicKing(LogicPieces):
     can_view = big_view
     can_move = king_move
 
+    # not work need rework
+    """
     def check_castling(self, figure,  pos) -> bool:
         if ((self.color and figure.cell in ([7, 0], [0, 0]) and self.cell == [4, 0] or
              not self.color and figure.cell in ([7, 7], [0, 7]) and self.cell == [4, 7])):
@@ -35,6 +37,7 @@ class LogicKing(LogicPieces):
                 pos[0] = 2
                 return True
         return False
+    """
 
     def on_move(self):
         self.is_can = False

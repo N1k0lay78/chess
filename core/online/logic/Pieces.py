@@ -12,38 +12,15 @@ class LogicPieces:
         self.cell = [0, 0]
         self.set_cell(cell)
 
+    def get_path(self, cell):
+        if cell != self.cr:
+            return [(cell[0], cell[1], 2)]
+
     def can_move(self, cell):  # can move to cell
+        path =
         return cell != self.cell
 
     can_view = small_view
-
-    def get_piece(self, cell):  # get figure from board
-        return self.board.get_piece(cell)
-
-    def remove_piece(self, piece):  # remove figure from board
-        return self.board.remove_piece(piece)
-
-    def check_clear_cell(self, cell):  # cell is clear
-        return not self.get_piece(cell)
-
-    def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
-        piece = self.get_piece(cell)
-        if piece:
-            if piece.s != self.s:
-                # for offline
-                # self.remove_piece(piece)
-                return True
-            else:
-                return False
-        return True
-
-    def check_eat(self, cell):  # enemy on cell
-        piece = self.get_piece(cell)
-        if piece and piece.s != self.s:
-            # for offline
-            # self.remove_piece(piece)
-            return True
-        return False
 
     def update(self, cell):
         if 0 <= self.r <= 7 and 0 <= self.c <= 7 and self.can_move(cell):
@@ -55,6 +32,39 @@ class LogicPieces:
             return True
         else:
             return False
+
+    # rarely edited methods
+
+    def get_piece(self, cell):  # get figure from board
+        return self.board.get_piece(cell)
+
+    def remove_piece(self, piece):  # remove figure from board
+        return self.board.remove_piece(piece)
+
+    # for check is can make move
+    def check_clear_cell(self, cell):  # cell is clear
+        return not self.get_piece(cell)
+
+    # for check is can make move
+    def check_not_friendly_cell(self, cell):  # cell is clear or enemy on cell
+        piece = self.get_piece(cell)
+        if piece:
+            if piece.s != self.s:
+                # for offline
+                # self.remove_piece(piece)
+                return True
+            else:
+                return False
+        return True
+
+    # for check is can make move
+    def check_eat(self, cell):  # enemy on cell
+        piece = self.get_piece(cell)
+        if piece and piece.s != self.s:
+            # for offline
+            # self.remove_piece(piece)
+            return True
+        return False
 
     def set_cell(self, cell):
         self.cell = cell
@@ -89,3 +99,5 @@ class LogicPieces:
 
     def test(self):
         return [self.cell, self.name, self.is_can, self.color]
+
+{"a": "a"}.
