@@ -17,8 +17,16 @@ class LogicPieces:
             return [(cell[0], cell[1], 2)]
 
     def can_move(self, cell):  # can move to cell
-        path =
-        return cell != self.cell
+        path = self.get_path(cell)
+        if not path:
+            return False
+        # column, row and type check of path
+        for c, r, t in path:
+            if t == 0 and not self.check_clear_cell([c, r]) or \
+                    t == 1 and not self.check_not_friendly_cell([c, r]) or \
+                    t == 2 and not self.check_eat([c, r]):
+                return False
+        return True
 
     can_view = small_view
 
@@ -99,5 +107,3 @@ class LogicPieces:
 
     def test(self):
         return [self.cell, self.name, self.is_can, self.color]
-
-{"a": "a"}.

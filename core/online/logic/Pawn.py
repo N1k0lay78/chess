@@ -1,12 +1,12 @@
 from core.online.logic.Pieces import LogicPieces
-from core.logic.pieces_move import logic_pawn_move
+from core.logic.pieces_move import logic_pawn_path
 
 
 class LogicPawn(LogicPieces):
     def __init__(self, board, cell, color, is_can):
         super().__init__(board, "", cell, color, is_can)
 
-    can_move = logic_pawn_move
+    get_path = logic_pawn_path
 
     def on_move(self):
         # we cannot walk 2 cells

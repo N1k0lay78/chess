@@ -1,5 +1,5 @@
 from core.online.logic.Pieces import LogicPieces
-from core.logic.pieces_move import king_move
+from core.logic.pieces_move import king_path
 from core.logic.pieces_view import big_view
 
 
@@ -8,7 +8,7 @@ class LogicKing(LogicPieces):
         super().__init__(board, "K", cell, color, is_can)
 
     can_view = big_view
-    can_move = king_move
+    get_path = king_path
 
     # not work need rework
     """
