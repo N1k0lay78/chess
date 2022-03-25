@@ -22,24 +22,22 @@ class LogicBoard:
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
             if not self.check_shah(self.step % 2):
-                print(self.check_pat((self.step + 1) % 2))
+                print("PAT IS", self.check_pat((self.step + 1) % 2))
+                print("MAT IS", self.check_mat((self.step + 1) % 2))
                 if self.check_mat((self.step + 1) % 2):
                     special_print("SOME ONE LOSE", level=10)
-                    self.load_board(line_board)
+                    self.restart_game(self.step % 2)
                 elif self.check_pat((self.step + 1) % 2):
                     special_print("DRAW", level=10)
-                    self.load_board(self.r)
+                    self.restart_game()
                 else:
                     special_print("NEXT MOVE", level=10)
                     self.step += 1
                 return True
-            else:
-                return False
-        else:
-            return False
+        self.load_board(line_board)
+        return False
 
     def can_view(self, color):
-
         if self.with_fog_of_war:
             visible = []
             player_pieces = self.get_pieces(color)
@@ -66,9 +64,10 @@ class LogicBoard:
         else:
             self.pieces.remove(piece)
 
-    def restart_game(self, color):
-        special_print('won', ("white" if color == 1 else "black"), level=10)
-        self.step = 0
+    def restart_game(self, color=None):
+        if color:
+            special_print('won', ("white" if color == 1 else "black"), level=10)
+        self.step = -1
         self.load_board(boards[name_board_to_play])
 
     def get_pieces(self, color):
@@ -123,8 +122,10 @@ class LogicBoard:
                 attacking_pieces.append(piece)
 
         if len(attacking_pieces) == 0:  # no attacking pieces
+            print('ON 1')
             return False
         elif self.check_king_move_out(king, enemy_pieces):  # can move out
+            print('ON 2')
             return False
         elif len(attacking_pieces) > 1:  # count attacking pieces > 1 and king can't move out
             return True
@@ -135,16 +136,19 @@ class LogicBoard:
         for piece in friendly_pieces:
             if piece.can_move(attacking_pieces[0].cr):
                 if piece.t != "K":
+                    print('ON 3')
                     return False
                 elif not self.under_attack(attacking_pieces[0].cr, enemy_pieces):
+                    print('ON 4')
                     return False
 
         # try blocking way
-        if attacking_pieces[0].t not in "NP":  # if Not (Horse or Pawn) and count attacking pieces == 1
+        # if Not (Horse or Pawn) and count attacking pieces == 1
+        if attacking_pieces[0].t not in "NP":
             path = attacking_pieces[0].get_path(king.cr)[:-1]
             for piece in friendly_pieces:
                 for c, r, _ in path:
-                    if piece.can_move([c, r]):
+                    if piece.t != "K" and piece.can_move([c, r]):
                         return False
 
         # can't eat or block way
@@ -178,16 +182,13 @@ class LogicBoard:
         return True
 
     def under_attack(self, cell, pieces):
-        return any(piece.can_move(cell) for piece in pieces)
+        return list(piece.can_move(cell) for piece in pieces)
 
     def check_king_move_out(self, king, pieces):
         # if the king is under the check, he cannot castling
         moves = ([0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1])
         # check that the king can make this move, and nothing threatens him there
         # (they won’t eat it on the next move)
-        print(*(king.can_move([king.c + move[0], king.r + move[1]]) and
-            not self.under_attack([king.c + move[0], king.r + move[1]], pieces)
-            for move in moves))
         return any(
             king.can_move([king.c + move[0], king.r + move[1]]) and
             not self.under_attack([king.c + move[0], king.r + move[1]], pieces)

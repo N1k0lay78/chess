@@ -22,16 +22,17 @@ class LogicPieces:
             return False
         # column, row and type check of path
         for c, r, t in path:
-            if t == 0 and not self.check_clear_cell([c, r]) or \
-                    t == 1 and not self.check_not_friendly_cell([c, r]) or \
-                    t == 2 and not self.check_eat([c, r]):
+            if not (0 <= c <= 7 and 0 <= r <= 7) or (
+                    t == 0 and not self.check_clear_cell([c, r]) or
+                    t == 1 and not self.check_not_friendly_cell([c, r]) or
+                    t == 2 and not self.check_eat([c, r])):
                 return False
         return True
 
     can_view = small_view
 
     def update(self, cell):
-        if 0 <= self.r <= 7 and 0 <= self.c <= 7 and self.can_move(cell):
+        if self.can_move(cell):
             piece = self.get_piece(cell)
             if piece:
                 self.remove_piece(piece)
@@ -81,7 +82,7 @@ class LogicPieces:
         pass
 
     def __repr__(self):
-        return f"{self.name}{chr(97+self.cell[0])}{8-self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
+        return f"{self.name}{chr(97 + self.cell[0])}{8 - self.cell[1]}{'w' if self.color == 0 else 'b'}{int(self.is_can)}"
 
     def __getattr__(self, item):
         res = []
