@@ -164,16 +164,14 @@ from core.online.logic.Board import LogicBoard
 #         self.choice_color = 4
 
 class Game():
-    def __init__(self, game_code, max_users, check_time, server):
+    def __init__(self, game_code, max_users, server):
         # settings
         self.game_code = game_code
         self.max_users = max_users
-        self.check_time = check_time
         self.running = True
 
         # work with user
         self.players = {}
-        self.active_players = []
         self.wait_choice = False
         self.message_queue = []
 
@@ -189,7 +187,8 @@ class Game():
         return self.server.send_to_user(user[0], message)
 
     def update_all_users_condition(self):
-        pass
+        for key in self.players.keys():
+            self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
         # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
 
     def get_user_message(self, nickname, message):
@@ -208,7 +207,6 @@ class Game():
             if self.players[nickname]["color"] in [0, 1]:
                 self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} "
                                                                   f"{self.board.step} {self.board.can_view(color)}")
-            # !!!!!!!!!!!!!!!
 
     def leave_game(self, nickname):
         if nickname in self.players:
@@ -216,8 +214,8 @@ class Game():
 
     def run(self):
         while self.running:
-            for i in range(len(self.message_queue) - 1, -1, -1):
-                nickname, data = self.message_queue[i]
+            while len(self.message_queue):
+                nickname, data = self.message_queue[0]
                 if nickname in self.players and self.players[nickname]["color"] in [0, 1]:
                     special_print(f"New LM from {nickname} - {data}", level=10)
                     if data[:2] == "mo":
@@ -236,7 +234,7 @@ class Game():
                     # else:
                     #     pass
                     #     # special_print(f"Message from {nickname} - {data}", level=10)
-                self.message_queue.pop(i)
+                self.message_queue.pop(0)
 
     def stop(self):
         self.running = False
@@ -344,8 +342,8 @@ class Server:
             time.sleep(self.check_time)
 
     def create_game(self, code=1234, max_users=2):
-        if code not in self.games:  # Проверяем, что игры с таким портом не существует
-            game = Game(code, max_users, 1, self)
+        if code not in self.games:
+            game = Game(code, max_users, self)
             game_thread = Thread(target=game.run)
             game_thread.start()
             self.games[code] = [game, game_thread]
