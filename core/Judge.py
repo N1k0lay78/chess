@@ -1,7 +1,14 @@
+from Source.boards import boards
+
+
 class Judge:
     def __init__(self, board, board_line: str):
         self.board = board
         self.board_line = board_line
+        self.board.load_board(boards[board_line])
+
+    def get_color(self):
+        return self.board.step % 2
 
     def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""

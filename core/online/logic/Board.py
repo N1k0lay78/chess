@@ -5,11 +5,11 @@ from Source.special_functools import special_print
 
 
 class LogicBoard:
-    def __init__(self, server, is_on_fog_of_war=False):
+    def __init__(self, is_on_fog_of_war=False):
         # settings
-        self.server = server
         self.with_fog_of_war = is_on_fog_of_war
         # game logic
+        self.last_moved = None
         self.pieces = []
         self.step = 0
         # init
@@ -33,11 +33,12 @@ class LogicBoard:
                 else:
                     special_print("NEXT MOVE", level=10)
                     self.step += 1
+                self.last_moved = piece
                 return True
         self.load_board(line_board)
         return False
 
-    def can_view(self, color):
+    def get_visible(self, color):
         if self.with_fog_of_war:
             visible = []
             player_pieces = self.get_pieces(color)
@@ -49,9 +50,12 @@ class LogicBoard:
                         if player_piece.can_view(piece.cell):
                             visible.append(piece)
                             break
-            return self.get_board_line(visible)
+            return visible
         else:
-            return self.get_board_line(self.pieces)
+            return self.pieces
+
+    def can_view(self, color):
+        return self.get_board_line(self.get_visible(color))
 
     def get_piece(self, cell):
         for piece in self.pieces:
@@ -69,6 +73,12 @@ class LogicBoard:
             special_print('won', ("white" if color == 1 else "black"), level=10)
         self.step = -1
         self.load_board(boards[name_board_to_play])
+
+    def get_step(self):
+        return self.step
+
+    def get_last_move_piece(self):
+        return self.last_moved
 
     def get_pieces(self, color):
         return list(filter(lambda p: p.color == color, self.pieces))
@@ -122,10 +132,8 @@ class LogicBoard:
                 attacking_pieces.append(piece)
 
         if len(attacking_pieces) == 0:  # no attacking pieces
-            print('ON 1')
             return False
         elif self.check_king_move_out(king, enemy_pieces):  # can move out
-            print('ON 2')
             return False
         elif len(attacking_pieces) > 1:  # count attacking pieces > 1 and king can't move out
             return True
@@ -136,10 +144,8 @@ class LogicBoard:
         for piece in friendly_pieces:
             if piece.can_move(attacking_pieces[0].cr):
                 if piece.t != "K":
-                    print('ON 3')
                     return False
                 elif not self.under_attack(attacking_pieces[0].cr, enemy_pieces):
-                    print('ON 4')
                     return False
 
         # try blocking way
@@ -165,17 +171,14 @@ class LogicBoard:
 
         enemy_pieces = self.get_pieces((color + 1) % 2)
         friendly_pieces = self.get_pieces(color)
-        print(enemy_pieces)
 
         for piece in friendly_pieces:
             if piece.t != "K":
-                print(1)
                 for c in range(8):
                     for r in range(8):
                         if piece.can_move([c, r]):
                             return False
             elif self.check_king_move_out(king, enemy_pieces):
-                print(2, king)
                 return False
 
         # we can't make any step
