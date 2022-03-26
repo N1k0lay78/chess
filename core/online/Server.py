@@ -64,13 +64,26 @@ class Game:
                 nickname, data = self.message_queue[0]
                 if nickname in self.players and self.players[nickname]["color"] in [0, 1]:
                     special_print(f"New LM from {nickname} - {data}", level=10)
-                    if data[:2] == "mo":
+                    if data[:2] == "mo" and not self.wait_choice:
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
                         special_print(("can" if move else "can't") + " move", level=10)
                         if not self.wait_choice:
-                            self.update_all_users_condition()
+                            self.wait_choice, self.pawn_coord = self.board.check_pawn()
+                            if move and self.wait_choice:
+                                self.send_to_user(self.players[nickname]["data"], "ch")
+                            else:
+                                self.update_all_users_condition()
                         # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                    elif data[:2] == "mc" and self.wait_choice:
+                        if len(data) == 4 and self.board.get_piece(self.pawn_coord).replace(data[3]):
+                            self.update_all_users_condition()
+                            self.wait_choice = False
+                            self.pawn_coord = [-1, -1]
+                            self.send_to_user(self.players[nickname]["data"], "ok")
+                            self.update_all_users_condition()
+                        else:
+                            self.send_to_user(self.players[nickname]["data"], "er")
                     # elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
                     #     if self.board.get_piece(self.pawn_coord).replace(data[3]):
                     #         self.update_all_users_condition()
@@ -181,6 +194,8 @@ class Server:
                 if not res:
                     if nickname in self.users:
                         listen_thread.join(0)
+                        for bkey in self.games.keys():
+                            self.games[bkey][0].leave_game(nickname)
                         self.users.pop(nickname)
                     special_print(f"{nickname} left the game", level=10)
                     # special_print(f"Connection timed out with {address[0]}:{address[1]}", level=10)

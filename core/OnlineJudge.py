@@ -17,7 +17,7 @@ class OnlineJudge:
         """pieces make move"""
         piece = self.board.get_pos(to)
 
-        if piece.name == "" and to[1] in [0, 7] and not self.board.game.restart:
+        if piece and piece.t == "" and to[1] in [0, 7] and not self.board.game.restart:
             self.on_swap(to)
 
         if self.make_castling:

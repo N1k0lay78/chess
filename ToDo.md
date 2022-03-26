@@ -4,6 +4,7 @@
 - online connection not work  (commit "make all tests for PiecesManager")
 - online pawn eat king (starting swap and reloading -> crash)
 - close game in online mode
+- Fix critical mats in board "test2" (no figures and rook on one line with king)
 
 ## need to make
 

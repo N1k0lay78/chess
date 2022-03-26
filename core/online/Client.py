@@ -77,7 +77,10 @@ class Client:
                             a = data.split()
                             special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
                             self.color = int(data.split()[1])
+                            self.board.color = int(data.split()[1])
+                            self.judge.color = int(data.split()[1])
                             self.board.step = int(data.split()[2])
+
                             if self.color:
                                 self.judge.flip()
                         elif data[:2] == "sp":
@@ -91,7 +94,8 @@ class Client:
                             self.board.load_board(data.split(":")[2])
                             if self.color:
                                 self.judge.flip()
-                        elif data[:2] == "ch":
+                        elif data[:2] in ["ch", "er"]:
+                            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!11")
                             wait_user_choice_thread = Thread(target=self.wait_user_choice)
                             wait_user_choice_thread.start()
                 except Exception as e:
