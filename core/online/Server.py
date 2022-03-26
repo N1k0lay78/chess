@@ -153,6 +153,7 @@ class Server:
                     self.users[nickname] = [conn, address, False, send_to, listen_thread]
                     self.queue.remove([nickname, conn, address])
                     print(f"Add user {nickname}")
+            time.sleep(3)
 
     def get_from_user(self, nickname, conn, send_to):
         while True:
