@@ -1,7 +1,7 @@
 import socket
 from threading import Thread
 import time
-from Source.special_functools import special_print
+from Source.special_functools import special_print, debug
 
 # Получаем свой локальный ip адрес
 self_ip = socket.gethostbyname(socket.gethostname())
@@ -80,6 +80,10 @@ class Client:
                             self.board.step = int(data.split()[2])
                             if self.color:
                                 self.judge.flip()
+                        elif data[:2] == "sp":
+                            self.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                            self.color = int(data.split()[1])
+                            self.board.step = int(data.split()[2])
                         elif data[:2] in ["nm", "im"]:
                             self.board.step = int(data.split(":")[1])
                             special_print(data, level=10)

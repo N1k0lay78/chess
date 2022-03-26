@@ -26,7 +26,7 @@ class OnlineJudge:
 
         if self.board.color == 1:
             self.client.sending_to_the_server(f"mo {7-fr[0]},{7-fr[1]}:{7-to[0]},{7-to[1]}:{str(piece).lower()}")
-        else:
+        elif self.board.color == 0:
             self.client.sending_to_the_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
 
     def on_remove(self, name: str) -> None:
