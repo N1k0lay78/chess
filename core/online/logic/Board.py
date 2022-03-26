@@ -15,6 +15,11 @@ class LogicBoard:
         # init
         self.pieces_manager = PiecesManager(self, logic_pieces_dict)
 
+    def check_pawn(self):
+        for piece in self.pieces:
+            if piece.t == "" and piece.r in [0, 7]:
+                return True
+
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
 
