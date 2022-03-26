@@ -22,7 +22,6 @@ class LogicBoard:
 
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
-
         line_board = self.get_board_line(self.pieces)
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):

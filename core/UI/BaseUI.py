@@ -43,7 +43,7 @@ class BaseUI:
         self.check_collide_update()
         return self.hovered
 
-    def update(self, event):
+    def event(self, event):
         if event.type == pygame.MOUSEBUTTONUP and self.un_active_on_mouse_up:
             self.window.remove_active()
 
