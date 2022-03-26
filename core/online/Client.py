@@ -35,22 +35,23 @@ class Client:
                     sock.connect((self.server, self.port))
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
-                    if data[:2] == "su":
-                        self.board.load_board(data[7 + len(data.split()[2]) - 1:])
-                        special_print("Connected", level=10)
-                        a = data.split()
-                        special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
-                        self.color = int(data.split()[1])
-                        self.board.step = int(data.split()[2])
-                        if self.color:
-                            self.judge.flip()
+                    if data[:2] == "sc":
+                        special_print("Connected to the server", level=10)
+                        # self.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                        # a = data.split()
+                        # special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
+                        # self.color = int(data.split()[1])
+                        # self.board.step = int(data.split()[2])
+                        # if self.color:
+                        #     self.judge.flip()
                     self.socket = sock
-                except:
+                except Exception as e:
                     special_print("Something is wrong. Try to connect again")
                     continue
             else:
                 if not self.sending_to_the_server("Check connection"):
                     print("Something is wrong")
+                    self.socket.close()
                     self.socket = None
                 time.sleep(1)
 
@@ -59,9 +60,8 @@ class Client:
         if self.socket:
             try:
                 self.socket.send(self.to_bytes(message))
-            except:
-                special_print("Lost connection with server", level=10)
-                self.socket = None
+            except Exception as e:
+                special_print(f"Bad connection with server - {e}", level=10)
                 return False
         return True
 
@@ -70,9 +70,17 @@ class Client:
             if self.socket:
                 try:
                     data = self.to_text(self.socket.recv(1024))
-                    if data != "Check connection":
+                    if data != "Check connection" and len(data) >= 2:
                         print(data)
-                        if data[:2] in ["nm", "im"]:
+                        if data[:2] == "su":
+                            self.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                            a = data.split()
+                            special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
+                            self.color = int(data.split()[1])
+                            self.board.step = int(data.split()[2])
+                            if self.color:
+                                self.judge.flip()
+                        elif data[:2] in ["nm", "im"]:
                             self.board.step = int(data.split(":")[1])
                             special_print(data, level=10)
                             special_print(self.board.step, level=10)
@@ -82,8 +90,8 @@ class Client:
                         elif data[:2] == "ch":
                             wait_user_choice_thread = Thread(target=self.wait_user_choice)
                             wait_user_choice_thread.start()
-                except:
-                    special_print("Bad connection with server", level=10)
+                except Exception as e:
+                    special_print(f"Bad connection with server - {e}", level=10)
 
     def wait_user_choice(self):
         self.board.set_pause(True)

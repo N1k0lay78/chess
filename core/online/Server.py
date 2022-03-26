@@ -163,26 +163,19 @@ from core.online.logic.Board import LogicBoard
 #         self.pawn_coord = []
 #         self.choice_color = 4
 
-class Game(Thread):
-    def __init__(self, port, ip_address, max_users, check_time, users):
-        super().__init__()
+class Game():
+    def __init__(self, game_code, max_users, check_time, server):
         # settings
-        self.port = port
-        self.ip_address = ip_address
+        self.game_code = game_code
         self.max_users = max_users
         self.check_time = check_time
-
-        # socket
-        self.sock = socket.socket()
-        self.sock.bind((self.ip_address, self.port))
-        self.sock.listen(self.max_users)
-        self.queue = []
+        self.running = True
 
         # work with user
-        self.users = users
-        self.players = []
+        self.players = {}
         self.active_players = []
         self.wait_choice = False
+        self.message_queue = []
 
         # logic of game
         self.pawn_coord = []
@@ -190,98 +183,63 @@ class Game(Thread):
         self.line = boards[name_board_to_play]
         self.board = LogicBoard(self, is_on_fog_of_war)
         self.board.load_board(self.line)
+        self.server = server
 
-    def ask_user_choice(self, color, coord):
-        while True:
-            try:
-                for address, data in self.users.items():
-                    if data[2] == color:
-                        self.wait_choice = True
-                        self.pawn_coord = coord
-                        self.choice_color = color
-                        self.send_to_user(data[0], "ch make right choice")
-                        self.update_all_users_condition()
-                break
-            except:
-                continue
-
-    def send_to_user(self, conn, message):
-        if conn and message:
-            try:
-                conn.send(self.to_bytes(message))
-            except:
-                special_print("Error with send message", message, level=10)
-                return False
-        return True
-
-    def check_user_connect(self, nickname, address, conn, color):
-        f = False
-        while True:
-            if not f:
-                res = self.send_to_user(conn, f"su {color} {self.board.step} {self.board.can_view(color)}")
-                f = True
-            else:
-                res = self.send_to_user(conn, "Check connection")
-            if not res:
-                if address in self.users:
-                    self.active_players.remove(nickname)
-                    del self.users[address]
-                special_print(f"{nickname} left the game", level=10)
-                special_print(f"Connection timed out with {address[0]}:{address[1]}", level=10)
-                special_print(f"Users {len(self.users)}/{self.max_users}", level=10)
-                return
-            time.sleep(self.check_time)
+    def send_to_user(self, user, message):
+        return self.server.send_to_user(user[0], message)
 
     def update_all_users_condition(self):
-        print("Обновляю кондиции")
-        while True:
-            try:
-                for address, data in self.users.items():
-                    self.send_to_user(data[0], f"nm:{self.board.step}:{self.board.can_view(data[2])}")
-                return
-            except:
-                continue
+        pass
+        # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
 
-    def return_all_back(self):
-        print("Накладываю санкции на ход")
-        while True:
-            try:
-                for address, data in self.users.items():
-                    self.send_to_user(data[0], f"im:{self.board.step}:{self.board.can_view(data[2])}")
-                return
-            except:
-                continue
+    def get_user_message(self, nickname, message):
+        self.message_queue.append([nickname, message])
 
-    def get_user_message(self, nickname, address, conn, color):
-        while True:
-            try:
-                data = self.to_text(conn.recv(1024))
-                if data and data != "Check connection":
+    def connect_user(self, nickname, user):
+        if len(self.players) < self.max_users and nickname not in self.players:
+            color = [0, 1]
+            for key in self.players.keys():
+                if self.players[key]["color"] in color:
+                    color.remove(self.players[key]["color"])
+            self.players[nickname] = {}
+            self.players[nickname]["data"] = user
+            self.players[nickname]["data"][3].append(self.get_user_message)
+            self.players[nickname]["color"] = color[0] if len(color) > 0 else 2
+            if self.players[nickname]["color"] in [0, 1]:
+                self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} "
+                                                                  f"{self.board.step} {self.board.can_view(color)}")
+            # !!!!!!!!!!!!!!!
+
+    def leave_game(self, nickname):
+        if nickname in self.players:
+            self.players.pop(nickname)
+
+    def run(self):
+        while self.running:
+            for i in range(len(self.message_queue) - 1, -1, -1):
+                nickname, data = self.message_queue[i]
+                if nickname in self.players and self.players[nickname]["color"] in [0, 1]:
+                    special_print(f"New LM from {nickname} - {data}", level=10)
                     if data[:2] == "mo":
                         data = data[3:].split(":")
                         move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
                         special_print(("can" if move else "can't") + " move", level=10)
-                        if not self.wait_choice and move:
+                        if not self.wait_choice:
                             self.update_all_users_condition()
-                        elif not move:
-                            self.return_all_back()
-                        # special_print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))), level=10)
-                    elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
-                        if self.board.get_piece(self.pawn_coord).replace(data[3]):
-                            self.update_all_users_condition()
-                            self.wait_choice = False
-                        else:
-                            self.ask_user_choice(self.choice_color, self.pawn_coord)
-                    else:
-                        pass
-                        # special_print(f"Message from {nickname} - {data}", level=10)
-            except Exception as e:
-                special_print(e, level=10)
-                special_print(f"Bad connection with {nickname} {address}", level=10)
-                return
+                        # print(self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(",")))))
+                    # elif data[:2] == "mc" and self.wait_choice and color == self.choice_color:
+                    #     if self.board.get_piece(self.pawn_coord).replace(data[3]):
+                    #         self.update_all_users_condition()
+                    #         self.wait_choice = False
+                    #     else:
+                    #         self.ask_user_choice(self.choice_color, self.pawn_coord)
+                    # else:
+                    #     pass
+                    #     # special_print(f"Message from {nickname} - {data}", level=10)
+                self.message_queue.pop(i)
 
-    def run(self):
-        Thread(target=self.user_master).start()
+    def stop(self):
+        self.running = False
 
     def to_bytes(self, message):
         return bytes(message, encoding="utf-8")
@@ -329,17 +287,24 @@ class Server:
             users = [[nickname, conn, address] for nickname, conn, address in self.queue]
             for nickname, conn, address in users:
                 if len(self.users) < self.max_user_count and nickname not in self.users:
-                    listen_thread = Thread(target=self.listen_user, args=(nickname, address, conn))
-                    listen_thread.start()
-                    self.users[nickname] = [conn, address, listen_thread, False]
-                    self.queue.remove([nickname, conn, address])
 
-    def listen_user(self, nickname, address, conn):
+                    send_to = [self.logic_with_user]
+
+                    listen_thread = Thread(target=self.get_from_user, args=(nickname, conn, send_to))
+                    listen_thread.start()
+
+                    self.users[nickname] = [conn, address, False, send_to, listen_thread]
+                    self.queue.remove([nickname, conn, address])
+                    print(f"Add user {nickname}")
+
+    def get_from_user(self, nickname, conn, send_to):
         while True:
             try:
                 data = self.to_text(conn.recv(1024))
-                if data and data != "Check connection":
-                    special_print(f"Get message from user {nickname} {data}")
+                if data and len(data) >= 2 and data != "Check connection":
+                    # special_print(f"Get message from user {nickname} {data}")
+                    for pol in send_to:
+                        pol(nickname, data)
             except Exception as e:
                 # special_print(f"Bad connection with {nickname} {address}", level=10)
                 time.sleep(self.check_time)
@@ -349,7 +314,7 @@ class Server:
             try:
                 conn.send(self.to_bytes(message))
             except Exception as e:
-                special_print("Error with send message", message, level=10)
+                special_print("Error with send message -", message, level=10)
                 return False
         return True
 
@@ -358,14 +323,15 @@ class Server:
             users = []
             for key, values in self.users.items():
                 users.append([key, *values])
-            for nickname, conn, address, listen_thread, send_m in users:
+            for nickname, conn, address, send_m, st, listen_thread in users:
                 # print(nickname, conn, address, listen_thread, send_m, sep="\n")
                 if not send_m:
-                    res = self.send_to_user(conn, f"su")
+                    res = self.send_to_user(conn, f"sc")
                     special_print(f"User {nickname} connected", level=10)
                     special_print(f"Users {len(self.users)}/{self.max_user_count}", level=10)
 
-                    self.users[nickname][3] = True
+                    self.users[nickname][2] = True
+                    self.games[1234][0].connect_user(nickname, self.users[nickname])
                 else:
                     res = self.send_to_user(conn, "Check connection")
                 if not res:
@@ -377,15 +343,19 @@ class Server:
                     special_print(f"Users {len(self.users)}/{self.max_user_count}", level=10)
             time.sleep(self.check_time)
 
-    def create_game(self, port, ip_address, max_users=2):
-        if port not in self.games:  # Проверяем, что игры с таким портом не существует
-            game = Game(port, ip_address, max_users, 3)
+    def create_game(self, code=1234, max_users=2):
+        if code not in self.games:  # Проверяем, что игры с таким портом не существует
+            game = Game(code, max_users, 1, self)
             game_thread = Thread(target=game.run)
             game_thread.start()
-            self.games[port] = [game, game_thread]
+            self.games[code] = [game, game_thread]
             return {"success": "Game success created"}
         else:
             return {"error": "This port for game is already in use"}  # Просим так больше не делать
+
+    def logic_with_user(self, nickname, message):
+        if nickname in self.users:
+            special_print(f"Message from {nickname} - {message}", level=10)
 
     def to_bytes(self, message):
         return bytes(message, encoding="utf-8")
@@ -416,6 +386,6 @@ if __name__ == '__main__':
 
     print(self_ip)
 
-    server = Server()
-    print(server.create_socket(9090, self_ip))
+    server = Server(self_ip)
+    print(server.create_game())
     # print(server.create_socket(9091, self_ip))
