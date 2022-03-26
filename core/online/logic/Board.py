@@ -18,7 +18,8 @@ class LogicBoard:
     def check_pawn(self):
         for piece in self.pieces:
             if piece.t == "" and piece.r in [0, 7]:
-                return True
+                return True, piece.cr
+        return False, [-1, -1]
 
     def move(self, from_cell, to_cell):
         piece = self.get_piece(from_cell)
@@ -26,8 +27,8 @@ class LogicBoard:
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
             if not self.check_shah(self.step % 2):
-                print("PAT IS", self.check_pat((self.step + 1) % 2))
-                print("MAT IS", self.check_mat((self.step + 1) % 2))
+                # print("PAT IS", self.check_pat((self.step + 1) % 2))
+                # print("MAT IS", self.check_mat((self.step + 1) % 2))
                 if self.check_mat((self.step + 1) % 2):
                     special_print("SOME ONE LOSE", level=10)
                     self.restart_game(self.step % 2)
@@ -75,7 +76,7 @@ class LogicBoard:
     def restart_game(self, color=None):
         if color:
             special_print('won', ("white" if color == 1 else "black"), level=10)
-        self.step = -1
+        self.step = 0
         self.load_board(boards[name_board_to_play])
 
     def get_step(self):
