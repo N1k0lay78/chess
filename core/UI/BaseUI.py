@@ -34,7 +34,7 @@ class BaseUI:
 
     def draw(self, pos=(0, 0)):
         if self.image:
-            self.window.screen.blit(self.image, (self.pos[0] + pos[0], self.pos[1] + pos[1]))
+            self.window.game.screen.blit(self.image, (self.pos[0] + pos[0], self.pos[1] + pos[1]))
         if self.child:
             self.draw_child()
 

@@ -1,4 +1,5 @@
-from core.textures.load_image import load_image
+"""
+    from core.textures.load_image import load_image
 from core.textures.Tileset import TileSet
 
 test_image = False
@@ -30,3 +31,10 @@ if test_tileset:
         print("OK")
 if test_image:
     print(load_image('board'))
+"""
+import pygame
+
+from core.Game import Game
+
+pygame.init()
+Game().run()

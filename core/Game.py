@@ -27,7 +27,8 @@ class Game:
             "Load": LoadingGame,
             "Menu": MainMenuWindow,
         }
-        self.window = self.windows[get_param("start_window")](self)
+        self.window = None
+        self.open_window(get_param("start_window"))
 
     def run(self):
         while self.running:
@@ -56,7 +57,8 @@ class Game:
                 print(self.clock.get_fps())
 
     def open_window(self, name=""):
-        self.window.on_close()
+        if self.window:
+            self.window.on_close()
         if name:
             self.window = self.windows[name](self)
 

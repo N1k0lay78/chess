@@ -25,8 +25,8 @@ class Button(BaseUI):
     def on_click(self):
         pass
 
-    def update(self, event):
-        super().update(event)
+    def event(self, event):
+        super().event(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.image = self.tile_set[self.frames[2]]
             self.on_press()

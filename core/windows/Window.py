@@ -4,14 +4,7 @@ import pygame
 class Window:
     def __init__(self, game):
         self.game = game
-        # self.screen = screen
-        # self.running = True
         self.active = None
-        # self.max_fps = max_fps
-        # self.clock = pygame.time.Clock()
-        # self.max_fps = max_fps
-        # self.last_time = pygame.time.get_ticks()
-        # self.delta = 0
 
     def events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -41,14 +34,3 @@ class Window:
 
     def on_close(self):
         pass
-
-    # legacy
-    def run(self):
-        while self.running:
-            self.delta = (pygame.time.get_ticks() - self.last_time) / 1000.0
-            self.last_time = pygame.time.get_ticks()
-            self.events()
-            self.update()
-            self.draw()
-            pygame.display.update()
-            self.clock.tick(self.max_fps)
