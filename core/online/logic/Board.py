@@ -190,7 +190,7 @@ class LogicBoard:
         return True
 
     def under_attack(self, cell, pieces):
-        return list(piece.can_move(cell) for piece in pieces)
+        return any(piece.can_move(cell) for piece in pieces)
 
     def check_king_move_out(self, king, pieces):
         # if the king is under the check, he cannot castling
