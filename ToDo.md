@@ -4,7 +4,6 @@
 - online connection not work  (commit "make all tests for PiecesManager")
 - online pawn eat king (starting swap and reloading -> crash)
 - close game in online mode
-- dont see end at "Ka8b0 Ka6w0 Rb7w0" (under_attack doesn't work)
 
 ## need to make
 
