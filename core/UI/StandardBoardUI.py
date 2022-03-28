@@ -1,4 +1,4 @@
-from core.textures.load_image import load_image
+from Source.settings import params
 from core.textures.Tileset import TileSet
 import pygame
 from math import sin, cos, acos, radians, pi
@@ -14,7 +14,7 @@ class StandardBoardUI:
         self.size = 50
         # sprites
         self.pieces_tile_set = TileSet('pieces', (50, 150))
-        self.board_image = load_image('board')
+        self.board_image = TileSet('board', (440, 440))
         # create logic board
         self.logic_board = board
         # user interaction
@@ -23,12 +23,24 @@ class StandardBoardUI:
         self.focused = None
         self.dragging = False
         self.wait = False
-        self.rotation = 2
+        self.rotation = 0
         self.move_percent = 0
         self.move_positions = ((0, 0), (0, 0))
 
     def draw(self):
-        img = pygame.transform.rotate(self.board_image, -90 * self.rotation)
+        pygame.key.get_pressed()
+        if self.logic_board.get_step() % 2 == 0 and not self.rotation or \
+                self.logic_board.get_step() % 2 != 0 and self.rotation:
+            if self.rotation:
+                img = pygame.transform.rotate(self.board_image[0], 360 + 180 * (1 - self.rotation))
+            else:
+                img = self.board_image[0]
+        else:
+            if self.rotation:
+                img = pygame.transform.rotate(self.board_image[1], -360 - 180 * (1 - self.rotation))
+            else:
+                img = self.board_image[1]
+
         self.game.screen.blit(img, (self.pos[0] - img.get_width() // 2 + 200, self.pos[1] - img.get_width() // 2 + 200))
         layers = {}
         for piece in self.logic_board.get_visible(self.judge.get_color()):
@@ -36,8 +48,10 @@ class StandardBoardUI:
             if self.logic_board.get_last_move_piece() and self.move_percent and \
                     piece.cr == self.logic_board.get_last_move_piece().cr:
                 pos = [
-                    self.move_positions[0][0] + (self.move_positions[1][0] - self.move_positions[0][0]) * (1 - self.move_percent),
-                    self.move_positions[0][1] + (self.move_positions[1][1] - self.move_positions[0][1]) * (1 - self.move_percent)
+                    self.move_positions[0][0] + (self.move_positions[1][0] - self.move_positions[0][0]) *
+                    (1 - self.move_percent),
+                    self.move_positions[0][1] + (self.move_positions[1][1] - self.move_positions[0][1]) *
+                    (1 - self.move_percent)
                 ]
 
             if piece == self.focused and self.dragging:
@@ -64,11 +78,9 @@ class StandardBoardUI:
                 else:
                     self.game.screen.blit(self.get_pieces_texture(piece.t, 2), pos)
                     self.game.screen.blit(self.get_pieces_texture(*piece.ts), pos)
-                # pygame.draw.circle(self.game.screen, (255, 250, 250),
-                #                    (self.get_pos_from_cell(piece.cr)[0] , self.get_pos_from_cell(piece.cr)[1] ), 5)
 
     def event(self, event):
-        if self.wait or self.rotation != 0:
+        if self.wait or self.rotation or self.move_percent:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -94,15 +106,19 @@ class StandardBoardUI:
             else:
                 goal_movement = [int(event.pos[0] - self.pos[0]) // self.size,
                                  int(event.pos[1] - self.pos[1]) // self.size]
+
             if self.logic_board.get_step() % 2 == 1:
                 goal_movement = [7 - goal_movement[0], 7 - goal_movement[1]]
+
             move_positions = (self.get_pos_from_cell(self.focused.cr), self.get_pos_from_cell(goal_movement))
+
             if self.logic_board.move(self.focused.cr, goal_movement):
                 self.focused = None
                 if not self.dragging:
                     self.move_percent = 1
                     self.move_positions = move_positions
-                self.rotation = 2
+                if params["is_on_rotation"]:
+                    self.rotation = 1
 
             self.dragging = False
 
@@ -114,8 +130,9 @@ class StandardBoardUI:
             self.move_percent -= 8 * self.game.delta / self.get_dist(*self.move_positions)
             if self.move_percent < 0:
                 self.move_percent = 0
+
         elif self.rotation > 0:
-            self.rotation -= 2 * self.game.delta + 0.1 * sin(pi * self.rotation / 2)
+            self.rotation -= (1 + 0.25 * cos(2*pi * self.rotation - pi)) * self.game.delta
             if self.rotation < 0:
                 self.rotation = 0
 
@@ -130,11 +147,11 @@ class StandardBoardUI:
         if center_y < 0:
             rot = 2*pi - rot
         if self.logic_board.get_step() % 2 == 0:
-            return [dist * cos(rot + radians(90 * self.rotation)) + 300 - 25,
-                    dist * sin(rot + radians(90 * self.rotation)) + 300 - 125]
+            return [dist * cos(rot - radians(180 * self.rotation)) + 300 - 25,
+                    dist * sin(rot - radians(180 * self.rotation)) + 300 - 135]
         else:
-            return [dist * cos(rot + radians(90 * self.rotation) + pi) + 300 - 25,
-                    dist * sin(rot + radians(90 * self.rotation) + pi) + 300 - 125]
+            return [dist * cos(rot + radians(180 * self.rotation) + pi) + 300 - 25,
+                    dist * sin(rot + radians(180 * self.rotation) + pi) + 300 - 135]
 
     def get_pieces_texture(self, name, color):
         names = {'': 0, "R": 1, "K": 2, "Q": 3, "B": 4, "N": 5}
