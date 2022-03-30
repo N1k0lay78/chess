@@ -12,7 +12,8 @@ class Game:
         pygame.display.set_caption(get_param("app_name"))
         pygame.display.set_icon(pygame.image.load(get_param("app_icon")))
         # font
-        self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25*2)
+        self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25 * 2)
+        self.small_font = pygame.font.Font('Source/Fonts/Chava.ttf', 25)
         # game is running
         self.running = True
         # delta and fps
@@ -55,6 +56,11 @@ class Game:
             self.clock.tick(self.max_fps)
             if False:
                 print(self.clock.get_fps())
+
+    def render_text(self, text, color=(0, 0, 0), is_small=True):
+        if is_small:
+            return self.small_font.render(text, False, color)
+        return self.font.render(text, False, color)
 
     def open_window(self, name=""):
         if self.window:
