@@ -11,17 +11,20 @@ class Window:
             self.set_active(event)
         if self.active:
             self.active.event(event)
-        elif event.type == pygame.MOUSEMOTION:
+        if event.type == pygame.MOUSEMOTION:
             self.check_hover(event)
 
     def check_hover(self, event):
         pass
 
     def set_active_object(self, object):
-        self.active = object
+        if object != self.active:
+            if self.active:
+                self.active.on_disactive()
+            self.active = object
 
     def remove_active(self):
-        self.active = None
+        self.set_active_object(None)
 
     def set_active(self, event):
         pass

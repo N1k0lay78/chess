@@ -53,3 +53,9 @@ class BaseUI:
     def move(self, move):
         self.pos[0] += move[0]
         self.pos[1] += move[1]
+
+    def check_hover(self, event):
+        pass
+
+    def on_disactive(self):
+        pass
