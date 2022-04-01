@@ -25,6 +25,7 @@ class StandardBoardUI:
         self.wait = False
         self.rotation = 0
         self.move_percent = 0
+        self.to_end = 1
         self.move_positions = ((0, 0), (0, 0))
 
     def draw(self):
@@ -117,7 +118,7 @@ class StandardBoardUI:
                 if not self.dragging:
                     self.move_percent = 1
                     self.move_positions = move_positions
-                if params["is_on_rotation"]:
+                if params["is_on_rotation"] and self.logic_board.is_playing:
                     self.rotation = 1
 
             self.dragging = False
@@ -126,6 +127,11 @@ class StandardBoardUI:
         return ((cell1[0] - cell2[0])**2 + (cell1[1] - cell2[1])**2)**0.5/50
 
     def update(self):
+        if not self.logic_board.is_playing:
+            self.to_end -= self.window.game.delta
+            if self.to_end < 0:
+                self.window.game.open_window("Menu")
+
         if self.move_percent > 0:
             self.move_percent -= 8 * self.game.delta / self.get_dist(*self.move_positions)
             if self.move_percent < 0:

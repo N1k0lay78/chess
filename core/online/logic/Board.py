@@ -12,6 +12,7 @@ class LogicBoard:
         self.last_moved = None
         self.pieces = []
         self.step = 0
+        self.is_playing = True
         # init
         self.pieces_manager = PiecesManager(self, logic_pieces_dict)
 
@@ -22,6 +23,8 @@ class LogicBoard:
         return False, [-1, -1]
 
     def move(self, from_cell, to_cell):
+        if not self.is_playing:
+            return False
         piece = self.get_piece(from_cell)
         line_board = self.get_board_line(self.pieces)
 
@@ -31,10 +34,12 @@ class LogicBoard:
                 # print("MAT IS", self.check_mat((self.step + 1) % 2))
                 if self.check_mat((self.step + 1) % 2):
                     special_print("SOME ONE LOSE", level=10)
-                    self.restart_game(self.step % 2)
+                    self.is_playing = False
+                    # self.restart_game(self.step % 2)
                 elif self.check_pat((self.step + 1) % 2):
                     special_print("DRAW", level=10)
-                    self.restart_game()
+                    self.is_playing = False
+                    # self.restart_game()
                 else:
                     special_print("NEXT MOVE", level=10)
                     self.step += 1
@@ -74,6 +79,7 @@ class LogicBoard:
             self.pieces.remove(piece)
 
     def restart_game(self, color=None):
+        self.is_playing = True
         if color:
             special_print('won', ("white" if color == 1 else "black"), level=10)
         self.step = 0
