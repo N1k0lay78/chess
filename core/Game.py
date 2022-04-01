@@ -1,14 +1,17 @@
 from Source.settings import get_param
+from core.online.Client import Client
 from core.windows.LoadingGame import LoadingGame
 from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
-
 from core.windows.TestWindow import TestWindow
 
 
 class Game:
     def __init__(self):
+        # server
+        self.client = Client(input(), get_param("online_host_ip"), get_param("online_host_port"))
+
         # init app
         self.screen = pygame.display.set_mode(get_param("screen_size"))
         pygame.display.set_caption(get_param("app_name"))
