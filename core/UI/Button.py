@@ -11,7 +11,8 @@ class Button(BaseUI):
         self.pressed = False
 
     def check_collide_update(self):
-        self.image = self.tile_set[self.frames[self.hovered]]
+        if not self.pressed:
+            self.image = self.tile_set[self.frames[self.hovered]]
 
     def on_press(self):
         pass

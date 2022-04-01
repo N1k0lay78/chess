@@ -2,8 +2,11 @@ from core.textures.load_image import load_image
 
 
 class TileSet:
-    def __init__(self, filename, grid_size):
-        self.image = load_image(filename)
+    def __init__(self, data, grid_size):
+        if type(data) == str:
+            self.image = load_image(data)
+        else:
+            self.image = data
         self.grid_size = grid_size
         self.max_x = self.image.get_size()[0]//self.grid_size[0]
         self.max_y = self.image.get_size()[1]//self.grid_size[1]
