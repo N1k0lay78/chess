@@ -78,7 +78,6 @@ class Client:
         self.port = port
 
         # server
-        self.is_connected = False
         self.socket = None
         self.connection_monitoring_thread = None
         self.getting_from_the_server_thread = None

@@ -32,4 +32,4 @@ nicknames = ["NIKI", "RJKZ", "RJKZAVR", "NIKOLAUSUS", "NIKNIKSHAM", "TSAR", "N1K
 
 
 def set_random_nickname():
-    params["nickname"] = random.choice(nicknames)
+    params["nickname"] = random.choice(nicknames) + "_" + str(random.choice(range(1, 101)))

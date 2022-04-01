@@ -1,4 +1,4 @@
-from Source.settings import get_param
+from Source.settings import params
 from core.windows.Window import Window
 from core.online.logic.Board import LogicBoard
 from core.Judge import Judge
@@ -9,15 +9,15 @@ from core.UI.StandardBoardUI import StandardBoardUI
 class GameWindow(Window):
     def __init__(self, game):
         super().__init__(game)
-        if get_param("mode") == "online":
+        if params["mode"] == "online":
             self.logic_board = LogicBoard(False)
             self.judge = OnlineJudge(self.logic_board)
-        elif get_param("mode") == "fog of war":
+        elif params["mode"] == "fog of war":
             self.logic_board = LogicBoard(True)
             self.judge = OnlineJudge(self.logic_board)
         else:
             self.logic_board = LogicBoard(False)
-            self.judge = Judge(self.logic_board, get_param("board_name"))
+            self.judge = Judge(self.logic_board, params["board_name"])
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
         self.set_active_object(self.game_board)
 
