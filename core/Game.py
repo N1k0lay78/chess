@@ -1,18 +1,22 @@
-from Source.settings import get_param
+from Source.settings import params, set_random_nickname
+from core.online.Client import Client
 from core.windows.LoadingGame import LoadingGame
 from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
-
 from core.windows.TestWindow import TestWindow
 
 
 class Game:
     def __init__(self):
+        # server
+        self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"])
+        self.client.run()
+
         # init app
-        self.screen = pygame.display.set_mode(get_param("screen_size"))
-        pygame.display.set_caption(get_param("app_name"))
-        pygame.display.set_icon(pygame.image.load(get_param("app_icon")))
+        self.screen = pygame.display.set_mode(params["screen_size"])
+        pygame.display.set_caption(params["app_name"])
+        pygame.display.set_icon(pygame.image.load(params["app_icon"]))
         # font
         self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25 * 2)
         self.small_font = pygame.font.Font('Source/Fonts/Chava.ttf', 25)
@@ -20,10 +24,10 @@ class Game:
         self.running = True
         # delta and fps
         self.clock = pygame.time.Clock()
-        self.max_fps = get_param("max_fps")
+        self.max_fps = params["max_fps"]
         self.last_time = pygame.time.get_ticks()
         self.delta = 0
-        self.is_flip_screen = get_param("is_flip_screen")
+        self.is_flip_screen = params["is_flip_screen"]
         # windows
         self.windows = {
             "Game": GameWindow,
@@ -32,7 +36,7 @@ class Game:
             "Test": TestWindow,
         }
         self.window = None
-        self.open_window(get_param("start_window"))
+        self.open_window(params["start_window"])
 
     def run(self):
         while self.running:
@@ -70,6 +74,9 @@ class Game:
             if self.window:
                 self.window.on_close()
             self.window = self.windows[name](self)
+
+    def connect_to_the_game(self, code):
+        print(code)
 
     def quit(self):
         self.open_window()

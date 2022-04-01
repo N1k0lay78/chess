@@ -1,8 +1,8 @@
-from Source.settings import debug
+from Source.settings import params
 
 
 def special_print(*message, **args):
-    if debug:
+    if params["debug"]:
         # if "level" in args:
         # print(args["level"])
         print(*message)

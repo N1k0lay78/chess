@@ -1,5 +1,5 @@
 from Source.boards import boards
-from Source.settings import name_board_to_play
+from Source.settings import params
 from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
 from Source.special_functools import special_print
 
@@ -83,7 +83,7 @@ class LogicBoard:
         if color:
             special_print('won', ("white" if color == 1 else "black"), level=10)
         self.step = 0
-        self.load_board(boards[name_board_to_play])
+        self.load_board(boards[params["board_name"]])
 
     def get_step(self):
         return self.step

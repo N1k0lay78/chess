@@ -5,7 +5,7 @@ params = {
     "board_name": "test2",
     "log_level": "",
     "debug": False,
-    "online_host_ip": "192.168.1.71",  # "192.168.1.13" "26.238.243.152"
+    "online_host_ip": "192.168.1.13",  # "192.168.1.13" "26.238.243.152"
     "online_host_port": 8080,
     "nickname": "",  # if empty use input
     "screen_size": (600, 600),
@@ -13,7 +13,7 @@ params = {
     "app_icon": "Source/Image/icon.png",
     "max_fps": 30,
     "is_on_rotation": True,
-    "start_window": "Menu",  # "Load" for production
+    "start_window": "Test",  # "Load" for production
     "is_flip_screen": False,
 }
 
@@ -32,4 +32,5 @@ nicknames = ["NIKI", "RJKZ", "RJKZAVR", "NIKOLAUSUS", "NIKNIKSHAM", "TSAR", "N1K
 
 
 def set_random_nickname():
-    params["nickname"] = random.choice(nicknames)
+    params["nickname"] = random.choice(nicknames) + "_" + str(random.choice(range(1, 100001)))
+    return params["nickname"]

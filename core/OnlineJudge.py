@@ -1,16 +1,12 @@
-from threading import Thread
-from Source.settings import online_host_ip, online_host_port, nickname
-from core.online.Client import Client
+from Source.settings import params
 
 
 class OnlineJudge:
-    def __init__(self, board):
+    def __init__(self, board, game):
         self.board = board
-        self.nickname = nickname if nickname else input()
-        self.socket, self.port = online_host_ip, online_host_port
-        self.client = Client(board, self.nickname, self.socket, self.port, self)
-        self.client_thread = Thread(target=self.client.run)
-        self.client_thread.start()
+        self.nickname = params["nickname"]
+        self.socket, self.port = params["online_host_ip"], params["online_host_port"]
+        self.game = game
         self.make_castling = False
 
     def on_move(self, fr: tuple, to: tuple) -> None:
@@ -25,9 +21,9 @@ class OnlineJudge:
             self.make_castling = False
 
         if self.board.color == 1:
-            self.client.sending_to_the_server(f"mo {7-fr[0]},{7-fr[1]}:{7-to[0]},{7-to[1]}:{str(piece).lower()}")
+            self.game.send_to_server(f"mo {7-fr[0]},{7-fr[1]}:{7-to[0]},{7-to[1]}:{str(piece).lower()}")
         elif self.board.color == 0:
-            self.client.sending_to_the_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
+            self.game.send_to_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
 
     def on_remove(self, name: str) -> None:
         """on pieces eat"""
@@ -63,5 +59,4 @@ class OnlineJudge:
             piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
 
     def quit(self) -> None:
-        self.client.stop()
-        self.client_thread.join()
+        pass
