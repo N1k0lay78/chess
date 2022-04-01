@@ -1,19 +1,25 @@
 from time import time
-from BaseUI import BaseUI
+
 import pygame
 import ctypes
 
+from core.UI.BaseUI import BaseUI
+
 
 class InputField(BaseUI):
-    def __init__(self, window, pos, placeholder, color):
+    def __init__(self, window, pos, placeholder, color, type):
         super().__init__(window, pos)
         self.placeholder = placeholder
         self.color = color
+        self.type = type
+
+        # ready to action
+        self.ready = False
 
         # settings
         self.u = ctypes.windll.LoadLibrary("user32.dll")
-        self.time_to_zajim = 0.7
-        self.delay_print = 0.025
+        self.time_to_zajim = 0.6
+        self.delay_print = 0.02
         self.old_time = 0
 
         # for typing
@@ -41,6 +47,13 @@ class InputField(BaseUI):
                                 'al': False}
         self.pressed_letters = {}
 
+    def draw(self, pos=(0, 0)):
+        pos = [pos[0] + self.pos[0], pos[1] + self.pos[1]]
+        if self.text:
+            self.window.game.screen.blit(self.window.game.render_text(self.text, self.color[0]), pos)
+        else:
+            self.window.game.screen.blit(self.window.game.render_text(self.placeholder, self.color[1]), pos)
+
     def get_language(self):
         if hex(getattr(self.u, "GetKeyboardLayout")(0)) == '0x4190419':
             return True
@@ -58,7 +71,7 @@ class InputField(BaseUI):
                     seal = self.code_to_letter[n_one]
                     if self.pressed_special["sh"] and seal in self.special_symbols:
                         seal = self.special_symbols[seal]
-                        if is_rus:
+                        if is_rus and seal in self.special_symbols:
                             seal = self.special_symbols[seal]
                     elif is_rus and seal in self.rus:
                         seal = self.rus[seal]
@@ -68,14 +81,14 @@ class InputField(BaseUI):
                             if len(seal) == 1:
                                 self.text += seal
                             else:
-                                self.text = self.text[:-1]
+                                self.backspace()
                     else:
                         self.pressed_letters[seal] += delta
                         if self.pressed_letters[seal] > self.time_to_zajim:
                             if len(seal) == 1:
                                 self.text += seal
                             else:
-                                self.text = self.text[:-1]
+                                self.backspace()
                             self.pressed_letters[seal] -= self.delay_print
                     used.append(seal)
                 if n_one in self.code_to_special:
@@ -84,12 +97,57 @@ class InputField(BaseUI):
         for key in list(self.pressed_letters.keys()):
             if key not in used:
                 self.pressed_letters.pop(key)
-                print("DELETE")
         for key in self.pressed_special.keys():
             if key not in used:
                 self.pressed_special[key] = False
         self.old_time = cur_time
+        if self.type == "code":
+            self.code_checker()
+        elif self.type == "nickname":
+            self.nickname_check()
+        else:
+            self.text_checker()
         # print(self.pressed_letters)
+
+    def code_checker(self):
+        text = "".join(self.text.split())
+        self.ready = text.isdigit() and len(text) == 4
+
+        res = []
+        for i in range(len(text)):
+            if text[i].isdigit() and len(res) < 4:
+                res.append(text[i])
+        self.text = " ".join(res)
+
+    def nickname_check(self):
+        res = ""
+        for char in self.text:
+            if char in "qwertyuiopasdfghjklzxcvbnm_-1234567890" and len(res) < 15:
+                res += char
+        self.ready = len(res) > 7 and "qwertyuiopasdfghjklzxcvbnm" in res
+        self.text = res
+
+    def text_checker(self):
+        if len(self.text) > 50:
+            self.text = self.text[:50]
+
+    def backspace(self):
+        if len(self.text) > 0:
+            if self.type == "code":
+                if self.pressed_special["ct"]:
+                    self.text = ""
+                else:
+                    self.text = " ".join(self.text.split()[:-1])
+            elif self.type == "nickname":
+                if self.pressed_special["ct"]:
+                    self.text = "_".join(self.text.split('_')[:-1])
+                else:
+                    self.text = self.text[:-1]
+            else:
+                if self.pressed_special["ct"]:
+                    self.text = self.text.rstrip()[:-len(self.text.split()[-1])].rstrip()
+                else:
+                    self.text = self.text[:-1]
 
 
 # pygame.init()

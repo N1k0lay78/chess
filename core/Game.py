@@ -4,6 +4,8 @@ from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
 
+from core.windows.TestWindow import TestWindow
+
 
 class Game:
     def __init__(self):
@@ -27,6 +29,7 @@ class Game:
             "Game": GameWindow,
             "Load": LoadingGame,
             "Menu": MainMenuWindow,
+            "Test": TestWindow,
         }
         self.window = None
         self.open_window(get_param("start_window"))
@@ -63,9 +66,9 @@ class Game:
         return self.font.render(text, False, color)
 
     def open_window(self, name=""):
-        if self.window:
-            self.window.on_close()
         if name:
+            if self.window:
+                self.window.on_close()
             self.window = self.windows[name](self)
 
     def quit(self):
