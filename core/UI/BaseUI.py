@@ -59,3 +59,6 @@ class BaseUI:
 
     def on_disactive(self):
         pass
+
+    def update(self):
+        pass
