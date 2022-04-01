@@ -1,4 +1,5 @@
 from core.UI.InputField import InputField
+from core.UI.PlayButton import PlayButton
 from core.UI.ReadyButton import ReadyButton
 from core.windows.Window import Window
 
@@ -9,6 +10,9 @@ class TestWindow(Window):
         self.ui = []
         # self.ui.append(InputField(self, (10, 10), "C O D E", [(0, 0, 0), (150, 150, 150)], "nickname"))
         self.ui.append(ReadyButton(self, (10, 85)))
+        self.ui.append(PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}))
+        self.ui.append(PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}))
+        self.ui.append(PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}))
         self.active = self.ui[-1]
 
     def update(self):
