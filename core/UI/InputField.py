@@ -8,7 +8,7 @@ from core.UI.BaseUI import BaseUI
 
 class InputField(BaseUI):
     def __init__(self, window, pos, placeholder, color, type):
-        super().__init__(window, pos)
+        super().__init__(window, pos, un_active_on_mouse_up=False)
         self.placeholder = placeholder
         self.color = color
         self.type = type
@@ -149,6 +149,10 @@ class InputField(BaseUI):
                 else:
                     self.text = self.text[:-1]
 
+    def check_collide_point(self, pos):
+        pos = (pos[0] - self.pos[0], pos[1] - self.pos[1])
+        if 0 <= pos[0] <= 105 and 0 <= pos[1] <= 75:
+            return True
 
 # pygame.init()
 # screen = pygame.display.set_mode((600, 600))

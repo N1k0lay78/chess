@@ -1,4 +1,4 @@
-from Source.settings import params
+from Source.settings import params, set_random_nickname
 from core.online.Client import Client
 from core.windows.LoadingGame import LoadingGame
 from core.windows.GameWidow import GameWindow
@@ -10,7 +10,8 @@ from core.windows.TestWindow import TestWindow
 class Game:
     def __init__(self):
         # server
-        self.client = Client(input(), params["online_host_ip"], params["online_host_port"])
+        self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"])
+        self.client.run()
 
         # init app
         self.screen = pygame.display.set_mode(params["screen_size"])
@@ -73,6 +74,9 @@ class Game:
             if self.window:
                 self.window.on_close()
             self.window = self.windows[name](self)
+
+    def connect_to_the_game(self, code):
+        print(code)
 
     def quit(self):
         self.open_window()

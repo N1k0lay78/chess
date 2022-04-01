@@ -8,11 +8,11 @@ class TestWindow(Window):
     def __init__(self, game):
         super().__init__(game)
         self.ui = []
-        # self.ui.append(InputField(self, (10, 10), "C O D E", [(0, 0, 0), (150, 150, 150)], "nickname"))
-        self.ui.append(ReadyButton(self, (10, 85)))
-        self.ui.append(PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}))
-        self.ui.append(PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}))
-        self.ui.append(PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}))
+        self.ui.append(InputField(self, (10, 10), "C O D E", [(0, 0, 0), (150, 150, 150)], "code"))
+        # self.ui.append(ReadyButton(self, (10, 85)))
+        self.ui.append(PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}, func=game.connect_to_the_game))
+        # self.ui.append(PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}))
+        # self.ui.append(PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}))
         self.active = self.ui[-1]
 
     def update(self):

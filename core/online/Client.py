@@ -1,7 +1,7 @@
 import socket
 from threading import Thread
 import time
-from Source.special_functools import special_print, debug
+from Source.special_functools import special_print
 
 # Получаем свой локальный ip адрес
 # self_ip = socket.gethostbyname(socket.gethostname())

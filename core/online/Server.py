@@ -111,7 +111,7 @@ class Game:
 
 
 class Server:
-    def __init__(self, ip_address, port=5050):
+    def __init__(self, ip_address, port=8080):
         self.max_user_count = 100
         self.check_time = 1
         self.ip_address = ip_address

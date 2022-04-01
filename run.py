@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect
 import config
 import socket
 from core.online.Server import Server
-from Source.settings import debug
+from Source.settings import params
 
 
 server = Server()
@@ -17,7 +17,7 @@ def get_render_template(template_name, title, **kwargs):
 
 
 def main(port=8000):
-    if debug:
+    if params["debug"]:
         global have_game
         self_ip = socket.gethostbyname(socket.gethostname())
         if not have_game:
