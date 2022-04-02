@@ -7,7 +7,7 @@ from Source.special_functools import special_print
 # self_ip = socket.gethostbyname(socket.gethostname())
 
 
-class Game:
+class Room:
     def __init__(self, board, judge, client):
         # game objects
         self.client = client
@@ -21,6 +21,7 @@ class Game:
         self.running = True
 
     def get_server_message(self, message):
+        print("????????????????????????", message)
         self.message_queue.append(message)
 
     def send_to_server(self, message):
@@ -66,7 +67,7 @@ class Game:
 
     def wait_user_choice(self):
         self.board.set_pause(True)
-        self.send_to_server(f"mc {input()}")
+        self.send_to_server(f"mc {input('????3@#R#QWFE')}")
         self.board.set_pause(False)
 
 
@@ -83,14 +84,19 @@ class Client:
         self.getting_from_the_server_thread = None
         self.running = True
         self.send_to = []
-        self.game = None
+        self.room = None
+
+    def is_connected(self):
+        return bool(self.socket)
 
     def connect_to_game(self, board, judge):
-        if not self.game:
-            self.game = Game(board, judge, self)
-            self.send_to.append(self.game.get_server_message)
+        if not self.room and self.socket:
+            print("????????????????????????????????????????????????????????????????????????")
+            self.sending_to_the_server("cg 1234")
+            self.room = Room(board, judge, self)
+            self.send_to.append(self.room.get_server_message)
         else:
-            special_print("У пользователя уже есть игра!")
+            print("У пользователя уже есть игра!")
 
     def connect_with_server(self):
         while self.running:
@@ -110,7 +116,7 @@ class Client:
                     print("Something is wrong")
                     self.socket.close()
                     self.socket = None
-                    self.game = None
+                    self.room = None
                     self.send_to = []
                 time.sleep(1)
 
@@ -130,7 +136,7 @@ class Client:
                 try:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection" and len(data) >= 2:
-                        # print(data)
+                        print(data)
                         for pol in self.send_to:
                             pol(data)
                 except Exception as e:

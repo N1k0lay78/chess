@@ -2,18 +2,22 @@ from Source.settings import params
 
 
 class OnlineJudge:
-    def __init__(self, board, game):
+    def __init__(self, board, client):
         self.board = board
         self.nickname = params["nickname"]
         self.socket, self.port = params["online_host_ip"], params["online_host_port"]
-        self.game = game
+        self.client = client
         self.make_castling = False
+        self.color = 0
+
+    def get_color(self):
+        return self.color
 
     def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""
         piece = self.board.get_pos(to)
 
-        if piece and piece.t == "" and to[1] in [0, 7] and not self.board.game.restart:
+        if piece and piece.t == "" and to[1] in [0, 7]:
             self.on_swap(to)
 
         if self.make_castling:
@@ -21,9 +25,9 @@ class OnlineJudge:
             self.make_castling = False
 
         if self.board.color == 1:
-            self.game.send_to_server(f"mo {7-fr[0]},{7-fr[1]}:{7-to[0]},{7-to[1]}:{str(piece).lower()}")
+            self.client.sending_to_the_server(f"mo {7-fr[0]},{7-fr[1]}:{7-to[0]},{7-to[1]}:{str(piece).lower()}")
         elif self.board.color == 0:
-            self.game.send_to_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
+            self.client.sending_to_the_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
 
     def on_remove(self, name: str) -> None:
         """on pieces eat"""

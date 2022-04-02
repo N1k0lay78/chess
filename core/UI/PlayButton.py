@@ -12,7 +12,9 @@ class PlayButton(TextButton):
     def on_click(self):
         for key, val in self.settings.items():
             params[key] = val
+        if len(self.window.ui[0].text) > 0:
+            params["code"] = int("".join(self.window.ui[0].text.split()))
         if not self.func:
             self.window.game.open_window(self.open_window)
-        else:
-            self.func(int("".join(self.window.ui[0].text.split())))
+        # elif len(self.window.ui[0].text) > 0:
+            # self.func(int("".join(self.window.ui[0].text.split())))

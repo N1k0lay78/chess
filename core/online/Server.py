@@ -39,6 +39,7 @@ class Game:
         self.message_queue.append([nickname, message])
 
     def connect_user(self, nickname, user):
+        print(f"Connect {nickname}")
         if len(self.players) < self.max_users and nickname not in self.players:
             color = [0, 1]
             for key in self.players.keys():
@@ -49,6 +50,7 @@ class Game:
             self.players[nickname]["data"][3].append(self.get_user_message)
             self.players[nickname]["color"] = color[0] if len(color) > 0 else 2
             if self.players[nickname]["color"] in [0, 1]:
+                print("?????")
                 self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} {self.board.step} "
                                                                   f"{self.board.can_view(self.players[nickname]['color'])}")
             else:
@@ -160,6 +162,9 @@ class Server:
             try:
                 data = self.to_text(conn.recv(1024))
                 if data and len(data) >= 2 and data != "Check connection":
+                    print(data)
+                    if data == "cg":
+                        self.games[int(data.split()[1])][0].connect_user(nickname, self.users[nickname])
                     # special_print(f"Get message from user {nickname} {data}")
                     for pol in send_to:
                         pol(nickname, data)
@@ -189,7 +194,6 @@ class Server:
                     special_print(f"Users {len(self.users)}/{self.max_user_count}", level=10)
 
                     self.users[nickname][2] = True
-                    self.games[1234][0].connect_user(nickname, self.users[nickname])
                 else:
                     res = self.send_to_user(conn, "Check connection")
                 if not res:
@@ -198,7 +202,7 @@ class Server:
                         for bkey in self.games.keys():
                             self.games[bkey][0].leave_game(nickname)
                         self.users.pop(nickname)
-                    special_print(f"{nickname} left the game", level=10)
+                    print(f"Delete user {nickname}")
                     # special_print(f"Connection timed out with {address[0]}:{address[1]}", level=10)
                     special_print(f"Users {len(self.users)}/{self.max_user_count}", level=10)
             time.sleep(self.check_time)

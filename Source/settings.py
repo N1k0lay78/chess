@@ -15,6 +15,7 @@ params = {
     "is_on_rotation": True,
     "start_window": "Test",  # "Load" for production
     "is_flip_screen": False,
+    "code": 0,
 }
 
 # is_on_fog_of_war = False
