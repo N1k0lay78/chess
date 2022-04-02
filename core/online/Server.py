@@ -114,6 +114,7 @@ class Game:
 
 class Server:
     def __init__(self, ip_address, port=8080):
+        # print(ip_address, port)
         self.max_user_count = 100
         self.check_time = 1
         self.ip_address = ip_address
@@ -163,7 +164,8 @@ class Server:
                 data = self.to_text(conn.recv(1024))
                 if data and len(data) >= 2 and data != "Check connection":
                     print(data)
-                    if data == "cg":
+                    if data[:2] == "cg":
+                        print("Da blyat")
                         self.games[int(data.split()[1])][0].connect_user(nickname, self.users[nickname])
                     # special_print(f"Get message from user {nickname} {data}")
                     for pol in send_to:

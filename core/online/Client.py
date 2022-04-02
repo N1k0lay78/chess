@@ -20,6 +20,9 @@ class Room:
         self.color = 0
         self.running = True
 
+        self.run_thread = Thread(target=self.run)
+        self.run_thread.start()
+
     def get_server_message(self, message):
         print("????????????????????????", message)
         self.message_queue.append(message)
@@ -28,10 +31,10 @@ class Room:
         self.client.sending_to_the_server(message)
 
     def run(self):
-        if self.running:
-            while len(self.message_queue):
+        while self.running:
+            if len(self.message_queue):
                 data = self.message_queue[0]
-                print(data)
+                print(data, "!!!!DATA!!!!")
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     a = data.split()
@@ -64,6 +67,7 @@ class Room:
                 elif data[:2] in ["ch", "er"]:
                     wait_user_choice_thread = Thread(target=self.wait_user_choice)
                     wait_user_choice_thread.start()
+                self.message_queue.pop(0)
 
     def wait_user_choice(self):
         self.board.set_pause(True)
@@ -73,6 +77,7 @@ class Room:
 
 class Client:
     def __init__(self, nickname, server, port):
+        print(server, port)
         # settings
         self.nickname = nickname
         self.server = server
@@ -87,14 +92,16 @@ class Client:
         self.room = None
 
     def is_connected(self):
-        return bool(self.socket)
+        return True if self.socket else False
 
     def connect_to_game(self, board, judge):
+        print("!!!?!?!?!?!")
         if not self.room and self.socket:
             print("????????????????????????????????????????????????????????????????????????")
-            self.sending_to_the_server("cg 1234")
             self.room = Room(board, judge, self)
             self.send_to.append(self.room.get_server_message)
+            time.sleep(1)
+            print(self.sending_to_the_server("cg 1234"))
         else:
             print("У пользователя уже есть игра!")
 
@@ -126,7 +133,8 @@ class Client:
             try:
                 self.socket.send(self.to_bytes(message))
             except Exception as e:
-                special_print(f"Bad connection with server - {e}", level=10)
+                # special_print(f"Bad connection with server - {e}", level=10)
+                print(f"Bad connection with server - {e}")
                 return False
         return True
 
