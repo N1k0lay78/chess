@@ -1,4 +1,6 @@
+from core.UI.DefaultButton import DefaultButton
 from core.UI.InputField import InputField
+from core.UI.InputFieldPopUp import InputFieldPopUp
 from core.UI.PlayButton import PlayButton
 from core.UI.ReadyButton import ReadyButton
 from core.windows.Window import Window
@@ -8,11 +10,14 @@ class TestWindow(Window):
     def __init__(self, game):
         super().__init__(game)
         self.ui = []
+        self.ui.append(DefaultButton(self, (10, 40), "войти", 3))
         self.ui.append(InputField(self, (10, 10), "C O D E", [(0, 0, 0), (150, 150, 150)], "code"))
         # self.ui.append(ReadyButton(self, (10, 85)))
         self.ui.append(PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}, func=game.connect_to_the_game))
         # self.ui.append(PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}))
         # self.ui.append(PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}))
+        self.ui.append(InputFieldPopUp(self, [0, 300], "code", "войти"))
+        self.ui.append(InputFieldPopUp(self, [300, 300], "nickname", "создать"))
         self.active = self.ui[-1]
 
     def update(self):

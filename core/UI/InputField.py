@@ -7,9 +7,10 @@ from core.UI.BaseUI import BaseUI
 
 
 class InputField(BaseUI):
-    def __init__(self, window, pos, placeholder, color, type):
-        super().__init__(window, pos, un_active_on_mouse_up=False)
+    def __init__(self, window, pos, placeholder, color, type, size=(10, 10), align_center=False):
+        super().__init__(window, pos, un_active_on_mouse_up=False, size=size)
         self.placeholder = placeholder
+        self.align_center = align_center
         self.color = color
         self.type = type
 
@@ -48,11 +49,15 @@ class InputField(BaseUI):
         self.pressed_letters = {}
 
     def draw(self, pos=(0, 0)):
-        pos = [pos[0] + self.pos[0], pos[1] + self.pos[1]]
         if self.text:
-            self.window.game.screen.blit(self.window.game.render_text(self.text, self.color[0]), pos)
+            render = self.window.game.render_text(self.text, self.color[0])
         else:
-            self.window.game.screen.blit(self.window.game.render_text(self.placeholder, self.color[1]), pos)
+            render = self.window.game.render_text(self.placeholder, self.color[1])
+        if self.align_center:
+            pos = [pos[0] + self.pos[0] + (self.get_size()[0] - render.get_width()) // 2, pos[1] + self.pos[1]]
+        else:
+            pos = [pos[0] + self.pos[0], pos[1] + self.pos[1]]
+        self.window.game.screen.blit(render, pos)
 
     def get_language(self):
         if hex(getattr(self.u, "GetKeyboardLayout")(0)) == '0x4190419':
@@ -124,7 +129,7 @@ class InputField(BaseUI):
         for char in self.text:
             if char in "qwertyuiopasdfghjklzxcvbnm_-1234567890" and len(res) < 15:
                 res += char
-        self.ready = len(res) > 7 and "qwertyuiopasdfghjklzxcvbnm" in res
+        self.ready = len(res) > 7
         self.text = res
 
     def text_checker(self):
@@ -149,10 +154,6 @@ class InputField(BaseUI):
                 else:
                     self.text = self.text[:-1]
 
-    def check_collide_point(self, pos):
-        pos = (pos[0] - self.pos[0], pos[1] - self.pos[1])
-        if 0 <= pos[0] <= 105 and 0 <= pos[1] <= 75:
-            return True
 
 # pygame.init()
 # screen = pygame.display.set_mode((600, 600))
