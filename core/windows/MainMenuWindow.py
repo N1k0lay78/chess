@@ -12,7 +12,7 @@ class MainMenuWindow(Window):
         super().__init__(game)
         self.background = load_image('main_menu')
         self.button = ChangeWindowButton(self, (500, 0), TileSet('settings4', (100, 100)), "Game")
-        
+
         self.buttons = [
             PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}),
             PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}),

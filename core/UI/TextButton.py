@@ -18,5 +18,10 @@ def create_tile_set(game, text):
 
 
 class TextButton(Button):
-    def __init__(self, window, pos, text):
+    def __init__(self, window, pos, text, action=None):
         super().__init__(window, pos, TileSet(*create_tile_set(window.game, text)), (0, 1, 2))
+        self.action = action
+
+    def on_click(self):
+        if self.action:
+            self.action(self)
