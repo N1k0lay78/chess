@@ -4,8 +4,8 @@ import socket
 from core.online.Server import Server
 from Source.settings import params
 
-
-server = Server()
+self_ip = socket.gethostbyname(socket.gethostname())
+server = Server(self_ip, 8080)
 have_game = False
 ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg']
 app = Flask(__name__)
@@ -19,9 +19,8 @@ def get_render_template(template_name, title, **kwargs):
 def main(port=8000):
     if params["debug"]:
         global have_game
-        self_ip = socket.gethostbyname(socket.gethostname())
         if not have_game:
-            server.create_socket(8080, self_ip)
+            server.create_game(1234, 4)
             have_game = True
     else:
         app.run(port=port)
@@ -38,15 +37,15 @@ def create_game():
     global have_game
     self_ip = socket.gethostbyname(socket.gethostname())
     if not have_game:
-        server.create_socket(8080, self_ip)
+        server.create_game(1234, 4)
         have_game = True
     return f"""{self_ip}"""
 
 
 @app.route("/restart_game")
 def restart_game():
-    global have_game
-    have_game = False
+    # global have_game
+    # have_game = False
     return redirect("/create_game")
 
 

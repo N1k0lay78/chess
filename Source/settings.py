@@ -2,7 +2,7 @@ import random
 
 params = {
     "mode": "online",  # online/offline/fog of war
-    "board_name": "test2",
+    "board_name": "classic",
     "log_level": "",
     "debug": False,
     "online_host_ip": "192.168.1.13",  # "192.168.1.13" "26.238.243.152"
