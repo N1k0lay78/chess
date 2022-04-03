@@ -43,7 +43,7 @@ def create_game():
 
 
 @app.route("/restart_game")
-def restart_game():
+def restart_game(): 
     # global have_game
     # have_game = False
     return redirect("/create_game")
