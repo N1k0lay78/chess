@@ -23,10 +23,11 @@ class GameWindow(Window):
         self.connect_to_the_game()
 
     def connect_to_the_game(self):
+        self.game.client.sending_to_the_server(f"hg {params['code']}")
         print(params["code"], self.game.client.is_connected())
         if self.game.client.is_connected():
             # print("A podkluchitca?")
-            self.game.client.connect_to_game(self.logic_board, self.judge)
+            self.game.client.connect_to_game(params['code'], self.logic_board, self.judge)
 
     def draw(self):
         self.game_board.draw()

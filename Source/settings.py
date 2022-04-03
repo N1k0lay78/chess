@@ -16,6 +16,8 @@ params = {
     "start_window": "Test",  # "Load" for production
     "is_flip_screen": False,
     "code": 0,
+    "game_exist": False,
+    "have_answer": False,
 }
 
 # is_on_fog_of_war = False

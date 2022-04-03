@@ -1,3 +1,5 @@
+import time
+
 from Source.settings import params
 from core.UI.BaseUI import BaseUI
 from core.UI.DefaultButton import DefaultButton
@@ -7,7 +9,18 @@ from core.UI.PopUp import PopUp
 
 def ready_code(button):
     if button.parent.child[1].ready and params["code"]:
-        button.window.game.open_window("Game")
+        button.window.game.client.sending_to_the_server(f"hg {params['code']}")
+        params["game_exist"] = False
+        params["have_answer"] = False
+        c = 0
+        while not params["have_answer"] and c < 15:
+            c += 1
+            time.sleep(0.3)
+        print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
+        if button.window.game.client.is_connected() and params["game_exist"]:
+            print("Connect")
+            button.window.game.open_window("Game")
+        print("Lose")
         # print(params["code"])
 
 

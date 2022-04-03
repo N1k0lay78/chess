@@ -170,6 +170,11 @@ class Server:
                         # print("Da blyat")
                         self.games[int(data.split()[1])][0].connect_user(nickname, self.users[nickname])
                     # special_print(f"Get message from user {nickname} {data}")
+                    elif data[:2] == "hg":
+                        if int(data.split()[1]) in list(self.games.keys()):
+                            self.send_to_user(conn, "ga 1")
+                        else:
+                            self.send_to_user(conn, "ga 0")
                     for pol in send_to:
                         pol(nickname, data)
             except Exception as e:

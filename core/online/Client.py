@@ -1,6 +1,8 @@
 import socket
 from threading import Thread
 import time
+
+from Source.settings import params
 from Source.special_functools import special_print
 
 # Получаем свой локальный ip адрес
@@ -94,14 +96,14 @@ class Client:
     def is_connected(self):
         return True if self.socket else False
 
-    def connect_to_game(self, board, judge):
+    def connect_to_game(self, code, board, judge):
         # print("!!!?!?!?!?!")
         if not self.room and self.socket:
             # print("????????????????????????????????????????????????????????????????????????")
             self.room = Room(board, judge, self)
             self.send_to.append(self.room.get_server_message)
             time.sleep(1)
-            self.sending_to_the_server("cg 1234")
+            self.sending_to_the_server(f"cg {code}")
         else:
             print("У пользователя уже есть игра!")
 
@@ -145,6 +147,9 @@ class Client:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection" and len(data) >= 2:
                         print(data)
+                        if data[:2] == "ga":
+                            params["game_exist"] = bool(int(data.split()[1]))
+                            params["have_answer"] = True
                         for pol in self.send_to:
                             pol(data)
                 except Exception as e:
