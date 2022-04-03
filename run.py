@@ -5,7 +5,7 @@ from core.online.Server import Server
 from Source.settings import params
 
 self_ip = socket.gethostbyname(socket.gethostname())
-server = Server(self_ip, 8080)
+server = Server(self_ip, 7890)
 have_game = False
 ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg']
 app = Flask(__name__)
@@ -43,7 +43,7 @@ def create_game():
 
 
 @app.route("/restart_game")
-def restart_game(): 
+def restart_game():
     # global have_game
     # have_game = False
     return redirect("/create_game")
