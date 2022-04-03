@@ -66,8 +66,8 @@ class Game:
                 pygame.display.update()
             # lock fps
             self.clock.tick(self.max_fps)
-            if False:
-                print(self.clock.get_fps())
+            # if False:
+                # print(self.clock.get_fps())
 
     def render_text(self, text, color=(0, 0, 0), is_small=True):
         if is_small:

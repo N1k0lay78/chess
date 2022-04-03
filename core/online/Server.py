@@ -32,7 +32,7 @@ class Game:
 
     def update_all_users_condition(self):
         for key in self.players.keys():
-            print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
+            # print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
             self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
         # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
 
@@ -40,7 +40,7 @@ class Game:
         self.message_queue.append([nickname, message])
 
     def connect_user(self, nickname, user):
-        print(f"Connect {nickname}")
+        # print(f"Connect {nickname}")
         if len(self.players) < self.max_users and nickname not in self.players:
             color = [0, 1]
             for key in self.players.keys():
@@ -64,7 +64,7 @@ class Game:
     def run(self):
         while self.running:
             if len(self.message_queue):
-                print(self.message_queue[0])
+                # print(self.message_queue[0])
                 nickname, data = self.message_queue[0]
                 if nickname in self.players and self.players[nickname]["color"] in [0, 1]:
                     special_print(f"New LM from {nickname} - {data}", level=10)
@@ -157,7 +157,7 @@ class Server:
 
                     self.users[nickname] = [conn, address, False, send_to, listen_thread]
                     self.queue.remove([nickname, conn, address])
-                    print(f"Add user {nickname}")
+                    # print(f"Add user {nickname}")
             time.sleep(3)
 
     def get_from_user(self, nickname, conn, send_to):
@@ -165,7 +165,7 @@ class Server:
             try:
                 data = self.to_text(conn.recv(1024))
                 if data and len(data) >= 2 and data != "Check connection":
-                    print(data)
+                    # print(data)
                     if data[:2] == "cg":
                         # print("Da blyat")
                         self.games[int(data.split()[1])][0].connect_user(nickname, self.users[nickname])
@@ -211,7 +211,7 @@ class Server:
                         for bkey in self.games.keys():
                             self.games[bkey][0].leave_game(nickname)
                         self.users.pop(nickname)
-                    print(f"Delete user {nickname}")
+                    # print(f"Delete user {nickname}")
                     # special_print(f"Connection timed out with {address[0]}:{address[1]}", level=10)
                     special_print(f"Users {len(self.users)}/{self.max_user_count}", level=10)
             time.sleep(self.check_time)

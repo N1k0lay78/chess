@@ -113,7 +113,7 @@ while running:
             pressed_special[key] = False
     # print(pressed_letters)
     # print(pressed_special)
-    if text != lv:
-        print("\r" + text, end="")
+    # if text != lv:
+        # print("\r" + text, end="")
     lv = text
     old_time = cur_time

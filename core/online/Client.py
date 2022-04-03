@@ -36,7 +36,7 @@ class Room:
         while self.running:
             if len(self.message_queue):
                 data = self.message_queue[0]
-                print(data, "!!!!DATA!!!!")
+                # print(data, "!!!!DATA!!!!")
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     a = data.split()
@@ -105,7 +105,8 @@ class Client:
             time.sleep(1)
             self.sending_to_the_server(f"cg {code}")
         else:
-            print("У пользователя уже есть игра!")
+            pass
+            # print("У пользователя уже есть игра!")
 
     def connect_with_server(self):
         while self.running:
@@ -122,7 +123,7 @@ class Client:
                     special_print("Something is wrong. Try to connect again", level=10)
             else:
                 if not self.sending_to_the_server("Check connection"):
-                    print("Something is wrong")
+                    # print("Something is wrong")
                     self.socket.close()
                     self.socket = None
                     self.room = None
@@ -136,7 +137,7 @@ class Client:
                 self.socket.send(self.to_bytes(message))
             except Exception as e:
                 # special_print(f"Bad connection with server - {e}", level=10)
-                print(f"Bad connection with server - {e}")
+                # print(f"Bad connection with server - {e}")
                 return False
         return True
 
@@ -146,7 +147,7 @@ class Client:
                 try:
                     data = self.to_text(self.socket.recv(1024))
                     if data != "Check connection" and len(data) >= 2:
-                        print(data)
+                        # print(data)
                         if data[:2] == "ga":
                             params["game_exist"] = bool(int(data.split()[1]))
                             params["have_answer"] = True

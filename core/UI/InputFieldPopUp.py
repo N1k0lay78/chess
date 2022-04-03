@@ -16,17 +16,18 @@ def ready_code(button):
         while not params["have_answer"] and c < 15:
             c += 1
             time.sleep(0.3)
-        print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
+        # print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
         if button.window.game.client.is_connected() and params["game_exist"]:
-            print("Connect")
+            # print("Connect")
             button.window.game.open_window("Game")
-        print("Lose")
+        # print("Lose")
         # print(params["code"])
 
 
 def ready_nickname(button):
     if button.parent.child[1].ready:
-        print(f"READY {button.parent.child[1].text}, len={len(button.parent.child[1].text)}")
+        pass
+        # print(f"READY {button.parent.child[1].text}, len={len(button.parent.child[1].text)}")
 
 
 class InputFieldPopUp(PopUp):
