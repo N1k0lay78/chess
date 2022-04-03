@@ -112,8 +112,9 @@ class StandardBoardUI:
                 goal_movement = [7 - goal_movement[0], 7 - goal_movement[1]]
 
             move_positions = (self.get_pos_from_cell(self.focused.cr), self.get_pos_from_cell(goal_movement))
-
+            l_pose = self.focused.cr[:]
             if self.logic_board.move(self.focused.cr, goal_movement):
+                self.judge.on_move(l_pose, goal_movement)
                 self.focused = None
                 if not self.dragging:
                     self.move_percent = 1

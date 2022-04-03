@@ -1,3 +1,4 @@
+from Source.settings import params
 from core.UI.BaseUI import BaseUI
 from core.UI.DefaultButton import DefaultButton
 from core.UI.InputField import InputField
@@ -5,8 +6,9 @@ from core.UI.PopUp import PopUp
 
 
 def ready_code(button):
-    if button.parent.child[1].ready:
-        print("CODE READY")
+    if button.parent.child[1].ready and params["code"]:
+        button.window.game.open_window("Game")
+        # print(params["code"])
 
 
 def ready_nickname(button):

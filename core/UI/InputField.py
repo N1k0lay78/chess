@@ -3,6 +3,7 @@ from time import time
 import pygame
 import ctypes
 
+from Source.settings import params
 from core.UI.BaseUI import BaseUI
 
 
@@ -117,6 +118,11 @@ class InputField(BaseUI):
     def code_checker(self):
         text = "".join(self.text.split())
         self.ready = text.isdigit() and len(text) == 4
+
+        if self.ready:
+            params["code"] = int(text)
+        else:
+            params["code"] = 0
 
         res = []
         for i in range(len(text)):

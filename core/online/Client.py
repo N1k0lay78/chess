@@ -24,7 +24,7 @@ class Room:
         self.run_thread.start()
 
     def get_server_message(self, message):
-        print("????????????????????????", message)
+        # print("????????????????????????", message)
         self.message_queue.append(message)
 
     def send_to_server(self, message):
@@ -45,8 +45,8 @@ class Room:
                     self.judge.color = int(data.split()[1])
                     self.board.step = int(data.split()[2])
 
-                    if self.color:
-                        self.judge.flip()
+                    # if self.color:
+                    #     self.judge.flip()
 
                 elif data[:2] == "sp":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
@@ -61,8 +61,8 @@ class Room:
                     special_print(self.board.step, level=10)
                     self.board.load_board(data.split(":")[2])
 
-                    if self.color:
-                        self.judge.flip()
+                    # if self.color:
+                    #     self.judge.flip()
 
                 elif data[:2] in ["ch", "er"]:
                     wait_user_choice_thread = Thread(target=self.wait_user_choice)
@@ -77,7 +77,7 @@ class Room:
 
 class Client:
     def __init__(self, nickname, server, port):
-        print(server, port)
+        # print(server, port)
         # settings
         self.nickname = nickname
         self.server = server
@@ -95,13 +95,13 @@ class Client:
         return True if self.socket else False
 
     def connect_to_game(self, board, judge):
-        print("!!!?!?!?!?!")
+        # print("!!!?!?!?!?!")
         if not self.room and self.socket:
-            print("????????????????????????????????????????????????????????????????????????")
+            # print("????????????????????????????????????????????????????????????????????????")
             self.room = Room(board, judge, self)
             self.send_to.append(self.room.get_server_message)
             time.sleep(1)
-            print(self.sending_to_the_server("cg 1234"))
+            self.sending_to_the_server("cg 1234")
         else:
             print("У пользователя уже есть игра!")
 

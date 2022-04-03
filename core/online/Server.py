@@ -32,6 +32,7 @@ class Game:
 
     def update_all_users_condition(self):
         for key in self.players.keys():
+            print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
             self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
         # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
 
@@ -50,7 +51,7 @@ class Game:
             self.players[nickname]["data"][3].append(self.get_user_message)
             self.players[nickname]["color"] = color[0] if len(color) > 0 else 2
             if self.players[nickname]["color"] in [0, 1]:
-                print("?????")
+                # print("?????")
                 self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} {self.board.step} "
                                                                   f"{self.board.can_view(self.players[nickname]['color'])}")
             else:
@@ -62,7 +63,8 @@ class Game:
 
     def run(self):
         while self.running:
-            while len(self.message_queue):
+            if len(self.message_queue):
+                print(self.message_queue[0])
                 nickname, data = self.message_queue[0]
                 if nickname in self.players and self.players[nickname]["color"] in [0, 1]:
                     special_print(f"New LM from {nickname} - {data}", level=10)
@@ -165,7 +167,7 @@ class Server:
                 if data and len(data) >= 2 and data != "Check connection":
                     print(data)
                     if data[:2] == "cg":
-                        print("Da blyat")
+                        # print("Da blyat")
                         self.games[int(data.split()[1])][0].connect_user(nickname, self.users[nickname])
                     # special_print(f"Get message from user {nickname} {data}")
                     for pol in send_to:

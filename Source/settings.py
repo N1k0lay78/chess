@@ -1,7 +1,7 @@
 import random
 
 params = {
-    "mode": "offline",  # online/offline/fog of war
+    "mode": "online",  # online/offline/fog of war
     "board_name": "test2",
     "log_level": "",
     "debug": False,
