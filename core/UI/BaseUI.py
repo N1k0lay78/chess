@@ -76,3 +76,6 @@ class BaseUI:
 
     def update(self):
         pass
+
+    def fixed_update(self):
+        pass

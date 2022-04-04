@@ -32,6 +32,10 @@ class TestWindow(Window):
                 self.set_active_object(element)
                 break
 
+    def fixed_update(self):
+        for element in self.ui:
+            element.fixed_update()
+
     def check_hover(self, event):
         pos = event.pos
         for element in self.ui:

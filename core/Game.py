@@ -57,6 +57,7 @@ class Game:
                 else:
                     self.quit()
             self.window.update()
+            self.window.fixed_update()
             self.screen.fill((20, 20, 50))
             self.window.draw()
             # if flip screen mode
