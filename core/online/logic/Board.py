@@ -29,6 +29,18 @@ class LogicBoard:
         line_board = self.get_board_line(self.pieces)
 
         if piece and piece.color == self.step % 2 and piece.update(to_cell):
+
+            # castling
+            if piece.t == "K" and from_cell in [[4, 0], [4, 7]] and to_cell in [[2, 0], [2, 7], [6, 0], [6, 7]]:
+                rook_pos = {"Kg8b0": [7, 0], "Kc8b0": [0, 0], "Kg1w0": [7, 7], "Kc1w0": [0, 7]}
+                rook_to = {"Kg8b0": [5, 0], "Kc8b0": [3, 0], "Kg1w0": [5, 7], "Kc1w0": [3, 7]}
+                rook = self.get_piece(rook_pos[str(piece)])
+                if rook and rook.i:
+                    rook.set_cell(rook_to[str(piece)])
+                    self.step += 1
+                    self.last_moved = piece
+                    return True
+
             if not self.check_shah(self.step % 2):
                 # print("PAT IS", self.check_pat((self.step + 1) % 2))
                 # print("MAT IS", self.check_mat((self.step + 1) % 2))

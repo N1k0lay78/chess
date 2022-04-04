@@ -47,10 +47,16 @@ def king_path(self, pos):
     # check that we are moving one cell
     if abs(self.c - pos[0]) < 2 and abs(self.r - pos[1]) < 2:
         return [(*pos, 1)]
+
+    if self.i and abs(self.c - pos[0]) == 2 and self.r - pos[1] == 0:
+        if self.c - pos[0] > 0:
+            return [(1, self.r, 0), (2, self.r, 0), (3, self.r, 0)]
+        else:
+            return [(5, self.r, 0), (6, self.r, 0)]
     # castling check
-    figure = self.get_piece(pos)
-    if figure and self.i and figure.t == "R" and figure.i and figure.s == self.s:
-        return  # self.check_castling(figure, pos)
+    # figure = self.get_piece(pos)
+    # if figure and self.i and figure.t == "R" and figure.i and figure.s == self.s:
+    #     return  # self.check_castling(figure, pos)
 
 
 def king_move(self, pos):

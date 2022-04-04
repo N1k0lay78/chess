@@ -118,6 +118,7 @@ class StandardBoardUI:
                 self.focused = None
                 if not self.dragging:
                     self.move_percent = 1
+                    self.logic_board.step -= 1
                     self.move_positions = move_positions
                 if params["is_on_rotation"] and self.logic_board.is_playing:
                     self.rotation = 1
@@ -137,6 +138,7 @@ class StandardBoardUI:
             self.move_percent -= 8 * self.game.delta / self.get_dist(*self.move_positions)
             if self.move_percent < 0:
                 self.move_percent = 0
+                self.logic_board.step += 1
 
         elif self.rotation > 0:
             self.rotation -= (1 + 0.25 * cos(2*pi * self.rotation - pi)) * self.game.delta
