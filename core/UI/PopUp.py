@@ -1,5 +1,6 @@
 import pygame
 
+from Source.settings import params
 from core.UI.BaseUI import BaseUI
 from core.textures.Tileset import TileSet
 
@@ -52,6 +53,10 @@ class PopUp(BaseUI):
         self.hovered = 0 <= pos[0] <= self.size[0] and 0 <= pos[1] <= self.size[1]
         return self.hovered
 
+    def move(self, move):
+        super().move(move)
+        self.check_pos()
+
     def update(self):
         if self.active:
             self.active.update()
@@ -60,7 +65,7 @@ class PopUp(BaseUI):
         super().event(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
             for elem in self.child:
-                if elem.check_collide_point(event.pos):
+                if elem.check_collide_point(event.pos) and type(elem) != BaseUI:
                     if self.active:
                         self.active.on_disactive()
                     self.active = elem
@@ -79,3 +84,14 @@ class PopUp(BaseUI):
             self.dragging = False
         if self.active:
             self.active.event(event)
+
+    def check_pos(self):
+        if 0 > self.pos[0]:
+            self.pos[0] = 0
+        elif self.pos[0] > params['screen_size'][0] - self.size[0]:
+            self.pos[0] = params['screen_size'][0] - self.size[0]
+
+        if 0 > self.pos[1]:
+            self.pos[1] = 0
+        elif self.pos[1] > params['screen_size'][1] - self.size[1]:
+            self.pos[1] = params['screen_size'][1] - self.size[1]
