@@ -1,9 +1,7 @@
 import socket
 from threading import Thread
 import time
-
 from Source.settings import params
-from Source.special_functools import special_print
 
 # Получаем свой локальный ip адрес
 # self_ip = socket.gethostbyname(socket.gethostname())
@@ -40,7 +38,7 @@ class Room:
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     a = data.split()
-                    special_print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}", level=10)
+                    print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
 
                     self.color = int(data.split()[1])
                     self.board.color = int(data.split()[1])
@@ -59,8 +57,8 @@ class Room:
 
                 elif data[:2] in ["nm", "im"]:
                     self.board.step = int(data.split(":")[1])
-                    special_print(data, level=10)
-                    special_print(self.board.step, level=10)
+                    print(data)
+                    print(self.board.step)
                     self.board.load_board(data.split(":")[2])
 
                     # if self.color:
@@ -75,6 +73,10 @@ class Room:
         self.board.set_pause(True)
         self.send_to_server(f"mc {input('????3@#R#QWFE')}")
         self.board.set_pause(False)
+
+    def stop(self):
+        self.running = False
+        self.run_thread.join(0)
 
 
 class Client:
@@ -113,14 +115,14 @@ class Client:
             if not self.socket:
                 try:
                     sock = socket.socket()
-                    sock.connect((self.server, self.port), timeout=0.1)
+                    sock.connect((self.server, self.port))
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
                     if data and len(data) >= 2 and data[:2] == "sc":
-                        special_print("Connected to the server", level=10)
+                        print("Connected to the server")
                     self.socket = sock
                 except Exception as e:
-                    special_print("Something is wrong. Try to connect again", level=10)
+                    print("Something is wrong. Try to connect again")
             else:
                 if not self.sending_to_the_server("Check connection"):
                     # print("Something is wrong")
@@ -136,7 +138,7 @@ class Client:
             try:
                 self.socket.send(self.to_bytes(message))
             except Exception as e:
-                # special_print(f"Bad connection with server - {e}", level=10)
+                # print(f"Bad connection with server - {e}")
                 # print(f"Bad connection with server - {e}")
                 return False
         return True
@@ -146,15 +148,16 @@ class Client:
             if self.socket:
                 try:
                     data = self.to_text(self.socket.recv(1024))
-                    if data != "Check connection" and len(data) >= 2:
+                    if data and data != "Check connection" and len(data) >= 2:
                         # print(data)
                         if data[:2] == "ga":
+                            print("?SA?Fas/f/saf/as/fas")
                             params["game_exist"] = bool(int(data.split()[1]))
                             params["have_answer"] = True
                         for pol in self.send_to:
                             pol(data)
                 except Exception as e:
-                    # special_print(f"Bad connection with server - {e}", level=10)
+                    # print(f"Bad connection with server - {e}")
                     time.sleep(1)
 
     def to_bytes(self, message):
@@ -175,7 +178,9 @@ class Client:
         self.getting_from_the_server_thread.join(0)
         if self.socket:
             self.socket.close()
-        self.socket = None
+        if self.room:
+            self.room.stop()
+        print("Что за хуйня???")
 
 
 if __name__ == '__main__':

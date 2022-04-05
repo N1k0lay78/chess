@@ -4,7 +4,7 @@ params = {
     "mode": "online",  # online/offline/fog of war
     "board_name": "classic",
     "log_level": "",
-    "debug": False,
+    "debug": True,
     "online_host_ip": "192.168.1.13",  # "192.168.1.13" "26.238.243.152"
     "online_host_port": 8080,
     "nickname": "",  # if empty use input

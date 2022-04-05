@@ -1,7 +1,6 @@
 from Source.boards import boards
 from Source.settings import params
 from core.logic.PiecesManager import PiecesManager, logic_pieces_dict, LoadingBoardError
-from Source.special_functools import special_print
 
 
 class LogicBoard:
@@ -45,15 +44,15 @@ class LogicBoard:
                 # print("PAT IS", self.check_pat((self.step + 1) % 2))
                 # print("MAT IS", self.check_mat((self.step + 1) % 2))
                 if self.check_mat((self.step + 1) % 2):
-                    special_print("SOME ONE LOSE", level=10)
+                    print("SOME ONE LOSE")
                     self.is_playing = False
                     # self.restart_game(self.step % 2)
                 elif self.check_pat((self.step + 1) % 2):
-                    special_print("DRAW", level=10)
+                    print("DRAW")
                     self.is_playing = False
                     # self.restart_game()
                 else:
-                    special_print("NEXT MOVE", level=10)
+                    print("NEXT MOVE")
                     self.step += 1
                 self.last_moved = piece
                 return True
@@ -93,7 +92,7 @@ class LogicBoard:
     def restart_game(self, color=None):
         self.is_playing = True
         if color:
-            special_print('won', ("white" if color == 1 else "black"), level=10)
+            print('won', ("white" if color == 1 else "black"))
         self.step = 0
         self.load_board(boards[params["board_name"]])
 
@@ -113,14 +112,14 @@ class LogicBoard:
         try:
             self.pieces.append(self.pieces_manager.add_piece(code))
         except LoadingBoardError as e:
-            special_print(e, level=10)
+            print(e)
 
     def load_board(self, line):  # loading pieces from line with pieces info
         try:
             self.pieces = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.pieces = []
-            special_print(e, level=10)
+            print(e)
 
     def check_shah(self, color):
         king = None
