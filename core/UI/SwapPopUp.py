@@ -5,19 +5,23 @@ from core.textures.Tileset import TileSet
 
 
 def swap_to_queen(button):
-    print('CHOOSE QUEEN')
+    button.window.game.client.room.figure = "Q"
+    print('Q')
 
 
 def swap_to_knight(button):
-    print('CHOOSE HORSE')
+    button.window.game.client.room.figure = "N"
+    print('N')
 
 
 def swap_to_rook(button):
-    print('CHOOSE ROOK')
+    button.window.game.client.room.figure = "R"
+    print('R')
 
 
 def swap_to_bishop(button):
-    print('CHOOSE ELEPHANT')
+    button.window.game.client.room.figure = "B"
+    print('B')
 
 
 class SwapPopUp(PopUp):

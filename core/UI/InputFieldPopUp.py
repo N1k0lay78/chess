@@ -26,7 +26,10 @@ def ready_code(button):
 
 def ready_nickname(button):
     if button.parent.child[1].ready:
-        pass
+        # pass
+        params["nickname"] = button.parent.child[1].text
+        button.window.game.client.nickname = params["nickname"]
+        button.window.game.client.socket = None
         # print(f"READY {button.parent.child[1].text}, len={len(button.parent.child[1].text)}")
 
 

@@ -26,6 +26,9 @@ class Button(BaseUI):
     def on_click(self):
         pass
 
+    def on_disactive(self):
+        self.pressed = False
+
     def event(self, event):
         super().event(event)
         if event.type == pygame.MOUSEBUTTONDOWN:

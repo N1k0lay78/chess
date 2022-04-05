@@ -10,7 +10,6 @@ from core.windows.Window import Window
 class TestWindow(Window):
     def __init__(self, game):
         super().__init__(game)
-        self.ui = []
         self.ui.append(SwapPopUp(self, (250, 10), 1))
         self.ui.append(InputFieldPopUp(self, [0, 300], "code", "войти"))
         self.ui.append(InputFieldPopUp(self, [300, 300], "nickname", "создать"))

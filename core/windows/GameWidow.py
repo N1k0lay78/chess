@@ -1,3 +1,5 @@
+import pygame
+
 from Source.settings import params
 from core.windows.Window import Window
 from core.online.logic.Board import LogicBoard
@@ -32,9 +34,36 @@ class GameWindow(Window):
 
     def draw(self):
         self.game_board.draw()
+        for element in self.ui[::-1]:
+            element.draw()
 
     def update(self):
         self.game_board.update()
+        if self.active:
+            self.active.update()
 
     def events(self, event):
-        self.active.event(event)
+        # self.active.event(event)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.set_active(event)
+        if self.active:
+            self.active.event(event)
+        if event.type == pygame.MOUSEMOTION:
+            self.check_hover(event)
+        self.game_board.event(event)
+
+    def set_active(self, event):
+        for element in self.ui:
+            if element.check_collide_point(event.pos):
+                self.set_active_object(element)
+                break
+
+    def fixed_update(self):
+        for element in self.ui:
+            element.fixed_update()
+
+    def check_hover(self, event):
+        pos = event.pos
+        for element in self.ui:
+            if element.check_collide_point(pos):
+                pos = [-1, -1]

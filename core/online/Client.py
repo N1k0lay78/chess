@@ -5,6 +5,7 @@ from Source.settings import params
 
 # Получаем свой локальный ip адрес
 # self_ip = socket.gethostbyname(socket.gethostname())
+from core.UI.SwapPopUp import SwapPopUp
 
 
 class Room:
@@ -19,6 +20,7 @@ class Room:
         self.is_choice = False
         self.color = 0
         self.running = True
+        self.figure = None
 
         self.run_thread = Thread(target=self.run)
         self.run_thread.start()
@@ -65,14 +67,21 @@ class Room:
                     #     self.judge.flip()
 
                 elif data[:2] in ["ch", "er"]:
+                    self.client.game.window.ui.append(SwapPopUp(self.client.game.window, (250, 10), self.color))
                     wait_user_choice_thread = Thread(target=self.wait_user_choice)
                     wait_user_choice_thread.start()
                 self.message_queue.pop(0)
 
     def wait_user_choice(self):
-        self.board.set_pause(True)
-        self.send_to_server(f"mc {input('????3@#R#QWFE')}")
-        self.board.set_pause(False)
+        while True:
+            print(self.figure)
+            if self.figure and self.figure in ["Q", "N", "R", "B"]:
+                self.send_to_server(f"mc {self.figure}")
+                self.client.game.window.ui.pop(0)
+                return True
+        # self.board.set_pause(True)
+        # self.send_to_server(f"mc {input('????3@#R#QWFE')}")
+        # self.board.set_pause(False)
 
     def stop(self):
         self.running = False
@@ -80,12 +89,13 @@ class Room:
 
 
 class Client:
-    def __init__(self, nickname, server, port):
+    def __init__(self, nickname, server, port, game):
         # print(server, port)
         # settings
         self.nickname = nickname
         self.server = server
         self.port = port
+        self.game = game
 
         # server
         self.socket = None
@@ -185,5 +195,5 @@ class Client:
 
 if __name__ == '__main__':
     self_ip = socket.gethostbyname(socket.gethostname())
-    client = Client("Nickolausus", self_ip, 9090)
+    client = Client("Nickolausus", self_ip, 9090, None)
     client.run()

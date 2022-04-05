@@ -1,11 +1,13 @@
 from Source.settings import params
+from core.UI.BaseUI import BaseUI
 from core.textures.Tileset import TileSet
 import pygame
 from math import sin, cos, acos, radians, pi
 
 
-class StandardBoardUI:
+class StandardBoardUI(BaseUI):
     def __init__(self, window, pos, judge, board):
+        super().__init__(window, pos, size=(600, 600))
         # settings
         self.window = window
         self.game = window.game
