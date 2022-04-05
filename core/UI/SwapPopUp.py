@@ -2,26 +2,27 @@ from core.UI.BaseUI import BaseUI
 from core.UI.DefaultButton import DefaultButton
 from core.UI.PopUp import PopUp
 from core.textures.Tileset import TileSet
+from loguru import logger
 
 
 def swap_to_queen(button):
     button.window.game.client.room.figure = "Q"
-    print('Q')
+    logger.info("on swap user choice Queen (Q)")
 
 
 def swap_to_knight(button):
     button.window.game.client.room.figure = "N"
-    print('N')
+    logger.info("on swap user choice Horse (N)")
 
 
 def swap_to_rook(button):
     button.window.game.client.room.figure = "R"
-    print('R')
+    logger.info("on swap user choice Rook (R)")
 
 
 def swap_to_bishop(button):
     button.window.game.client.room.figure = "B"
-    print('B')
+    logger.info("on swap user choice Elephant (B)")
 
 
 class SwapPopUp(PopUp):

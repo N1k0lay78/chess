@@ -1,3 +1,5 @@
+from loguru import logger
+
 from Source.settings import params
 
 
@@ -16,6 +18,7 @@ class OnlineJudge:
     def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""
         piece = self.board.get_piece(to)
+        logger.info(f"move {piece.t}{'b' if piece.s else 'w'} {self.chr_cell(fr)} — {self.chr_cell(to)}")
 
         if piece and piece.t == "" and to[1] in [0, 7]:
             self.on_swap(to)
@@ -61,3 +64,6 @@ class OnlineJudge:
 
     def quit(self) -> None:
         pass
+
+    def chr_cell(self, cell):
+        return f"{chr(65 + cell[0])}{8 - cell[1]}"

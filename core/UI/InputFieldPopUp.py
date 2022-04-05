@@ -4,24 +4,11 @@ from core.UI.BaseUI import BaseUI
 from core.UI.DefaultButton import DefaultButton
 from core.UI.InputField import InputField
 from core.UI.PopUp import PopUp
-
+from loguru import logger
 
 def ready_code(button):
     if button.parent.child[1].ready and params["code"]:
         button.parent.start_connect_to_game()
-    # button.window.game.client.sending_to_the_server(f"hg {params['code']}")
-    #     params["game_exist"] = False
-    #     params["have_answer"] = False
-    #     c = 0
-    #     while not params["have_answer"] and c < 15:
-    #         c += 1
-    #         time.sleep(0.3)
-    #     # print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
-    #     if button.window.game.client.is_connected() and params["game_exist"]:
-    #         # print("Connect")
-    #         button.window.game.open_window("Game")
-    #     # print("Lose")
-    #     # print(params["code"])
 
 
 def ready_nickname(button):
@@ -30,7 +17,7 @@ def ready_nickname(button):
         params["nickname"] = button.parent.child[1].text
         button.window.game.client.nickname = params["nickname"]
         button.window.game.client.socket = None
-        # print(f"READY {button.parent.child[1].text}, len={len(button.parent.child[1].text)}")
+        logger.info(f"set nickname to {params['nickname']}")
 
 
 class InputFieldPopUp(PopUp):
@@ -66,13 +53,14 @@ class InputFieldPopUp(PopUp):
         params["game_exist"] = False
         params["have_answer"] = False
         self.window.game.client.sending_to_the_server(f"hg {params['code']}")
+        logger.info(f"start connect to game with code {params['code']}")
 
     def fixed_update(self):
         if self.join_to_game:
             if time.time() - self.start_time > 5:
-                print("Неть")
+                logger.warning(f"unsuccessful connection to game")
                 self.join_to_game = False
             if self.window.game.client.is_connected() and params["game_exist"]:
-                print("Даъ")
+                logger.info(f"successful connection to game")
                 self.join_to_game = False
                 self.window.game.open_window("Game")
