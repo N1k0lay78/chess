@@ -1,5 +1,4 @@
 import time
-
 from Source.settings import params
 from core.UI.BaseUI import BaseUI
 from core.UI.DefaultButton import DefaultButton
@@ -9,24 +8,28 @@ from core.UI.PopUp import PopUp
 
 def ready_code(button):
     if button.parent.child[1].ready and params["code"]:
-        button.window.game.client.sending_to_the_server(f"hg {params['code']}")
-        params["game_exist"] = False
-        params["have_answer"] = False
-        c = 0
-        while not params["have_answer"] and c < 15:
-            c += 1
-            time.sleep(0.3)
-        # print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
-        if button.window.game.client.is_connected() and params["game_exist"]:
-            # print("Connect")
-            button.window.game.open_window("Game")
-        # print("Lose")
-        # print(params["code"])
+        button.parent.start_connect_to_game()
+    # button.window.game.client.sending_to_the_server(f"hg {params['code']}")
+    #     params["game_exist"] = False
+    #     params["have_answer"] = False
+    #     c = 0
+    #     while not params["have_answer"] and c < 15:
+    #         c += 1
+    #         time.sleep(0.3)
+    #     # print(params["code"], button.window.game.client.is_connected(), params["game_exist"], params["have_answer"], c)
+    #     if button.window.game.client.is_connected() and params["game_exist"]:
+    #         # print("Connect")
+    #         button.window.game.open_window("Game")
+    #     # print("Lose")
+    #     # print(params["code"])
 
 
 def ready_nickname(button):
     if button.parent.child[1].ready:
-        pass
+        # pass
+        params["nickname"] = button.parent.child[1].text
+        button.window.game.client.nickname = params["nickname"]
+        button.window.game.client.socket = None
         # print(f"READY {button.parent.child[1].text}, len={len(button.parent.child[1].text)}")
 
 
@@ -54,3 +57,22 @@ class InputFieldPopUp(PopUp):
         description.pos = (size[0] * 100 - description.image.get_width()) // 2, 40
 
         super().__init__(window, pos, size, [text_button, input_field, description])
+        self.start_time = 0
+        self.join_to_game = False
+
+    def start_connect_to_game(self):
+        self.start_time = time.time()
+        self.join_to_game = True
+        params["game_exist"] = False
+        params["have_answer"] = False
+        self.window.game.client.sending_to_the_server(f"hg {params['code']}")
+
+    def fixed_update(self):
+        if self.join_to_game:
+            if time.time() - self.start_time > 5:
+                print("Неть")
+                self.join_to_game = False
+            if self.window.game.client.is_connected() and params["game_exist"]:
+                print("Даъ")
+                self.join_to_game = False
+                self.window.game.open_window("Game")

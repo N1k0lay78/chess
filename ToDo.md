@@ -1,23 +1,18 @@
 # What needs to do
 
 ## need to fix
-- close game if dont have connection
-- fog of var
+- fog of war
 
 ## need to make
 - window choice players types
-- swap code
-- write code
-- write nickname code
 - viewer can change view from (white, rotate, black)
 
 ### Back
 - save game history
 
 ### UI
-- to swap pawn
 - win
-- shah
+- check
 - mate
 
 ### tests

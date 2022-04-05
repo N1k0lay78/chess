@@ -41,7 +41,7 @@ class Game:
         self.open_window(params["start_window"])
 
         # server
-        self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"])
+        self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"], self)
         self.client.run()
 
     def run(self):

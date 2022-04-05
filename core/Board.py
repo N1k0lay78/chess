@@ -1,6 +1,5 @@
 from core.logic.PiecesManager import PiecesManager, game_pieces_dict, LoadingBoardError
 from core.textures.Tileset import TileSet
-from Source.special_functools import special_print
 import pygame
 
 
@@ -97,7 +96,7 @@ class Board:
         try:
             self.board.append(self.pieces_manager.add_piece(code))
         except LoadingBoardError as e:
-            special_print(e, level=10)
+            print(e)
 
     def restart(self, line):
         self.step = 0
@@ -110,7 +109,7 @@ class Board:
             self.board = self.pieces_manager.read_line(line)
         except LoadingBoardError as e:
             self.board = []
-            special_print(e, level=10)
+            print(e)
 
     def set_pause(self, pause):
         self.pause = pause

@@ -3,9 +3,13 @@ import config
 import socket
 from core.online.Server import Server
 from Source.settings import params
+# from flask_sockets import Sockets
 
 self_ip = socket.gethostbyname(socket.gethostname())
-server = Server(self_ip, 8080)
+# self_ip = self_ip.split(".")
+# self_ip[3] = str(int(self_ip[3]) + 1)
+# self_ip = ".".join(self_ip)
+server = Server(self_ip, 51600)
 have_game = False
 ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg']
 app = Flask(__name__)

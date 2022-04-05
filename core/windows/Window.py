@@ -4,6 +4,7 @@ from loguru import logger
 
 class Window:
     def __init__(self, game):
+        self.ui = []
         self.game = game
         self.active = None
 

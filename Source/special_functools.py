@@ -1,7 +1,7 @@
 from Source.settings import params
 
 
-def special_print(*message, **args):
+def print(*message, **args):
     if params["debug"]:
         pass
         # if "level" in args:
