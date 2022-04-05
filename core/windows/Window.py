@@ -17,6 +17,9 @@ class Window:
     def check_hover(self, event):
         pass
 
+    def fixed_update(self):
+        pass
+
     def set_active_object(self, object):
         if object != self.active:
             if self.active:

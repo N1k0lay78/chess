@@ -12,12 +12,8 @@ class Judge:
 
     def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""
-        if self.board.get_pos(to).name == "" and to[1] in [0, 7] and not self.board.game.restart:
+        if self.board.get_piece(to).name == "" and to[1] in [0, 7] and not self.board.game.restart:
             self.on_swap(to)
-        self.board.go_to_next_step()
-        self.board.color = int(not self.board.color)
-        # flip the board
-        self.flip()
 
     def on_remove(self, name: str) -> None:
         """on pieces eat"""
@@ -40,10 +36,6 @@ class Judge:
 
     def restart(self) -> None:
         self.board.restart(self.board_line)
-
-    def flip(self):
-        for piece in self.board.board:
-            piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
 
     def quit(self) -> None:
         pass

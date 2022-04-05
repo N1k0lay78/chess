@@ -113,7 +113,7 @@ class Client:
             if not self.socket:
                 try:
                     sock = socket.socket()
-                    sock.connect((self.server, self.port))
+                    sock.connect((self.server, self.port), timeout=0.1)
                     sock.send(self.to_bytes(self.nickname))
                     data = self.to_text(sock.recv(1024))
                     if data and len(data) >= 2 and data[:2] == "sc":
@@ -171,8 +171,11 @@ class Client:
 
     def stop(self):
         self.running = False
-        self.connection_monitoring_thread.join(0.1)
-        self.getting_from_the_server_thread.join()
+        self.connection_monitoring_thread.join(0)
+        self.getting_from_the_server_thread.join(0)
+        if self.socket:
+            self.socket.close()
+        self.socket = None
 
 
 if __name__ == '__main__':
