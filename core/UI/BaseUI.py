@@ -79,3 +79,6 @@ class BaseUI:
 
     def fixed_update(self):
         pass
+
+    def __repr__(self):
+        return str(self.__class__.__name__)

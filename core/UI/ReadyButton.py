@@ -1,5 +1,6 @@
 from core.UI.Button import Button
 from core.textures.Tileset import TileSet
+from loguru import logger
 
 
 class ReadyButton(Button):
@@ -25,9 +26,11 @@ class ReadyButton(Button):
     def start_countdown(self, delay=3):
         self.countdown = delay
         self.is_countdown = True
+        logger.info(f'start countdown to start game time: {delay}s')
 
     def stop_countdown(self):
         self.is_countdown = False
+        logger.info(f'stop countdown to start game')
 
     def check_collide_point(self, pos):
         pos = [pos[0] - self.pos[0], pos[1] - self.pos[1]]

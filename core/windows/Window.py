@@ -1,4 +1,5 @@
 import pygame
+from loguru import logger
 
 
 class Window:
@@ -9,6 +10,7 @@ class Window:
     def events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.set_active(event)
+            logger.info(f"active is {self.active}")
         if self.active:
             self.active.event(event)
         if event.type == pygame.MOUSEMOTION:

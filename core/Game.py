@@ -5,12 +5,13 @@ from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
 from core.windows.TestWindow import TestWindow
-from threading import Thread
+from loguru import logger
 
 
 class Game:
     def __init__(self):
         # init app
+        logger.info("start game")
         self.screen = pygame.display.set_mode(params["screen_size"])
         pygame.display.set_caption(params["app_name"])
         pygame.display.set_icon(pygame.image.load(params["app_icon"]))
@@ -80,8 +81,14 @@ class Game:
             if self.window:
                 self.window.on_close()
             self.window = self.windows[name](self)
+            logger.info(f"open window \"{name}\"")
 
     def quit(self):
         self.open_window()
         self.running = False
         self.client.stop()
+        logger.info(f"close game")
+        quit(0)
+
+    def __quit__(self):
+        self.quit()

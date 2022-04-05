@@ -4,6 +4,7 @@ from core.online.logic.Board import LogicBoard
 from core.Judge import Judge
 from core.OnlineJudge import OnlineJudge
 from core.UI.StandardBoardUI import StandardBoardUI
+from  loguru import logger
 
 
 class GameWindow(Window):
@@ -21,14 +22,14 @@ class GameWindow(Window):
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
         self.set_active_object(self.game_board)
         self.connect_to_the_game()
+        logger.info(f"create game with mode {params['mode']}")
 
     def connect_to_the_game(self):
         if params['mode'] != "offline":
             self.game.client.sending_to_the_server(f"hg {params['code']}")
-            # print(params["code"], self.game.client.is_connected())
             if self.game.client.is_connected():
-                # print("A podkluchitca?")
                 self.game.client.connect_to_game(params['code'], self.logic_board, self.judge)
+            logger.info(f"connect to game with code {params['code']}")
 
     def draw(self):
         self.game_board.draw()

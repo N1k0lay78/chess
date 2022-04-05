@@ -1,7 +1,9 @@
 import pygame
 
+from Source.settings import params
 from core.UI.BaseUI import BaseUI
 from core.textures.Tileset import TileSet
+from loguru import logger
 
 
 class PlayerTypeSelect(BaseUI):
@@ -52,6 +54,7 @@ class PlayerTypeSelect(BaseUI):
             self.hovered = -1
 
     def set_choice(self, value):
+        logger.info(f"user {params['nickname']} choice {['White', 'Black', 'Viewer'][value]}")
         self.selected = value
 
     def on_disactive(self):
