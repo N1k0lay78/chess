@@ -4,6 +4,8 @@ from core.windows.LoadingGame import LoadingGame
 from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
+
+from core.windows.PlayerChoiceWindow import PlayerChoiceWindow
 from core.windows.TestWindow import TestWindow
 from loguru import logger
 
@@ -36,6 +38,7 @@ class Game:
             "Load": LoadingGame,
             "Menu": MainMenuWindow,
             "Test": TestWindow,
+            "Choice": PlayerChoiceWindow,
         }
         self.window = None
         self.open_window(params["start_window"])

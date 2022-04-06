@@ -11,7 +11,6 @@ class Window:
     def events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.set_active(event)
-            logger.info(f"active is {self.active}")
         if self.active:
             self.active.event(event)
         if event.type == pygame.MOUSEMOTION:
@@ -28,6 +27,7 @@ class Window:
             if self.active:
                 self.active.on_disactive()
             self.active = object
+            logger.info(f"active is {self.active}")
 
     def remove_active(self):
         self.set_active_object(None)

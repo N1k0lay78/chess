@@ -23,35 +23,44 @@ class PlayerTypeSelect(BaseUI):
             self.window.game.screen.blit(self.tile_set[0, 3], pos)
             self.window.game.screen.blit(self.tile_set[1, 3], (pos[0] + 75, pos[1]))
         if self.open_select:
-            self.child[0].draw(self.pos)
+            self.child[0].draw(pos)
         self.window.game.screen.blit(self.tile_set[1, self.selected], pos)
         # print(self.hovered)
         if self.hovered == 0:
             self.window.game.screen.blit(self.tile_set[0, 4], pos)
 
     def check_collide_point(self, pos):
-        pos = (pos[0] - self.pos[0], pos[1] - self.pos[1])
+        pos = self.get_pos(pos)
+
         if 0 <= pos[0] <= 105 and 0 <= pos[1] <= 75:
             return True
         if self.open_select and 0 <= pos[0] <= 75 and 0 <= pos[1] <= 210:
-                return True
+            return True
         return False
 
     def event(self, event):
         if self.editable:
             if event.type == pygame.MOUSEBUTTONUP and self.check_collide_point(event.pos):
                 if self.open_select:
-                    self.set_choice(self.child[0].values[(event.pos[1] - self.pos[1]) // 75])
+                    pos = self.get_pos(event.pos)
+                    self.set_choice(self.child[0].values[pos[1] // 75])
                 self.open_select = not self.open_select
 
     def check_hover(self, event):
-        pos = [event.pos[0] - self.pos[0], event.pos[1] - self.pos[1]]
+        pos = self.get_pos(event.pos)
         if 0 <= pos[0] <= 110 and 0 <= pos[1] < 75:
             self.hovered = 0
         elif 0 <= pos[0] <= 75 and 0 <= pos[1] <= 210:
             self.hovered = pos[1] // 75
         else:
             self.hovered = -1
+
+    def get_pos(self, pos):
+        if self.parent:
+            pos = [pos[0] - self.pos[0] - self.parent.pos[0], pos[1] - self.pos[1] - self.parent.pos[1]]
+        else:
+            pos = [pos[0] - self.pos[0], pos[1] - self.pos[1]]
+        return pos
 
     def set_choice(self, value):
         logger.info(f"user {params['nickname']} choice {['White', 'Black', 'Viewer'][value]}")
