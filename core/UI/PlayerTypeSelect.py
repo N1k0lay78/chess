@@ -64,6 +64,8 @@ class PlayerTypeSelect(BaseUI):
 
     def set_choice(self, value):
         logger.info(f"user {params['nickname']} choice {['White', 'Black', 'Viewer'][value]}")
+        if self.window.game.client:
+            self.window.game.client.sending_to_the_server(f"vc {value}")
         self.selected = value
 
     def on_disactive(self):

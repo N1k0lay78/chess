@@ -23,13 +23,15 @@ class GameWindow(Window):
             self.judge = Judge(self.logic_board, params["board_name"])
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
         self.set_active_object(self.game_board)
-        self.connect_to_the_game()
         logger.info(f"create game with mode {params['mode']}")
+        self.connect_to_the_game()
 
     def connect_to_the_game(self):
         if params['mode'] != "offline":
-            self.game.client.sending_to_the_server(f"hg {params['code']}")
+            # self.game.client.sending_to_the_server(f"hg {params['code']}")
+            print(f"!!!!!!!!!!!!!!! {self.game.client.is_connected()} {type(self.game.client.is_connected())}")
             if self.game.client.is_connected():
+                print("Я пидарас")
                 self.game.client.connect_to_game(params['code'], self.logic_board, self.judge)
             logger.info(f"connect to game with code {params['code']}")
 

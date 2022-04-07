@@ -6,6 +6,7 @@ from core.UI.InputField import InputField
 from core.UI.PopUp import PopUp
 from loguru import logger
 
+
 def ready_code(button):
     if button.parent.child[1].ready and params["code"]:
         button.parent.start_connect_to_game()
@@ -63,4 +64,4 @@ class InputFieldPopUp(PopUp):
             if self.window.game.client.is_connected() and params["game_exist"]:
                 logger.info(f"successful connection to game")
                 self.join_to_game = False
-                self.window.game.open_window("Game")
+                self.window.game.open_window("Choice")

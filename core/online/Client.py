@@ -40,6 +40,7 @@ class Room:
                 if data[:2] == "su":
                     self.board.load_board(data[7 + len(data.split()[2]) - 1:])
                     a = data.split()
+                    print("Дать")
                     print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
 
                     self.color = int(data.split()[1])
@@ -70,11 +71,15 @@ class Room:
                     self.client.game.window.ui.append(SwapPopUp(self.client.game.window, (250, 10), self.color))
                     wait_user_choice_thread = Thread(target=self.wait_user_choice)
                     wait_user_choice_thread.start()
+
+                elif data[:2] == "no":
+                    print("Неть")
+                    client.game.window.ui["players"][0].set_value(int(data.split()[1]))
                 self.message_queue.pop(0)
 
     def wait_user_choice(self):
         while True:
-            print(self.figure)
+            # print(self.figure)
             if self.figure and self.figure in ["Q", "N", "R", "B"]:
                 self.send_to_server(f"mc {self.figure}")
                 self.client.game.window.ui.pop(0)
@@ -106,7 +111,8 @@ class Client:
         self.room = None
 
     def is_connected(self):
-        return True if self.socket else False
+        print(bool(self.socket))
+        return bool(self.socket)
 
     def connect_to_game(self, code, board, judge):
         # print("!!!?!?!?!?!")
@@ -161,7 +167,6 @@ class Client:
                     if data and data != "Check connection" and len(data) >= 2:
                         # print(data)
                         if data[:2] == "ga":
-                            print("?SA?Fas/f/saf/as/fas")
                             params["game_exist"] = bool(int(data.split()[1]))
                             params["have_answer"] = True
                         for pol in self.send_to:

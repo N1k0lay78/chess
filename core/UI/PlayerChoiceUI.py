@@ -1,3 +1,5 @@
+from loguru import logger
+
 import pygame
 
 from Source.settings import params
@@ -12,6 +14,10 @@ class PlayerChoiceUI(BaseUI):
             PlayerTypeSelect(window, (0, 0), choice, nickname == params['nickname']),
         ], size=[300, 75], un_active_on_mouse_up=False)
         self.active = None
+
+    def set_choice(self, value):
+        logger.info(f"Back user {params['nickname']} choice from {['White', 'Black', 'Viewer'][self.child[1].selected]} to {['White', 'Black', 'Viewer'][value]}")
+        self.child[1].selected = value
 
     def check_collide_point(self, pos):
         some_collided = False

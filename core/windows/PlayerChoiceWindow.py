@@ -13,13 +13,17 @@ class PlayerChoiceWindow(Window):
         p = lambda x: 160 + 80 * x
         self.ui = {
             "static": [BaseUI(self, (180, 110), image=self.game.render_text(f"код игры: {params['code']}", (230, 81, 0)))],
-            "players": [PlayerChoiceUI(self, (150, p(0)), params['nickname'], 0),
-                        PlayerChoiceUI(self, (150, p(1)), "Niki", 1),
+            "players": [PlayerChoiceUI(self, (150, p(0)), params['nickname'], 2),
+                        PlayerChoiceUI(self, (150, p(1)), "Niki", 2),
                         PlayerChoiceUI(self, (150, p(2)), "Alexei", 2),
                         PlayerChoiceUI(self, (150, p(3)), "Slava", 2),
                         ],
             "ready": [ReadyButton(self, (250, p(4)))]
         }
+        self.connect_to_the_game()
+
+    def connect_to_the_game(self):
+        self.game.client.sending_to_the_server(f"cg {params['code']}")
 
     def update(self):
         if self.active:
