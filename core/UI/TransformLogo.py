@@ -14,16 +14,13 @@ class TransformLogo(BaseUI):
         self.end_time = time
         self.percent = 0
 
-    def update(self, event):
+    def update(self):
         if self.percent != 1:
-            self.time += self.window.delta
+            self.time += self.window.game.delta
         self.percent = min(1, self.time / self.end_time)
-        # print(self.percent)
-        # if self.percent == 1:
-        #     self.time = 0
 
-    def draw(self):
+    def draw(self, pos=(0, 0)):
         if 0 <= self.percent <= 1:
             size = int((self.start_height + self.delta_height * self.percent ** 2)*self.otnosh), int(self.start_height + self.delta_height * self.percent ** 2)
-            self.window.screen.blit(pygame.transform.scale(self.image, size),
+            self.window.game.screen.blit(pygame.transform.scale(self.image, size),
                                     (self.center[0] - size[0] // 2, self.center[1] - size[1] // 2))

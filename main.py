@@ -1,6 +1,6 @@
 from core.online.Client import Client
 from core.windows.Game import Game
-from core.windows.LoadingGame import LoadingGame
+from core.windows.LoadingWindow import LoadingGame
 from core.windows.test import Test
 from Source.settings import is_online, name_board_to_play
 import pygame
