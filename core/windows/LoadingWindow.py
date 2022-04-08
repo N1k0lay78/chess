@@ -10,16 +10,9 @@ from core.windows.Window import Window
 class LoadingWindow(Window):
     def __init__(self, game):
         super().__init__(game)
-        min_size = params["screen_size"][0]//30
-        st_height = min_size
-        end_height = min_size*10
         center_sc = params["screen_size"][0]//2, params["screen_size"][1]//2
         center = center_sc[0], center_sc[1]
         self.transformLogo = [TransformLogo(self, center, load_image('TestLogo'), 114/6, 114*2, 1)]
-        # center = center_sc[0]//2, params["screen_size"][1] - min_size*7/3
-        # self.transformLogo.append(TransformLogo(self, center, load_image('pygame'), st_height, end_height/3, 1, -1))
-        # center = center_sc[0] + center_sc[0]//2, params["screen_size"][1] - min_size*7/3
-        # self.transformLogo.append(TransformLogo(self, center, load_image('pygame'), st_height, end_height/3, 1, -2))
         self.active = PressAnyKey(self, (0, 0), "нажмите любую кнопку")
         self.active.pos = [
             (params["screen_size"][0] - self.active.image.get_size()[0]) // 2,
