@@ -1,6 +1,6 @@
 from unittest import TestCase
 from core.logic.PiecesManager import PiecesManager, game_pieces_dict, logic_pieces_dict
-from core.Board import Board
+from core.BoardLEGACY import Board
 from core.online.logic.Board import LogicBoard
 
 testing_boards = [

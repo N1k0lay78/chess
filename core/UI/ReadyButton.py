@@ -17,11 +17,13 @@ class ReadyButton(Button):
         # *send we are ready*
         self.ready = not self.ready
         if self.ready:
-            self.start_countdown()
-            # self.window.game.client.say(i'm ready)
+            self.window.game.client.sending_to_the_server("rc 1")
+        #     self.start_countdown()
+        #     # self.window.game.client.say(i'm ready)
         else:
+            self.window.game.client.sending_to_the_server("rc 0")
             self.stop_countdown()
-            # self.window.game.client.say(please wait)
+        #     # self.window.game.client.say(please wait)
 
     def start_countdown(self, delay=3):
         self.countdown = delay

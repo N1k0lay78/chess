@@ -1,6 +1,6 @@
 from unittest import TestCase
-from core.Board import Board
-from core.windows.Game import Game
+from core.BoardLEGACY import Board
+from core.windows.GameLEGACY import Game
 
 testing_boards = [
     "a7w1 a5b1",  # White Pawn at A7 and Black Pawn at A5

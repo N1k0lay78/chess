@@ -30,7 +30,7 @@ class StandardBoardUI(BaseUI):
         self.to_end = 1
         self.move_positions = ((0, 0), (0, 0))
 
-    def draw(self):
+    def draw(self, pos=(0, 0)):
         pygame.key.get_pressed()
         if self.logic_board.get_step() % 2 == 0 and not self.rotation or \
                 self.logic_board.get_step() % 2 != 0 and self.rotation:

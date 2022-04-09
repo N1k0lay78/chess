@@ -9,11 +9,11 @@ from core.UI.SwapPopUp import SwapPopUp
 
 
 class Room:
-    def __init__(self, board, judge, client):
+    def __init__(self, client):
         # game objects
         self.client = client
-        self.board = board
-        self.judge = judge
+        self.board = None
+        self.judge = None
         self.message_queue = []
 
         # game
@@ -21,9 +21,21 @@ class Room:
         self.color = 0
         self.running = True
         self.figure = None
+        self.game_started = False
 
         self.run_thread = Thread(target=self.run)
         self.run_thread.start()
+
+    def start_game(self, board, judge):
+        self.board = board
+        self.judge = judge
+        self.game_started = True
+        print("Ват?")
+
+    def stop_game(self):
+        self.board = None
+        self.judge = None
+        self.game_started = False
 
     def get_server_message(self, message):
         # print("????????????????????????", message)
@@ -36,45 +48,50 @@ class Room:
         while self.running:
             if len(self.message_queue):
                 data = self.message_queue[0]
-                # print(data, "!!!!DATA!!!!")
-                if data[:2] == "su":
-                    self.board.load_board(data[7 + len(data.split()[2]) - 1:])
-                    a = data.split()
-                    print("Дать")
-                    print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
+                print(data, "!!!!DATA!!!!")
+                if self.game_started:
+                    print("Угу, очень интересно")
+                    if data[:2] == "su":
+                        self.board.load_board(data[7 + len(data.split()[2]) - 1:])
+                        a = data.split()
+                        print("Дать")
+                        print(f"color: {a[1]} step: {a[2]} pieces: {a[3:]}")
 
-                    self.color = int(data.split()[1])
-                    self.board.color = int(data.split()[1])
-                    self.judge.color = int(data.split()[1])
-                    self.board.step = int(data.split()[2])
+                        self.color = int(data.split()[1])
+                        self.board.color = int(data.split()[1])
+                        self.judge.color = int(data.split()[1])
+                        self.board.step = int(data.split()[2])
 
-                    # if self.color:
-                    #     self.judge.flip()
+                        # if self.color:
+                        #     self.judge.flip()
 
-                elif data[:2] == "sp":
-                    self.board.load_board(data[7 + len(data.split()[2]) - 1:])
-                    self.color = int(data.split()[1])
-                    self.board.color = int(data.split()[1])
-                    self.judge.color = int(data.split()[1])
-                    self.board.step = int(data.split()[2])
+                    elif data[:2] in ["nm", "im"]:
+                        self.board.step = int(data.split(":")[1])
+                        print(data)
+                        print(self.board.step)
+                        self.board.load_board(data.split(":")[2])
 
-                elif data[:2] in ["nm", "im"]:
-                    self.board.step = int(data.split(":")[1])
-                    print(data)
-                    print(self.board.step)
-                    self.board.load_board(data.split(":")[2])
+                        # if self.color:
+                        #     self.judge.flip()
 
-                    # if self.color:
-                    #     self.judge.flip()
-
-                elif data[:2] in ["ch", "er"]:
-                    self.client.game.window.ui.append(SwapPopUp(self.client.game.window, (250, 10), self.color))
-                    wait_user_choice_thread = Thread(target=self.wait_user_choice)
-                    wait_user_choice_thread.start()
-
-                elif data[:2] == "no":
-                    print("Неть")
-                    client.game.window.ui["players"][0].set_value(int(data.split()[1]))
+                    elif data[:2] in ["ch", "er"]:
+                        self.client.game.window.ui.append(SwapPopUp(self.client.game.window, (250, 10), self.color))
+                        wait_user_choice_thread = Thread(target=self.wait_user_choice)
+                        wait_user_choice_thread.start()
+                else:
+                    print("Ещё интереснее!!!")
+                    if data[:2] == "ye":
+                        print("Берём новый цвет", data.split()[1])
+                        # self.color = int(data.split()[1])
+                        self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
+                    elif data[:2] == "no":
+                        print("Неть")
+                        self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
+                    elif data[:2] == "sr":
+                        if int(data.split()[1]):
+                            self.client.game.window.ui["ready"][0].start_countdown()
+                        else:
+                            self.client.game.window.ui["ready"][0].stop_countdown()
                 self.message_queue.pop(0)
 
     def wait_user_choice(self):
@@ -107,21 +124,20 @@ class Client:
         self.connection_monitoring_thread = None
         self.getting_from_the_server_thread = None
         self.running = True
-        self.send_to = []
-        self.room = None
+        self.room = Room(self)
+        self.send_to = [self.room.get_server_message]
 
     def is_connected(self):
-        print(bool(self.socket))
         return bool(self.socket)
 
     def connect_to_game(self, code, board, judge):
         # print("!!!?!?!?!?!")
-        if not self.room and self.socket:
-            # print("????????????????????????????????????????????????????????????????????????")
-            self.room = Room(board, judge, self)
-            self.send_to.append(self.room.get_server_message)
-            time.sleep(1)
-            self.sending_to_the_server(f"cg {code}")
+        if self.socket:
+            # self.sending_to_the_server("rg 1")
+            print("????????????????????????????????????????????????????????????????????????")
+            self.room.start_game(board, judge)
+            # time.sleep(1)
+            # self.sending_to_the_server(f"sg {code}")
         else:
             pass
             # print("У пользователя уже есть игра!")
@@ -165,7 +181,7 @@ class Client:
                 try:
                     data = self.to_text(self.socket.recv(1024))
                     if data and data != "Check connection" and len(data) >= 2:
-                        # print(data)
+                        print("NEW DATA IN CLIENT", data)
                         if data[:2] == "ga":
                             params["game_exist"] = bool(int(data.split()[1]))
                             params["have_answer"] = True

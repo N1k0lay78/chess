@@ -31,8 +31,9 @@ class GameWindow(Window):
             # self.game.client.sending_to_the_server(f"hg {params['code']}")
             print(f"!!!!!!!!!!!!!!! {self.game.client.is_connected()} {type(self.game.client.is_connected())}")
             if self.game.client.is_connected():
-                print("Я пидарас")
+                # print("Я пидарас")
                 self.game.client.connect_to_game(params['code'], self.logic_board, self.judge)
+                self.game.client.sending_to_the_server("ac")
             logger.info(f"connect to game with code {params['code']}")
 
     def draw(self):

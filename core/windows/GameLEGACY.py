@@ -3,8 +3,8 @@ from Source.settings import is_on_fog_of_war
 from core.online.Client import Client
 from core.Judge import Judge
 from core.OnlineJudge import OnlineJudge
-from core.FogOfWar import FogOfWar
-from core.Board import Board
+from core.FogOfWarLEGACY import FogOfWar
+from core.BoardLEGACY import Board
 from threading import Thread
 import socket
 import pygame

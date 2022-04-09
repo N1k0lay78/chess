@@ -1,5 +1,5 @@
 from unittest import TestCase
-from core.Board import Board
+from core.BoardLEGACY import Board
 from core.online.logic.Board import LogicBoard
 
 testing_boards = [

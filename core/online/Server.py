@@ -26,6 +26,7 @@ class Game:
         self.board.load_board(self.line)
         self.server = server
         self.game_started = False
+        self.all_ready = False
 
     def send_to_user(self, user, message):
         return self.server.send_to_user(user[0], message)
@@ -35,6 +36,9 @@ class Game:
             # print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
             self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
         # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
+
+    # self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} {self.board.step} "
+    #                                                   f"{self.board.can_view(self.players[nickname]['color'])}")
 
     def get_user_message(self, nickname, message):
         self.message_queue.append([nickname, message])
@@ -46,6 +50,8 @@ class Game:
             self.players[nickname]["data"] = user
             self.players[nickname]["data"][3].append(self.get_user_message)
             self.players[nickname]["color"] = 2
+            self.players[nickname]["ready"] = False
+            self.players[nickname]["confirmation"] = False
             # self.players[nickname]["color"] = color[0] if len(color) > 0 else 2
             # if self.players[nickname]["color"] in [0, 1]:
             #     print("?????")
@@ -53,7 +59,8 @@ class Game:
             #                                                   f"{self.board.can_view(self.players[nickname]['color'])}")
             # else:
             print("АААААААААААААААААААААААА?????")
-            self.send_to_user(self.players[nickname]["data"], f"sp {2} {self.board.step} {self.board.can_view(2)}")
+            # self.send_to_user(self.players[nickname]["data"], f"sp {2} {self.board.step} {self.board.can_view(2)}")
+            self.send_to_user(self.players[nickname]["data"], f"cl")
 
     def leave_game(self, nickname):
         if nickname in self.players:
@@ -69,44 +76,78 @@ class Game:
 
     def run(self):
         while self.running:
-            if len(self.message_queue):
-                # print(self.message_queue[0])
-                nickname, data = self.message_queue[0]
-                print(nickname, data)
-                if nickname in self.players:
-                    if self.game_started and self.players[nickname]["color"] in [0, 1]:
-                        print(f"New LM from {nickname} - {data}")
-                        if data[:2] == "mo" and not self.wait_choice:
-                            data = data[3:].split(":")
-                            move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
-                            print(("can" if move else "can't") + " move")
-                            if not self.wait_choice:
-                                self.wait_choice, self.pawn_coord = self.board.check_pawn()
-                                if move and self.wait_choice:
-                                    self.send_to_user(self.players[nickname]["data"], "ch")
-                                else:
+            try:
+                if len(self.message_queue):
+                    print(self.players)
+                    # print(self.message_queue[0])
+                    nickname, data = self.message_queue[0]
+                    # print(nickname, data, self.game_started)
+                    if nickname in self.players:
+                        if self.game_started and self.players[nickname]["color"] in [0, 1]:
+                            print(f"New LM from {nickname} - {data}")
+                            if data[:2] == "mo" and not self.wait_choice:
+                                data = data[3:].split(":")
+                                move = self.board.move(list(map(int, data[0].split(","))), list(map(int, data[1].split(","))))
+                                print(("can" if move else "can't") + " move")
+                                if not self.wait_choice:
+                                    self.wait_choice, self.pawn_coord = self.board.check_pawn()
+                                    if move and self.wait_choice:
+                                        self.send_to_user(self.players[nickname]["data"], "ch")
+                                    else:
+                                        self.update_all_users_condition()
+                            elif data[:2] == "mc" and self.wait_choice:
+                                if len(data) == 4 and self.board.get_piece(self.pawn_coord).replace(data[3]):
                                     self.update_all_users_condition()
-                        elif data[:2] == "mc" and self.wait_choice:
-                            if len(data) == 4 and self.board.get_piece(self.pawn_coord).replace(data[3]):
-                                self.update_all_users_condition()
-                                self.wait_choice = False
-                                self.pawn_coord = [-1, -1]
-                                self.send_to_user(self.players[nickname]["data"], "ok")
-                                self.update_all_users_condition()
-                            else:
-                                self.send_to_user(self.players[nickname]["data"], "er")
-                    elif not self.game_started:
-                        if data[:2] == "vc":
-                            colors, color = self.get_empty_colors(), int(data.split()[1])
-                            if color in colors:
-                                print(f"Color {color} может быть выбран")
-                                self.players[nickname]['color'] = color
-                                self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} {self.board.step} "
-                                                                                  f"{self.board.can_view(self.players[nickname]['color'])}")
-                            else:
-                                print(f"Color {color} не может быть выбран")
-                                self.send_to_user(self.players[nickname]["data"], f"no {self.players[nickname]['color']} {self.players[nickname]['color']}")
-                self.message_queue.pop(0)
+                                    self.wait_choice = False
+                                    self.pawn_coord = [-1, -1]
+                                    self.send_to_user(self.players[nickname]["data"], "ok")
+                                    self.update_all_users_condition()
+                                else:
+                                    self.send_to_user(self.players[nickname]["data"], "er")
+                        elif not self.game_started:
+                            if data[:2] == "vc":
+                                colors, color = self.get_empty_colors(), int(data.split()[1])
+                                if color in colors:
+                                    print(f"Color {color} может быть выбран")
+                                    self.players[nickname]['color'] = color
+                                    self.send_to_user(self.players[nickname]["data"], f"ye {self.players[nickname]['color']}")
+                                else:
+                                    print(f"Color {color} не может быть выбран")
+                                    self.send_to_user(self.players[nickname]["data"], f"no {self.players[nickname]['color']}")
+                            elif data[:2] == "rc":
+                                self.players[nickname]["ready"] = bool(int(data.split()[1]))
+                                print(data, "!!!!!", self.players[nickname]["ready"])
+                                if not bool(int(data.split()[1])) and self.all_ready:
+                                    self.all_ready = False
+                                    self.send_message_all_users(f"sr {0}")
+                            elif data[:2] == "ac":
+                                self.players[nickname]["confirmation"] = True
+                    self.message_queue.pop(0)
+                else:
+                    if len(self.players) > 0:
+                        if not self.all_ready:
+                            if self.check_param("ready"):
+                                self.all_ready = True
+                                self.send_message_all_users(f"sr {1}")
+                        elif not self.game_started:
+                            if self.check_param("confirmation"):
+                                self.start_game()
+            except:
+                pass
+
+    def check_param(self, param):
+        return all([self.players[pkey][param] for pkey in self.players.keys()])
+
+    def send_message_all_users(self, st):
+        for key in self.players.keys():
+            self.send_to_user(self.players[key]["data"], st)
+            if not st:
+                self.players[key]["confirmation"] = False
+
+    def start_game(self):
+        self.game_started = True
+        for bkey in self.players.keys():
+            self.send_to_user(self.players[bkey]['data'], f"su {self.players[bkey]['color']} {self.board.step} {self.board.can_view(self.players[bkey]['color'])}")
 
     def stop(self):
         self.running = False
