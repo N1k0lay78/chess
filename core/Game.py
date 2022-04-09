@@ -1,6 +1,6 @@
 from Source.settings import params, set_random_nickname
 from core.online.Client import Client
-from core.windows.LoadingGame import LoadingGame
+from core.windows.LoadingWindow import LoadingWindow
 from core.windows.GameWidow import GameWindow
 from core.windows.MainMenuWindow import MainMenuWindow
 import pygame
@@ -35,7 +35,7 @@ class Game:
         # windows
         self.windows = {
             "Game": GameWindow,
-            "Load": LoadingGame,
+            "Load": LoadingWindow,
             "Menu": MainMenuWindow,
             "Test": TestWindow,
             "Choice": PlayerChoiceWindow,
