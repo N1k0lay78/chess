@@ -61,10 +61,14 @@ class Game:
             print("АААААААААААААААААААААААА?????")
             # self.send_to_user(self.players[nickname]["data"], f"sp {2} {self.board.step} {self.board.can_view(2)}")
             self.send_to_user(self.players[nickname]["data"], f"cl")
+            if not self.game_started:
+                self.send_message_all_users(f"ju {nickname}")
 
     def leave_game(self, nickname):
         if nickname in self.players:
             self.players.pop(nickname)
+            if not self.game_started:
+                self.send_message_all_users(f"lu {nickname}")
 
     def get_empty_colors(self):
         colors = [0, 1]
@@ -108,6 +112,7 @@ class Game:
                             if data[:2] == "vc":
                                 colors, color = self.get_empty_colors(), int(data.split()[1])
                                 if color in colors:
+                                    self.send_message_all_users(f"mv {nickname} {color}")
                                     print(f"Color {color} может быть выбран")
                                     self.players[nickname]['color'] = color
                                     self.send_to_user(self.players[nickname]["data"], f"ye {self.players[nickname]['color']}")
@@ -116,10 +121,11 @@ class Game:
                                     self.send_to_user(self.players[nickname]["data"], f"no {self.players[nickname]['color']}")
                             elif data[:2] == "rc":
                                 self.players[nickname]["ready"] = bool(int(data.split()[1]))
+                                self.send_message_all_users(f"mr {nickname} {self.players[nickname]['ready']}")
                                 print(data, "!!!!!", self.players[nickname]["ready"])
                                 if not bool(int(data.split()[1])) and self.all_ready:
                                     self.all_ready = False
-                                    self.send_message_all_users(f"sr {0}")
+                                    self.send_message_all_users(f"sr {0}", True)
                             elif data[:2] == "ac":
                                 self.players[nickname]["confirmation"] = True
                     self.message_queue.pop(0)
@@ -128,7 +134,7 @@ class Game:
                         if not self.all_ready:
                             if self.check_param("ready"):
                                 self.all_ready = True
-                                self.send_message_all_users(f"sr {1}")
+                                self.send_message_all_users(f"sr {1}", True)
                         elif not self.game_started:
                             if self.check_param("confirmation"):
                                 self.start_game()
@@ -138,10 +144,10 @@ class Game:
     def check_param(self, param):
         return all([self.players[pkey][param] for pkey in self.players.keys()])
 
-    def send_message_all_users(self, st):
+    def send_message_all_users(self, st, f=False):
         for key in self.players.keys():
             self.send_to_user(self.players[key]["data"], st)
-            if not st:
+            if not st and f:
                 self.players[key]["confirmation"] = False
 
     def start_game(self):
