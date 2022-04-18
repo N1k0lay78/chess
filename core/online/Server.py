@@ -46,9 +46,14 @@ class Game:
     def connect_user(self, nickname, user):
         # print(f"Connect {nickname}")
         if len(self.players) < self.max_users and nickname not in self.players:
+
             s = []
             for key in self.players.keys():
                 s.append(f"{key} {self.players[key]['color']}")
+
+            if not self.game_started:
+                self.send_message_all_users(f"ju {nickname} 2")
+
             self.players[nickname] = {}
             self.players[nickname]["data"] = user
             self.players[nickname]["data"][3].append(self.get_user_message)
@@ -63,8 +68,6 @@ class Game:
             # else:
             print("АААААААААААААААААААААААА?????")
             # self.send_to_user(self.players[nickname]["data"], f"sp {2} {self.board.step} {self.board.can_view(2)}")
-            if not self.game_started:
-                self.send_message_all_users(f"ju {nickname}")
             self.send_to_user(self.players[nickname]["data"], f"cl {':'.join(s)}")
 
     def leave_game(self, nickname):

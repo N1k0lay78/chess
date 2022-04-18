@@ -15,6 +15,10 @@ class PlayerChoiceUI(BaseUI):
         ], size=[300, 75], un_active_on_mouse_up=False)
         self.active = None
         self.nickname = nickname
+        self.ready = False
+
+    def set_ready(self, ready):
+        self.ready = ready
 
     def get_name(self):
         return self.nickname

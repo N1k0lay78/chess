@@ -24,10 +24,15 @@ class PlayerChoiceWindow(Window):
     def add_user(self, name, color):
         self.ui["players"].append(PlayerChoiceUI(self, (150, self.p(len(self.ui["players"]))), name, color))
 
+    def set_user_ready(self, name, ready):
+        for i in range(len(self.ui["players"])):
+            if self.ui["players"][i].get_name() == name:
+                self.ui["players"][i].set_ready(ready)
+
     def change_user(self, name, color):
         for i in range(len(self.ui["players"])):
             if self.ui["players"][i].get_name() == name:
-                self.ui["players"].set_color(color)
+                self.ui["players"][i].set_color(color)
 
     def remove_user(self, name):
         for i in range(len(self.ui["players"])):
