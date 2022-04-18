@@ -5,7 +5,7 @@ params = {
     "board_name": "test10",
     "log_level": "",
     "debug": True,
-    "online_host_ip": "192.168.1.13",  # "192.168.1.13" "26.238.243.152"
+    "online_host_ip": "192.168.51.24",  # "192.168.1.13" "26.238.243.152"
     "online_host_port": 8080,
     "nickname": "",  # if empty use input
     "screen_size": (600, 600),
@@ -18,6 +18,7 @@ params = {
     "code": 0,
     "game_exist": False,
     "have_answer": False,
+    "loading_window_time": 12,
 }
 
 # is_on_fog_of_war = False

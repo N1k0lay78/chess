@@ -79,7 +79,6 @@ class Room:
                         wait_user_choice_thread = Thread(target=self.wait_user_choice)
                         wait_user_choice_thread.start()
                 else:
-                    print("Ещё интереснее!!!")
                     if data[:2] == "ye":
                         print("Берём новый цвет", data.split()[1])
                         # self.color = int(data.split()[1])
@@ -92,6 +91,13 @@ class Room:
                             self.client.game.window.ui["ready"][0].start_countdown()
                         else:
                             self.client.game.window.ui["ready"][0].stop_countdown()
+                    elif data[:2] == "cl":
+                        print(data, "инфа сотка")
+                        for el in data[2:].strip().split(":"):
+                            if len(el.split()) == 2:
+                                print(el)
+                                nick, color = el.split()
+                                self.client.game.window.add_user(nick, int(color))
                 self.message_queue.pop(0)
 
     def wait_user_choice(self):

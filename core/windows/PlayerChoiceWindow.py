@@ -10,17 +10,31 @@ class PlayerChoiceWindow(Window):
     def __init__(self, game):
         super().__init__(game)
         self.background = load_image('main_menu')
-        p = lambda x: 160 + 80 * x
         self.ui = {
             "static": [BaseUI(self, (180, 110), image=self.game.render_text(f"код игры: {params['code']}", (230, 81, 0)))],
-            "players": [PlayerChoiceUI(self, (150, p(0)), params['nickname'], 2),
-                        PlayerChoiceUI(self, (150, p(1)), "Niki", 2),
-                        PlayerChoiceUI(self, (150, p(2)), "Alexei", 2),
-                        PlayerChoiceUI(self, (150, p(3)), "Slava", 2),
+            "players": [PlayerChoiceUI(self, (150, self.p(0)), params['nickname'], 2),
                         ],
-            "ready": [ReadyButton(self, (250, p(4)))]
+            "ready": [ReadyButton(self, (250, self.p(4)))]
         }
         self.connect_to_the_game()
+
+    def p(self, x):
+        return 160 + 80 * x
+
+    def add_user(self, name, color):
+        self.ui["players"].append(PlayerChoiceUI(self, (150, self.p(len(self.ui["players"]))), name, color))
+
+    def change_user(self, name, color):
+        for i in range(len(self.ui["players"])):
+            if self.ui["players"][i].get_name() == name:
+                self.ui["players"].set_color(color)
+
+    def remove_user(self, name):
+        for i in range(len(self.ui["players"])):
+            if self.ui["players"][i].get_name() == name:
+                self.ui["players"].pop(i)
+        for i in range(len(self.ui["players"])):
+            self.ui["players"][i].pos = (150, self.p(i))
 
     def connect_to_the_game(self):
         self.game.client.sending_to_the_server(f"cg {params['code']}")

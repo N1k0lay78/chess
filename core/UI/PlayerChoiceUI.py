@@ -14,6 +14,13 @@ class PlayerChoiceUI(BaseUI):
             PlayerTypeSelect(window, (0, 0), choice, nickname == params['nickname']),
         ], size=[300, 75], un_active_on_mouse_up=False)
         self.active = None
+        self.nickname = nickname
+
+    def get_name(self):
+        return self.nickname
+
+    def set_color(self, color):
+        self.child[1].selected = color
 
     def set_choice(self, value):
         logger.info(f"Back user {params['nickname']} choice from {['White', 'Black', 'Viewer'][self.child[1].selected]} to {['White', 'Black', 'Viewer'][value]}")
