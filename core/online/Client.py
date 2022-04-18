@@ -91,6 +91,18 @@ class Room:
                             self.client.game.window.ui["ready"][0].start_countdown()
                         else:
                             self.client.game.window.ui["ready"][0].stop_countdown()
+                    elif data[:2] == "mv":
+                        nickname, color = data[:2].split()
+                        # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ЦВЕТА ПОЛЬЗОВАТЕЛЯ
+                    elif data[:2] == "mr":
+                        nickname, is_ready = data[:2].split()
+                        # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ГОТОВНОСТИ ПОЛЬЗОВАТЕЛЯ
+                    elif data[:2] == "ju":
+                        nickname = data.split()[1]
+                        # ДОБАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
+                    elif data[:2] == "lu":
+                        nickname = data.split()[1]
+                        # УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
                     elif data[:2] == "cl":
                         print(data, "инфа сотка")
                         for el in data[2:].strip().split(":"):
