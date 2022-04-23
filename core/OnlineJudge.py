@@ -18,14 +18,8 @@ class OnlineJudge:
     def on_move(self, fr: tuple, to: tuple) -> None:
         """pieces make move"""
         piece = self.board.get_piece(to)
+
         logger.info(f"move {piece.t}{'b' if piece.s else 'w'} {self.chr_cell(fr)} — {self.chr_cell(to)}")
-
-        if piece and piece.t == "" and to[1] in [0, 7]:
-            self.on_swap(to)
-
-        if self.make_castling:
-            to[0] = 0 if to[0] in [1, 2] else 7
-            self.make_castling = False
 
         self.client.sending_to_the_server(f"mo {fr[0]},{fr[1]}:{to[0]},{to[1]}:{str(piece).lower()}")
 
@@ -38,29 +32,19 @@ class OnlineJudge:
         # if name == "K":
         #     self.board.game.restart = True
 
-    def on_swap(self, cell: tuple) -> None:
+    def on_swap(self, choice: str) -> None:
         """swap pawn"""
-
-        # TODO: this
-
-        # pawn = self.board.get_pos(cell)
-        # self.board.remove_piece(pawn)
-        # self.board.add_piece(input("CHOICE: ").upper() + str(pawn))
+        self.client.room.figure = choice
 
     def on_castling(self, is_right: bool, color: int) -> None:
         """king make castling"""
-        self.make_castling = True
+        pass
 
     def update(self) -> None:
         pass
 
     def restart(self) -> None:
         pass
-
-    def flip(self):
-        self.board.color = 1
-        for piece in self.board.board:
-            piece.set_cell((7 - piece.cell[0], 7 - piece.cell[1]))
 
     def quit(self) -> None:
         pass
