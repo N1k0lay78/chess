@@ -1,5 +1,6 @@
 from Source.settings import params
 from core.UI.BaseUI import BaseUI
+from core.UI.SwapPopUp import SwapPopUp
 from core.textures.Tileset import TileSet
 import pygame
 from math import sin, cos, acos, radians, pi
@@ -13,25 +14,36 @@ class StandardBoardUI(BaseUI):
         self.game = window.game
         self.pos = pos
         self.judge = judge
+        self.logic_board = board
         self.size = 50
+
         # sprites
         self.pieces_tile_set = TileSet('pieces', (50, 150))
         self.board_image = TileSet('board', (440, 440))
-        # create logic board
-        self.logic_board = board
+
         # user interaction
         self.last_mouse_pos = (0, 0)
         self.delta_pos = (0, 0)
         self.focused = None
         self.dragging = False
-        self.wait = False
-        self.rotation = 0
+
+        # animation
+        self.animation_step = 0
+        # step 1 wait
+        self.wait_server_1 = False
+        # step 2 move
         self.move_percent = 0
         self.to_end = 1
         self.move_positions = ((0, 0), (0, 0))
+        # step 3 ask user
+        # step 4 wait server
+        self.wait_server_2 = False
+        # step 5 rotation
+        self.rotation = 0
+        # something
+        self.wait = False
 
     def draw(self, pos=(0, 0)):
-        pygame.key.get_pressed()
         if self.logic_board.get_step() % 2 == 0 and not self.rotation or \
                 self.logic_board.get_step() % 2 != 0 and self.rotation:
             if self.rotation:
@@ -83,7 +95,7 @@ class StandardBoardUI(BaseUI):
                     self.game.screen.blit(self.get_pieces_texture(*piece.ts), pos)
 
     def event(self, event):
-        if self.wait or self.rotation or self.move_percent:
+        if self.animation_step or self.wait:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -115,44 +127,79 @@ class StandardBoardUI(BaseUI):
 
             move_positions = (self.get_pos_from_cell(self.focused.cr), self.get_pos_from_cell(goal_movement))
             l_pose = self.focused.cr[:]
-            if self.logic_board.move(self.focused.cr, goal_movement):
+            if self.logic_board.move(self.focused.cr, goal_movement, False):
                 self.judge.on_move(l_pose, goal_movement)
                 self.focused = None
+
+                self.animation_step = 1
+
+                self.wait_server_1 = params['mode'] != 'offline'
+                self.wait_server_2 = params['mode'] != 'offline' and self.logic_board.check_pawn()[0]
+
                 if not self.dragging:
                     self.move_percent = 1
-                    self.logic_board.step -= 1
                     self.move_positions = move_positions
-                if params["is_on_rotation"] and self.logic_board.is_playing:
-                    self.rotation = 1
 
             self.dragging = False
 
-    def get_dist(self, cell1, cell2):
-        return ((cell1[0] - cell2[0])**2 + (cell1[1] - cell2[1])**2)**0.5/50
+    def animation_update(self):
+        if self.animation_step == 1 and not self.wait_server_1:
+            self.animation_step += 1
+        if self.animation_step == 2 and not self.move_percent:
+            self.animation_step += 1
+        if self.animation_step == 3 and not self.logic_board.check_pawn()[0]:
+            self.animation_step += 1
+            for elem in self.window.ui:
+                if type(elem) == SwapPopUp:
+                    self.window.ui.remove(elem)
+                    break
+        if self.animation_step == 4 and not self.wait_server_2:
+            self.animation_step += 1
 
-    def update(self):
+            # change step
+            self.logic_board.step += 1
+            if params['is_on_rotation']:
+                self.rotation = 1
+        if self.animation_step == 5 and not self.rotation:
+            self.animation_step += 1
+        if self.animation_step == 6:
+            # some to go to next step
+            self.animation_step = 0
+
+        if self.animation_step == 2:
+            self.move_percent -= 8 * self.game.delta / self.get_dist(*self.move_positions)
+            if self.move_percent < 0:
+                self.move_percent = 0
+
+        if self.animation_step == 3:
+            for elem in self.window.ui:
+                if type(elem) == SwapPopUp:
+                    break
+            else:
+                self.window.ui.append(SwapPopUp(self.window, (250, 10), self.judge.get_color() % 2))
+
+        if self.animation_step == 5:
+            self.rotation -= (1 + 0.25 * cos(2*pi * self.rotation - pi)) * self.game.delta
+            if self.rotation < 0:
+                self.rotation = 0
+
+    def fixed_update(self):
+        if self.animation_step > 0:
+            self.animation_update()
+
         if not self.logic_board.is_playing:
             self.to_end -= self.window.game.delta
             if self.to_end < 0:
                 self.window.game.open_window("Menu")
 
-        if self.move_percent > 0:
-            self.move_percent -= 8 * self.game.delta / self.get_dist(*self.move_positions)
-            if self.move_percent < 0:
-                self.move_percent = 0
-                self.logic_board.step += 1
-
-        elif self.rotation > 0:
-            self.rotation -= (1 + 0.25 * cos(2*pi * self.rotation - pi)) * self.game.delta
-            if self.rotation < 0:
-                self.rotation = 0
+    def get_dist(self, cell1, cell2):
+        return ((cell1[0] - cell2[0])**2 + (cell1[1] - cell2[1])**2)**0.5/50
 
     def get_pos_from_cell(self, cell):
         center_x = cell[0] * self.size + 25 - 200
         center_y = cell[1] * self.size + 125 - 300
         if center_x == center_y == 0:
             return [300, 300]
-        # return center_x + 300, center_y + 300
         dist = (center_x**2 + center_y**2)**0.5
         rot = acos(center_x/dist)
         if center_y < 0:

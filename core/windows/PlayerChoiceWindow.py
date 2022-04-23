@@ -27,7 +27,7 @@ class PlayerChoiceWindow(Window):
     def set_user_ready(self, name, ready):
         for i in range(len(self.ui["players"])):
             if self.ui["players"][i].get_name() == name:
-                self.ui["players"][i].set_ready(ready)
+                self.ui["players"][i].set_ready(ready == "True")
 
     def change_user(self, name, color):
         for i in range(len(self.ui["players"])):

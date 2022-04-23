@@ -18,9 +18,10 @@ class GameWindow(Window):
         elif params["mode"] == "fog of war":
             self.logic_board = LogicBoard(True)
             self.judge = OnlineJudge(self.logic_board, self.game.client)
+            # self.judge = Judge(self, self.logic_board, params["board_name"])
         else:
             self.logic_board = LogicBoard(False)
-            self.judge = Judge(self.logic_board, params["board_name"])
+            self.judge = Judge(self, self.logic_board, params["board_name"])
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
         self.set_active_object(self.game_board)
         logger.info(f"create game with mode {params['mode']}")
@@ -63,6 +64,7 @@ class GameWindow(Window):
                 break
 
     def fixed_update(self):
+        self.game_board.fixed_update()
         for element in self.ui:
             element.fixed_update()
 

@@ -128,6 +128,7 @@ class Game:
                             elif data[:2] == "rc":
                                 self.players[nickname]["ready"] = bool(int(data.split()[1]))
                                 self.send_message_all_users(f"mr {nickname} {self.players[nickname]['ready']}")
+                                time.sleep(0.001)
                                 print(data, "!!!!!", self.players[nickname]["ready"])
                                 if not bool(int(data.split()[1])) and self.all_ready:
                                     self.all_ready = False

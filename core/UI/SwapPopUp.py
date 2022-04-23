@@ -6,22 +6,22 @@ from loguru import logger
 
 
 def swap_to_queen(button):
-    button.window.game.client.room.figure = "Q"
+    button.window.judge.on_swap("Q")
     logger.info("on swap user choice Queen (Q)")
 
 
 def swap_to_knight(button):
-    button.window.game.client.room.figure = "N"
+    button.window.judge.on_swap("N")
     logger.info("on swap user choice Horse (N)")
 
 
 def swap_to_rook(button):
-    button.window.game.client.room.figure = "R"
+    button.window.judge.on_swap("R")
     logger.info("on swap user choice Rook (R)")
 
 
 def swap_to_bishop(button):
-    button.window.game.client.room.figure = "B"
+    button.window.judge.on_swap("B")
     logger.info("on swap user choice Elephant (B)")
 
 

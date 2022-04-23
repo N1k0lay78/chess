@@ -21,7 +21,7 @@ class LogicBoard:
                 return True, piece.cr
         return False, [-1, -1]
 
-    def move(self, from_cell, to_cell):
+    def move(self, from_cell, to_cell, increment=False):
         if not self.is_playing:
             return False
         piece = self.get_piece(from_cell)
@@ -36,7 +36,8 @@ class LogicBoard:
                 rook = self.get_piece(rook_pos[str(piece)])
                 if rook and rook.i:
                     rook.set_cell(rook_to[str(piece)])
-                    self.step += 1
+                    if increment:
+                        self.step += 1
                     self.last_moved = piece
                     return True
 
@@ -53,7 +54,8 @@ class LogicBoard:
                     # self.restart_game()
                 else:
                     print("NEXT MOVE")
-                    self.step += 1
+                    if increment:
+                        self.step += 1
                 self.last_moved = piece
                 return True
         self.load_board(line_board)
@@ -74,6 +76,11 @@ class LogicBoard:
             return visible
         else:
             return self.pieces
+
+    def can_view_cell(self, pos, color):
+        if params['mode'] == "fog of war":
+            return any(piece.s == color and piece.can_view(pos) for piece in self.pieces)
+        return True
 
     def can_view(self, color):
         return self.get_board_line(self.get_visible(color))

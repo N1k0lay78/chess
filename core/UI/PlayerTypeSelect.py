@@ -14,6 +14,10 @@ class PlayerTypeSelect(BaseUI):
         self.open_select = False
         self.editable = editable
         self.hovered = -1
+        self.ready = False
+
+    def set_ready(self, ready: bool):
+        self.ready = ready
 
     def draw(self, pos=(0, 0)):
         pos = [pos[0] + self.pos[0], pos[1] + self.pos[1]]
@@ -28,6 +32,8 @@ class PlayerTypeSelect(BaseUI):
         # print(self.hovered)
         if self.hovered == 0:
             self.window.game.screen.blit(self.tile_set[0, 4], pos)
+        elif self.ready and not self.editable:
+            self.window.game.screen.blit(self.tile_set[0, 5], pos)
 
     def check_collide_point(self, pos):
         pos = self.get_pos(pos)

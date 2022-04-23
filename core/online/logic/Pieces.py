@@ -22,6 +22,8 @@ class LogicPieces:
             return False
         # column, row and type check of path
         for c, r, t in path:
+            if not self.board.can_view_cell([c, r], self.color):
+                return False
             if not (0 <= c <= 7 and 0 <= r <= 7) or (
                     t == 0 and not self.check_clear_cell([c, r]) or
                     t == 1 and not self.check_not_friendly_cell([c, r]) or

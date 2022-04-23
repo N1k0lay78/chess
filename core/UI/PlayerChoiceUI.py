@@ -17,8 +17,9 @@ class PlayerChoiceUI(BaseUI):
         self.nickname = nickname
         self.ready = False
 
-    def set_ready(self, ready):
-        self.ready = ready
+    def set_ready(self, ready: bool):
+        if self.nickname != params["nickname"]:
+            self.child[1].set_ready(ready)
 
     def get_name(self):
         return self.nickname
