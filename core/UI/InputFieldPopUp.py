@@ -25,13 +25,13 @@ class InputFieldPopUp(PopUp):
     def __init__(self, window, pos, type_field, text):
         if type_field == "code":
             input_field = InputField(window, (99, 75), "C O D E", ((230, 81, 0), (255, 143, 0)), type_field,
-                                     size=(96, 18))
+                                     size=(96, 25))
             rendered_text = window.game.render_text("код игры", (230, 81, 0))
             size = (3, 2)
             action = ready_code
         elif type_field == "nickname":
             input_field = InputField(window, (15, 75), "nickname", ((230, 81, 0), (255, 143, 0)), type_field,
-                                     size=(267, 18), align_center=True)
+                                     size=(267, 25), align_center=True)
             size = (3, 2)
             rendered_text = window.game.render_text("никнейм", (230, 81, 0))
             action = ready_nickname
