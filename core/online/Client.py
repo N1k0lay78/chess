@@ -64,12 +64,17 @@ class Room:
 
                         # if self.color:
                         #     self.judge.flip()
-
+                    elif data[:2] == "om":
+                        self.client.game.window.game_board.wait_server_1 = False
+                    elif data[:2] == "ok":
+                        self.client.game.window.game_board.wait_server_1 = False
+                        self.client.game.window.game_board.wait_server_2 = False
                     elif data[:2] in ["nm", "im"]:
-                        self.board.step = int(data.split(":")[1])
+                        # self.board.step = int(data.split(":")[1])
                         print(data)
-                        print(self.board.step)
+                        print(data.split(":")[1])
                         self.board.load_board(data.split(":")[2])
+                        self.client.game.window.game_board.load_board(int(data.split(":")[1]), data.split(":")[2])
 
                         # if self.color:
                         #     self.judge.flip()
@@ -145,9 +150,11 @@ class Client:
         self.socket = None
         self.connection_monitoring_thread = None
         self.getting_from_the_server_thread = None
+        self.sending_to_the_server_queue_thread = None
         self.running = True
         self.room = Room(self)
         self.send_to = [self.room.get_server_message]
+        self.sending_to_the_server_list = []
 
     def is_connected(self):
         return bool(self.socket)
@@ -178,7 +185,7 @@ class Client:
                 except Exception as e:
                     print("Something is wrong. Try to connect again")
             else:
-                if not self.sending_to_the_server("Check connection"):
+                if not self.check_connection("Check connection"):
                     # print("Something is wrong")
                     self.socket.close()
                     self.socket = None
@@ -187,12 +194,24 @@ class Client:
                 time.sleep(1)
 
     def sending_to_the_server(self, message):
-        # print(f"{message} Почему то я не хочу это отправлять")
+        if self.socket:
+            self.sending_to_the_server_list.append(message)
+
+    def sending_to_the_server_queue(self):
+        while self.running:
+            if self.socket and len(self.sending_to_the_server_list):
+                message = self.sending_to_the_server_list.pop(0)
+                try:
+                    self.socket.send(self.to_bytes(message))
+                except Exception as e:
+                    # print(f"Bad connection with server - {e}")
+                    pass
+
+    def check_connection(self, message):
         if self.socket:
             try:
                 self.socket.send(self.to_bytes(message))
             except Exception as e:
-                # print(f"Bad connection with server - {e}")
                 # print(f"Bad connection with server - {e}")
                 return False
         return True
@@ -201,8 +220,8 @@ class Client:
         while self.running:
             if self.socket:
                 try:
-                    data = self.to_text(self.socket.recv(1024))
-                    if data and data != "Check connection" and len(data) >= 2:
+                    data = self.to_text(self.socket.recv(1024)).replace("Check connection", "")
+                    if data and len(data) >= 2:
                         print("NEW DATA IN CLIENT", data)
                         if data[:2] == "ga":
                             params["game_exist"] = bool(int(data.split()[1]))
@@ -224,11 +243,14 @@ class Client:
         self.connection_monitoring_thread.start()
         self.getting_from_the_server_thread = Thread(target=self.getting_from_the_server)
         self.getting_from_the_server_thread.start()
+        self.sending_to_the_server_queue_thread = Thread(target=self.sending_to_the_server_queue)
+        self.sending_to_the_server_queue_thread.start()
 
     def stop(self):
         self.running = False
         self.connection_monitoring_thread.join(0)
         self.getting_from_the_server_thread.join(0)
+        self.sending_to_the_server_queue_thread.join(0)
         if self.socket:
             self.socket.close()
         if self.room:

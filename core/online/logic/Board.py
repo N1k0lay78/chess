@@ -21,7 +21,7 @@ class LogicBoard:
                 return True, piece.cr
         return False, [-1, -1]
 
-    def move(self, from_cell, to_cell, increment=False):
+    def move(self, from_cell, to_cell, increment=True):
         if not self.is_playing:
             return False
         piece = self.get_piece(from_cell)
