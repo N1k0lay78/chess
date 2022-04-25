@@ -15,11 +15,11 @@ class MainMenuWindow(Window):
         self.button = ChangeWindowButton(self, (500, 0), TileSet('settings4', (100, 100)), "Game")
 
         self.buttons = [
-            # PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}),
-            # PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}),
-            # PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}),
-            AnimatedTorch(self, (0, 300)),
-            AnimatedTorch(self, (500, 300)),
+            PlayButton(self, (100, 200), "онлайн", "Game", {"mode": "online"}),
+            PlayButton(self, (100, 300), "офлайн", "Game", {"mode": "offline"}),
+            PlayButton(self, (100, 400), "туман войны", "Game", {"mode": "fog of war"}),
+            AnimatedTorch(self, (-10, 300)),
+            AnimatedTorch(self, (510, 300)),
         ]
 
     def check_hover(self, event):

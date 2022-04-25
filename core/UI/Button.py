@@ -4,8 +4,8 @@ from core.UI.BaseUI import BaseUI
 
 
 class Button(BaseUI):
-    def __init__(self, window, pos, tile_set, frames):
-        super().__init__(window, pos, image=tile_set[frames[0]])
+    def __init__(self, window, pos, tile_set, frames=(0, 1, 2), **kwargs):
+        super().__init__(window, pos, image=tile_set[frames[0]], **kwargs)
         self.tile_set = tile_set
         self.frames = frames  # 0 - default, 1 - hovered, 2 - clicked
         self.pressed = False
