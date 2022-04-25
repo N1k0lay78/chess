@@ -2,6 +2,7 @@ from core.UI.ChangeWindowButton import ChangeWindowButton
 from core.UI.ChechBox import CheckBox
 from core.UI.PlayButton import PlayButton
 from core.UI.PlayerTypeSelect import PlayerTypeSelect
+from core.UI.AnimatedTorch import AnimatedTorch
 from core.textures.Tileset import TileSet
 from core.textures.load_image import load_image
 from core.windows.Window import Window
@@ -14,9 +15,11 @@ class MainMenuWindow(Window):
         self.button = ChangeWindowButton(self, (500, 0), TileSet('settings4', (100, 100)), "Game")
 
         self.buttons = [
-            PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}),
-            PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}),
-            PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}),
+            # PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}),
+            # PlayButton(self, (10, 260), "офлайн", "Game", {"mode": "offline"}),
+            # PlayButton(self, (10, 330), "туман войны", "Game", {"mode": "fog of war"}),
+            AnimatedTorch(self, (0, 300)),
+            AnimatedTorch(self, (500, 300)),
         ]
 
     def check_hover(self, event):
@@ -36,9 +39,13 @@ class MainMenuWindow(Window):
             else:
                 self.remove_active()
 
+    def fixed_update(self):
+        for button in self.buttons:
+            button.fixed_update()
+
     def draw(self):
         self.game.screen.blit(self.background, (0, 0))
-        self.button.draw()
-
+        # self.button.draw()
+        #
         for button in self.buttons:
             button.draw()

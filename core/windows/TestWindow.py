@@ -1,3 +1,4 @@
+from core.UI.AnimatedTorch import AnimatedTorch
 from core.UI.DefaultButton import DefaultButton
 from core.UI.InputField import InputField
 from core.UI.InputFieldPopUp import InputFieldPopUp
@@ -10,6 +11,8 @@ from core.windows.Window import Window
 class TestWindow(Window):
     def __init__(self, game):
         super().__init__(game)
+        self.ui.append(AnimatedTorch(self, (0, 100)))
+        self.ui.append(AnimatedTorch(self, (100, 100)))
         self.ui.append(SwapPopUp(self, (250, 10), 1))
         self.ui.append(InputFieldPopUp(self, [0, 300], "code", "войти"))
         self.ui.append(InputFieldPopUp(self, [300, 300], "nickname", "создать"))

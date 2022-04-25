@@ -19,6 +19,9 @@ class Game:
         pygame.display.set_icon(pygame.image.load(params["app_icon"]))
 
         # font
+        # cell   1  2   3   4   5   6  px
+        # sizes (9, 17, 25, 33, 41, 50)
+        # offline
         self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25 * 2)
         self.small_font = pygame.font.Font('Source/Fonts/Chava.ttf', 25)
 
@@ -72,7 +75,7 @@ class Game:
             # lock fps
             self.clock.tick(self.max_fps)
             # if False:
-                # print(self.clock.get_fps())
+            #     print(self.clock.get_fps())
 
     def render_text(self, text, color=(0, 0, 0), is_small=True):
         if is_small:
