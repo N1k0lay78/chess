@@ -60,11 +60,13 @@ class Game:
             "Choice": PlayerChoiceWindow,
         }
         self.window = None
-        self.open_window(params["start_window"])
         self.text_version = self.render_text('0.1.5 Alpha', (249, 168, 37), True)
         # server
-        # self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"], self)
-        # self.client.run()
+        self.client = Client(set_random_nickname(), params["online_host_ip"], params["online_host_port"], self)
+        self.client.run()
+
+        # open start window
+        self.open_window(params["start_window"])
 
     def run(self):
 

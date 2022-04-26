@@ -9,13 +9,6 @@ from core.windows.Window import Window
 class PlayerChoiceWindow(Window):
     def __init__(self, game):
         super().__init__(game)
-        self.background = load_image('main_menu')
-        self.ui = {
-            "static": [BaseUI(self, (180, 110), image=self.game.render_text(f"код игры: {params['code']}", (230, 81, 0)))],
-            "players": [PlayerChoiceUI(self, (150, self.p(0)), params['nickname'], 2),
-                        ],
-            "ready": [ReadyButton(self, (250, self.p(4)))]
-        }
         self.connect_to_the_game()
 
     def p(self, x):
@@ -44,33 +37,18 @@ class PlayerChoiceWindow(Window):
     def connect_to_the_game(self):
         self.game.client.sending_to_the_server(f"cg {params['code']}")
 
-    def update(self):
-        if self.active:
-            self.active.update()
-
-    def set_active(self, event):
-        for key in self.ui:
-            for element in self.ui[key]:
-                if element.check_collide_point(event.pos):
-                    self.set_active_object(element)
-                    return
-        else:
-            self.set_active_object(None)
-
-    def fixed_update(self):
-        for key in self.ui:
-            for element in self.ui[key]:
-                element.fixed_update()
-
-    def check_hover(self, event):
-        pos = event.pos
-        for key in self.ui:
-            for element in self.ui[key]:
-                if element.check_collide_point(pos):
-                    pos = [-1, -1]
-
-    def draw(self):
-        self.game.screen.blit(self.background, (0, 0))
-        for key in reversed(self.ui.keys()):
-            for elem in self.ui[key][::-1]:
-                elem.draw()
+    def set_ui(self):
+        self.ui = {
+            "static": [
+                BaseUI(self, (180, 110), image=self.game.render_text(f"код игры: {params['code']}", (230, 81, 0))),
+            ],
+            "players": [
+                PlayerChoiceUI(self, (150, self.p(0)), params['nickname'], 2),
+            ],
+            "ready": [
+                ReadyButton(self, (250, self.p(4))),
+            ],
+            "background": [
+                # BaseUI(self, (0, 0), image=load_image('main_menu'), size=(0, 0))
+            ],
+        }

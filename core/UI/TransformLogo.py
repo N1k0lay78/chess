@@ -14,7 +14,7 @@ class TransformLogo(BaseUI):
         self.end_time = time
         self.percent = 0
 
-    def update(self):
+    def fixed_update(self):
         if self.percent != 1:
             self.time += self.window.game.delta
         self.percent = min(1, self.time / self.end_time)
