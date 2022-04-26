@@ -61,7 +61,7 @@ class AnimatedTorch(BaseUI):
 
         if len(self.child) < self.count_spikes and self.timer_spawn <= 0:
             ang = random() * pi
-            self.add_child(TorchSpike(self.window, [self.spike_dist * cos(ang) + 48, self.spike_dist * -sin(ang) + 40]))
+            self.add_child(TorchSpike(self.window, [self.spike_dist * cos(ang) + 50 - 14, self.spike_dist * -sin(ang) + 40 - 24]))
             self.timer_spawn = self.spawn_delta
 
         for spike in self.child:
