@@ -1,6 +1,7 @@
 import select
 import socket
 import queue
+from test_server.commands import commands_lobby, commands_game, commands_official, commands_social, commands_ui
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setblocking(0)  # Неблокирующийся сокет
@@ -10,8 +11,15 @@ server.listen()
 sockets = [server]
 message_queues = {}
 
+clients = {}
+new_clients = []
+messages = []
+
 
 def close_connection(con):
+    peer = con.getpeername()
+    if peer in clients:
+        del clients[peer]
     sockets.remove(con)
     if con in message_queues:
         del message_queues[con]
@@ -25,19 +33,43 @@ while sockets:
     # на другие события.
     readable, writable, exceptional = select.select(sockets, sockets, sockets, 1)
 
+    while len(new_clients):
+        peername, conn = new_clients.pop(0), None
+
+        if peername in clients:
+            continue
+
+        for wr in writable:
+            if wr.getpeername() == peername:
+                conn = wr
+                break
+
+        if not conn:
+            continue
+
+        try:
+            conn.send(bytes("suco", encoding="utf-8"))
+            clients[peername] = [conn, None]
+            print(clients)
+        except Exception as e:
+            print(e)
+
     for s in readable:  # Для каждого сокета готового к чтению
         if s is server:  # Если это сокет принимающий соединения
             connection, client_address = s.accept()
             connection.setblocking(0)  # Этот клиентский сокет тоже будет неблокируемым
             sockets.append(connection)  # Добавляем клиентский сокет в список сокетов
             message_queues[connection] = queue.Queue()  # Создаём очередь сообщений для сокета
+            new_clients.append(connection.getpeername())
         else:
             try:
-                data = s.recv(1024)  # Читаем без блокировки
-                print(data.decode())
-                for sock in writable:
-                    # print(type(sock))
-                    sock.send(bytes("Не надо мне ничего присылать", encoding="utf-8"))
+                if s in clients:
+                    data = s.recv(1024)  # Читаем без блокировки
+                    messages.append([s.getpeername(), data])
+                    print(data.decode())
+                    # for sock in writable:
+                        # print(type(sock))
+                        # sock.send(bytes("Не надо мне ничего присылать", encoding="utf-8"))
             except:
                 close_connection(s)  # В случае ошибки закрываем этот сокет и удаляем
             else:  # Если ошибка не произошла
