@@ -28,7 +28,7 @@ def ogranichitel(minmax, num):
 def gen_code(length):
     code = ""
     while len(code) < length:
-        code += "".join([choice(all_lets) for i in range(randint(2, 9))])
+        code += "".join([choice(all_lets) for i in range(randint(5, 9))])
         code += str(randint(0, max_num))
     return code[:length]
 
@@ -87,13 +87,12 @@ def decoding(code, message):
     return new_message
 
 
-
 # print(ord("a"))
-# code = gen_code(100)
+code = gen_code(100)
 # fraze = "Пока кто-то сидит на вождении, я сижу дома, да прогаю. Кстати, в коде, который шифровальный, было 100 символов"
 # co = coding(code, fraze)
 # deco = decoding(code, co)
-# print(code)
+print(code)
 # print(co)
 # print(deco)
 # print(deco == fraze)

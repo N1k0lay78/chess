@@ -1,5 +1,5 @@
 commands_official = {
-    "newn":
+    "newn": None
 }
 
 commands_lobby = {
