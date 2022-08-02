@@ -2,7 +2,7 @@ import pygame
 
 
 class BaseUI:
-    def __init__(self, window, pos, childs=[], image=None, un_active_on_mouse_up=True, size=(10, 10)):
+    def __init__(self, window, pos, childs=[], image=None, un_active_on_mouse_up=True, size=(0, 0)):
         self.window = window
         self.pos = pos
         self.child = []
@@ -47,7 +47,7 @@ class BaseUI:
             pos = [pos[0] - self.pos[0] - self.parent.pos[0], pos[1] - self.pos[1] - self.parent.pos[1]]
         else:
             pos = [pos[0] - self.pos[0], pos[1] - self.pos[1]]
-        if self.image:
+        if self.__size == (0, 0):
             self.hovered = 0 <= pos[0] <= self.image.get_width() and 0 <= pos[1] <= self.image.get_height()
         else:
             self.hovered = 0 <= pos[0] <= self.__size[0] and 0 <= pos[1] <= self.__size[1]

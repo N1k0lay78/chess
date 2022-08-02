@@ -8,21 +8,33 @@ from loguru import logger
 def swap_to_queen(button):
     button.window.judge.on_swap("Q")
     logger.info("on swap user choice Queen (Q)")
+    for pop_up in button.window.ui["pop-up"]:
+        if type(pop_up) == SwapPopUp:
+            button.window.ui['pop-up'].remove(pop_up)
 
 
 def swap_to_knight(button):
     button.window.judge.on_swap("N")
     logger.info("on swap user choice Horse (N)")
+    for pop_up in button.window.ui["pop-up"]:
+        if type(pop_up) == SwapPopUp:
+            button.window.ui['pop-up'].remove(pop_up)
 
 
 def swap_to_rook(button):
     button.window.judge.on_swap("R")
     logger.info("on swap user choice Rook (R)")
+    for pop_up in button.window.ui["pop-up"]:
+        if type(pop_up) == SwapPopUp:
+            button.window.ui['pop-up'].remove(pop_up)
 
 
 def swap_to_bishop(button):
     button.window.judge.on_swap("B")
     logger.info("on swap user choice Elephant (B)")
+    for pop_up in button.window.ui["pop-up"]:
+        if type(pop_up) == SwapPopUp:
+            button.window.ui['pop-up'].remove(pop_up)
 
 
 class SwapPopUp(PopUp):

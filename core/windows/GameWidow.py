@@ -23,6 +23,8 @@ class GameWindow(Window):
             self.logic_board = LogicBoard(False)
             self.judge = Judge(self, self.logic_board, params["board_name"])
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
+        self.ui['pop-up'] = []
+        self.ui['game'] = [self.game_board]
         self.set_active_object(self.game_board)
         logger.info(f"create game with mode {params['mode']}")
         self.connect_to_the_game()
@@ -37,16 +39,6 @@ class GameWindow(Window):
                 self.game.client.sending_to_the_server("ac")
             logger.info(f"connect to game with code {params['code']}")
 
-    def draw(self):
-        self.game_board.draw()
-        for element in self.ui[::-1]:
-            element.draw()
-
-    def update(self):
-        self.game_board.update()
-        if self.active:
-            self.active.update()
-
     def events(self, event):
         # self.active.event(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -56,20 +48,3 @@ class GameWindow(Window):
         if event.type == pygame.MOUSEMOTION:
             self.check_hover(event)
         self.game_board.event(event)
-
-    def set_active(self, event):
-        for element in self.ui:
-            if element.check_collide_point(event.pos):
-                self.set_active_object(element)
-                break
-
-    def fixed_update(self):
-        self.game_board.fixed_update()
-        for element in self.ui:
-            element.fixed_update()
-
-    def check_hover(self, event):
-        pos = event.pos
-        for element in self.ui:
-            if element.check_collide_point(pos):
-                pos = [-1, -1]

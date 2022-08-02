@@ -4,6 +4,7 @@ from core.UI.InputField import InputField
 from core.UI.InputFieldPopUp import InputFieldPopUp
 from core.UI.PlayButton import PlayButton
 from core.UI.ReadyButton import ReadyButton
+from core.UI.PlayerTypeSelect import PlayerTypeSelect
 from core.UI.SwapPopUp import SwapPopUp
 from core.windows.Window import Window
 
@@ -23,6 +24,7 @@ class TestWindow(Window):
                 AnimatedTorch(self, (0, 100)),
                 DefaultButton(self, (10, 40), "войти", 3),
                 InputField(self, (10, 10), "C O D E", [(0, 0, 0), (150, 150, 150)], ""),
+                PlayerTypeSelect(self, (100, 100), 0, True),
                 # ReadyButton(self, (10, 85)),
                 # PlayButton(self, (10, 190), "онлайн", "Game", {"mode": "online"}),
 

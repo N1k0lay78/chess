@@ -54,6 +54,8 @@ def king_path(self, pos):
         else:
             return [(5, self.r, 0), (6, self.r, 0)]
     # castling check
+    if self.i and self.cr == [[4, 0], [4, 7]][self.s]:
+        return True
     # figure = self.get_piece(pos)
     # if figure and self.i and figure.t == "R" and figure.i and figure.s == self.s:
     #     return  # self.check_castling(figure, pos)

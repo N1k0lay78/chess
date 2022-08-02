@@ -40,6 +40,8 @@ class LogicBoard:
                         self.step += 1
                     self.last_moved = piece
                     return True
+                self.load_board(line_board)
+                return False
 
             if not self.check_shah(self.step % 2):
                 # print("PAT IS", self.check_pat((self.step + 1) % 2))

@@ -172,11 +172,11 @@ class StandardBoardUI(BaseUI):
                 self.move_percent = 0
 
         if self.animation_step == 3:
-            for elem in self.window.ui:
+            for elem in self.window.ui['pop-up']:
                 if type(elem) == SwapPopUp:
                     break
             else:
-                self.window.ui.append(SwapPopUp(self.window, (250, 10), self.judge.get_color() % 2))
+                self.window.ui['pop-up'].append(SwapPopUp(self.window, (250, 10), self.judge.get_color() % 2))
 
         if self.animation_step == 5:
             self.rotation -= (1 + 0.25 * cos(2*pi * self.rotation - pi)) * self.game.delta
