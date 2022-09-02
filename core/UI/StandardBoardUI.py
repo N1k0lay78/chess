@@ -132,16 +132,24 @@ class StandardBoardUI(BaseUI):
                 self.window.game_logs.save_moves([l_pose, goal_movement])
                 self.focused = None
 
-                self.animation_step = 1
-
-                self.wait_server_1 = params['mode'] != 'offline'
-                self.wait_server_2 = params['mode'] != 'offline' and self.logic_board.check_pawn()[0]
-
-                if not self.dragging:
-                    self.move_percent = 1
-                    self.move_positions = move_positions
+                self.initialization_animate(self.dragging, move_positions)
 
             self.dragging = False
+
+    def load_board(self, step, board):
+        self.logic_board.step = step
+        self.logic_board.load_board(board)
+        # self.initialization_animate(False, [])
+
+    def initialization_animate(self, is_dragging, move_positions):
+        self.animation_step = 1
+
+        self.wait_server_1 = params['mode'] != 'offline'
+        self.wait_server_2 = params['mode'] != 'offline' and self.logic_board.check_pawn()[0]
+
+        if not is_dragging:
+            self.move_percent = 1
+            self.move_positions = move_positions
 
     def animation_update(self):
         if self.animation_step == 1 and not self.wait_server_1:
@@ -186,6 +194,7 @@ class StandardBoardUI(BaseUI):
 
     def fixed_update(self):
         if self.animation_step > 0:
+            print(self.animation_step)
             self.animation_update()
 
         if not self.logic_board.is_playing:

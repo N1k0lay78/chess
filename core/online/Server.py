@@ -29,12 +29,16 @@ class Game:
         self.all_ready = False
 
     def send_to_user(self, user, message):
+        # self.message_to_user_queue.append([user[0], message])
         return self.server.send_to_user(user[0], message)
 
-    def update_all_users_condition(self):
+    def update_all_users_condition(self, not_send_this=[]):
         for key in self.players.keys():
-            # print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
-            self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
+            if key in not_send_this:
+                self.send_to_user(self.players[key]["data"], f"om")
+            else:
+                # print(f"Send data to {key} -", f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
+                self.send_to_user(self.players[key]["data"], f"nm:{self.board.step}:{self.board.can_view(self.players[key]['data'][3])}")
         # self.send_to_user(self.players[key], f"nm:{self.board.step}:{self.board.can_view(self.players[3])}") #!!!!!!
 
     # self.send_to_user(self.players[nickname]["data"], f"su {self.players[nickname]['color']} {self.board.step} "
@@ -104,7 +108,10 @@ class Game:
                                     if move and self.wait_choice:
                                         self.send_to_user(self.players[nickname]["data"], "ch")
                                     else:
-                                        self.update_all_users_condition()
+                                        if move:
+                                            self.update_all_users_condition([nickname])
+                                        else:
+                                            self.update_all_users_condition()
                             elif data[:2] == "mc" and self.wait_choice:
                                 if len(data) == 4 and self.board.get_piece(self.pawn_coord).replace(data[3]):
                                     self.update_all_users_condition()
@@ -128,7 +135,6 @@ class Game:
                             elif data[:2] == "rc":
                                 self.players[nickname]["ready"] = bool(int(data.split()[1]))
                                 self.send_message_all_users(f"mr {nickname} {self.players[nickname]['ready']}")
-                                time.sleep(0.001)
                                 print(data, "!!!!!", self.players[nickname]["ready"])
                                 if not bool(int(data.split()[1])) and self.all_ready:
                                     self.all_ready = False
@@ -195,11 +201,14 @@ class Server:
         self.users = {}
         self.queue = []
         self.games = {}
+        self.message_to_user_queue = []
 
         self.check_connect_thread = Thread(target=self.check_connect)
         self.check_connect_thread.start()
         self.user_queue_thread = Thread(target=self.user_queue)
         self.user_queue_thread.start()
+        self.send_to_user_thread = Thread(target=self.send_messages)
+        self.send_to_user_thread.start()
         self.check_user_connections_thread = Thread(target=self.check_user_connections)
         self.check_user_connections_thread.start()
 
@@ -230,8 +239,8 @@ class Server:
     def get_from_user(self, nickname, conn, send_to):
         while True:
             try:
-                data = self.to_text(conn.recv(1024))
-                if data and len(data) >= 2 and data != "Check connection":
+                data = self.to_text(conn.recv(1024)).replace("Check connection", "")
+                if data and len(data) >= 2:
                     # print(data)
                     if data[:2] == "cg":
                         # print("Da blyat")
@@ -250,12 +259,31 @@ class Server:
 
     def send_to_user(self, conn, message):
         if conn and message:
+            self.message_to_user_queue.append([conn, message])
+        #     try:
+        #         conn.send(self.to_bytes(message))
+        #     except Exception as e:
+        #         print("Error with send message -", message)
+        # return True
+        #         return False
+
+    def check_connection(self, conn, message):
+        if conn:
             try:
                 conn.send(self.to_bytes(message))
             except Exception as e:
-                print("Error with send message -", message)
+                print("Error with check connection -", e)
                 return False
         return True
+
+    def send_messages(self):
+        while True:
+            if len(self.message_to_user_queue):
+                conn, message = self.message_to_user_queue.pop(0)
+                try:
+                    conn.send(self.to_bytes(message))
+                except Exception as e:
+                    print("Error with check connection -", e)
 
     def check_user_connections(self):
         while True:
@@ -265,13 +293,13 @@ class Server:
             for nickname, conn, address, send_m, st, listen_thread in users:
                 # print(nickname, conn, address, listen_thread, send_m, sep="\n")
                 if not send_m:
-                    res = self.send_to_user(conn, f"sc")
+                    res = self.check_connection(conn, f"sc")
                     print(f"User {nickname} connected")
                     print(f"Users {len(self.users)}/{self.max_user_count}")
 
                     self.users[nickname][2] = True
                 else:
-                    res = self.send_to_user(conn, "Check connection")
+                    res = self.check_connection(conn, "Check connection")
                 if not res:
                     if nickname in self.users:
                         listen_thread.join(0)
