@@ -1,17 +1,20 @@
 import pygame
 
+from Source.boards import boards
 from Source.settings import params
+from core.logic.GameLogs import GameLogs
 from core.windows.Window import Window
 from core.online.logic.Board import LogicBoard
 from core.Judge import Judge
 from core.OnlineJudge import OnlineJudge
 from core.UI.StandardBoardUI import StandardBoardUI
-from  loguru import logger
+from loguru import logger
 
 
 class GameWindow(Window):
     def __init__(self, game):
         super().__init__(game)
+        self.game_logs = GameLogs(params['game_logs_dir'])
         if params["mode"] == "online":
             self.logic_board = LogicBoard(False)
             self.judge = OnlineJudge(self.logic_board, self.game.client)
@@ -22,6 +25,7 @@ class GameWindow(Window):
         else:
             self.logic_board = LogicBoard(False)
             self.judge = Judge(self, self.logic_board, params["board_name"])
+            self.game_logs.start_save(boards[params["board_name"]])
         self.game_board = StandardBoardUI(self, (100, 100), self.judge, self.logic_board)
         self.ui['pop-up'] = []
         self.ui['game'] = [self.game_board]

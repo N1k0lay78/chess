@@ -33,7 +33,7 @@ class StandardBoardUI(BaseUI):
         self.wait_server_1 = False
         # step 2 move
         self.move_percent = 0
-        self.to_end = 1
+        self.to_end = 5
         self.move_positions = ((0, 0), (0, 0))
         # step 3 ask user
         # step 4 wait server
@@ -129,6 +129,7 @@ class StandardBoardUI(BaseUI):
             l_pose = self.focused.cr[:]
             if self.logic_board.move(self.focused.cr, goal_movement, False):
                 self.judge.on_move(l_pose, goal_movement)
+                self.window.game_logs.save_moves([l_pose, goal_movement])
                 self.focused = None
 
                 self.animation_step = 1
