@@ -5,7 +5,7 @@ params = {
     "board_name": "classic",
     "log_level": "",
     "debug": True,
-    "online_host_ip": "192.168.42.174",  # "192.168.1.13" "26.238.243.152"
+    "online_host_ip": "85.193.92.74",  # "192.168.1.13" "26.238.243.152"
     "online_host_port": 8080,
     "nickname": "",  # if empty use input
     "screen_size": (600, 600),

@@ -1,9 +1,9 @@
 import socket
 from core.online.Server import Server
 
-self_ip = socket.gethostbyname(socket.gethostname())
+# self_ip = socket.gethostbyname(socket.gethostname())
 
-print(self_ip)
+print('85.193.92.74')
 
-server = Server(self_ip, 8080)
+server = Server('85.193.92.74', 8080)
 print(server.create_game())
