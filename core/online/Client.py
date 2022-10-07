@@ -84,41 +84,44 @@ class Room:
                         wait_user_choice_thread = Thread(target=self.wait_user_choice)
                         wait_user_choice_thread.start()
                 else:
-                    if data[:2] == "ye":
-                        print("Берём новый цвет", data.split()[1])
-                        # self.color = int(data.split()[1])
-                        self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
-                    elif data[:2] == "no":
-                        print("Неть")
-                        self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
-                    elif data[:2] == "sr":
-                        if int(data.split()[1]):
-                            self.client.game.window.ui["ready"][0].start_countdown()
-                        else:
-                            self.client.game.window.ui["ready"][0].stop_countdown()
-                    elif data[:2] == "mv":
-                        nickname, color = data.split()[1:]
-                        self.client.game.window.change_user(nickname, int(color))
-                        # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ЦВЕТА ПОЛЬЗОВАТЕЛЯ
-                    elif data[:2] == "mr":
-                        nickname, ready = data.split()[1:]
-                        self.client.game.window.set_user_ready(nickname, ready)
-                        # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ГОТОВНОСТИ ПОЛЬЗОВАТЕЛЯ
-                    elif data[:2] == "ju":
-                        nickname, color = data.split()[1:]
-                        self.client.game.window.add_user(nickname, int(color))
-                        # ДОБАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
-                    elif data[:2] == "lu":
-                        nickname = data.split()[1]
-                        self.client.game.window.delete_user(nickname)
-                        # УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
-                    elif data[:2] == "cl":
-                        print(data, "инфа сотка")
-                        for el in data[2:].strip().split(":"):
-                            if len(el.split()) == 2:
-                                print(el)
-                                nick, color = el.split()
-                                self.client.game.window.add_user(nick, int(color))
+                    try:
+                        if data[:2] == "ye":
+                            print("Берём новый цвет", data.split()[1])
+                            # self.color = int(data.split()[1])
+                            self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
+                        elif data[:2] == "no":
+                            print("Неть")
+                            self.client.game.window.ui["players"][0].set_choice(int(data.split()[1]))
+                        elif data[:2] == "sr":
+                            if int(data.split()[1]):
+                                self.client.game.window.ui["ready"][0].start_countdown()
+                            else:
+                                self.client.game.window.ui["ready"][0].stop_countdown()
+                        elif data[:2] == "mv":
+                            nickname, color = data.split()[1:]
+                            self.client.game.window.change_user(nickname, int(color))
+                            # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ЦВЕТА ПОЛЬЗОВАТЕЛЯ
+                        elif data[:2] == "mr":
+                            nickname, ready = data.split()[1:]
+                            self.client.game.window.set_user_ready(nickname, ready)
+                            # ФУНКЦИЯ ДЛЯ ИЗМЕНЕНИЯ ГОТОВНОСТИ ПОЛЬЗОВАТЕЛЯ
+                        elif data[:2] == "ju":
+                            nickname, color = data.split()[1:]
+                            self.client.game.window.add_user(nickname, int(color))
+                            # ДОБАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
+                        elif data[:2] == "lu":
+                            nickname = data.split()[1]
+                            self.client.game.window.delete_user(nickname)
+                            # УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
+                        elif data[:2] == "cl":
+                            print(data, "инфа сотка")
+                            for el in data[2:].strip().split(":"):
+                                if len(el.split()) == 2:
+                                    print(el)
+                                    nick, color = el.split()
+                                    self.client.game.window.add_user(nick, int(color))
+                    except Exception:
+                        pass
                 self.message_queue.pop(0)
 
     def wait_user_choice(self):
