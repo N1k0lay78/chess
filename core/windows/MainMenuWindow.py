@@ -13,6 +13,12 @@ def start_offline(self):
     self.window.game.open_window('Game')
 
 
+def start_online(self):
+    params["mode"] = "online"
+    self.window.game.open_window('Choice')
+
+
+
 class MainMenuWindow(Window):
     def __init__(self, game):
         super().__init__(game)
@@ -33,7 +39,7 @@ class MainMenuWindow(Window):
             "Play": [
                 # PlayButton(self, (100, 200), "офлайн"),
                 # PlayButton(self, (100, 300), "войти"),
-                PlayButton(self, (100, 200), "онлайн"),
+                PlayButton(self, (100, 200), "онлайн", on_funk=start_online),
                 PlayButton(self, (100, 300), "туман войны"),
                 PlayButton(self, (100, 400), "офлайн", on_funk=start_offline),
             ],
