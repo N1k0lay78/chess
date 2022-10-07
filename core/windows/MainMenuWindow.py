@@ -1,5 +1,6 @@
 from Source.settings import params
 from core.UI.BaseUI import BaseUI
+from core.UI.InputFieldPopUp import InputFieldPopUp
 from core.UI.PlayButton import PlayButton
 from core.UI.AnimatedTorch import AnimatedTorch
 from core.textures.load_image import load_image
@@ -15,8 +16,7 @@ def start_offline(self):
 
 def start_online(self):
     params["mode"] = "online"
-    self.window.game.open_window('Choice')
-
+    self.window.ui['pop-up'].append(InputFieldPopUp(self.window, [0, 300], "code", "войти"),)
 
 
 class MainMenuWindow(Window):
@@ -25,6 +25,7 @@ class MainMenuWindow(Window):
 
     def set_ui(self):
         self.ui = {
+            "pop-up": [],
             "Lobby": [],
             "Settings": [
                 # ChangeWindowButton(self, (500, 100), TileSet('settings', (100, 100)), "Game")

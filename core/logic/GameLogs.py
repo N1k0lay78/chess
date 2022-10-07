@@ -47,6 +47,7 @@ class GameLogs:
 
     def check_files(self, filename) -> int:
         file = f"{os.getcwd()}{self.dir}\\{filename}.log"
+        print(file)
         # with open(file, 'r') as f:
         try:
             open(file, 'r').close()
@@ -73,5 +74,6 @@ class GameLogs:
             f.write('')
 
     def log(self, msg):
-        with open(self.file, 'a') as f:
-            f.write(f"{round(time.time() - self.start_time)}:{msg}\n")
+        if self.file:
+            with open(self.file, 'a') as f:
+                f.write(f"{round(time.time() - self.start_time)}:{msg}\n")

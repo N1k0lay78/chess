@@ -144,11 +144,14 @@ class Game:
                     self.message_queue.pop(0)
                 else:
                     if len(self.players) > 0:
+                        print(11111)
                         if not self.all_ready:
+                            print(22222)
                             if self.check_param("ready"):
                                 self.all_ready = True
                                 self.send_message_all_users(f"sr {1}", True)
                         elif not self.game_started:
+                            print(33333)
                             if self.check_param("confirmation"):
                                 self.start_game()
             except:

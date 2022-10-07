@@ -194,7 +194,6 @@ class StandardBoardUI(BaseUI):
 
     def fixed_update(self):
         if self.animation_step > 0:
-            print(self.animation_step)
             self.animation_update()
 
         if not self.logic_board.is_playing:
