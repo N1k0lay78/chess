@@ -38,8 +38,11 @@ class Game:
         # cell   1  2   3   4   5   6  px
         # sizes (9, 17, 25, 33, 41, 50)
         # offline
-        self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25 * 2)
-        self.small_font = pygame.font.Font('Source/Fonts/Chava.ttf', 25)
+        # self.font = pygame.font.Font('Source/Fonts/Chava.ttf', 25 * 2)
+        # self.small_font = pygame.font.Font('Source/Fonts/Chava.ttf', 25)
+        pygame.font.init()
+        self.font = pygame.font.Font(None, 25 * 2)
+        self.small_font = pygame.font.Font(None, 25)
 
         # game is running
         self.running = True

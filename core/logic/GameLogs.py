@@ -70,10 +70,12 @@ class GameLogs:
             self.file = f"{os.getcwd()}{self.dir}\\{filename}.log"
 
     def create_log_file(self):
-        with open(self.file, 'w') as f:
-            f.write('')
+        # with open(self.file, 'w') as f:
+        #     f.write('')
+        pass
 
     def log(self, msg):
-        if self.file:
-            with open(self.file, 'a') as f:
-                f.write(f"{round(time.time() - self.start_time)}:{msg}\n")
+        # if self.file:
+        #     with open(self.file, 'a') as f:
+        #         f.write(f"{round(time.time() - self.start_time)}:{msg}\n")
+        pass

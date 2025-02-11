@@ -1,8 +1,7 @@
 from core.online.Client import Client
-from core.windows.GameLEGACY import Game
-from core.windows.LoadingGame import LoadingGame
+# from core.windows.GameLEGACY import Game
 from core.windows.test import Test
-from Source.settings import is_online, name_board_to_play
+from core.Game import Game
 import pygame
 
 
@@ -16,7 +15,5 @@ screen = pygame.display.set_mode((700, 600))
 # nickname = "Nickolausus"
 # nickname = "Rjkz"
 color = 0
-game = Game((600, 600), "Шахматы", color, is_online, name_board_to_play,
-            icon=pygame.image.load('Source/Image/icon.png'),
-            )
+game = Game()
 game.run()
